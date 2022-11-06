@@ -40,11 +40,12 @@ dependencies:
   google_fonts: ^3.0.1
   provider: ^6.0.4
   material_design_icons_flutter: ^5.0.6996
-  firebase_core: ^2.1.1
-  firebase_auth: ^4.1.1
   google_sign_in: ^5.4.2
   mockito: ^5.3.2
   build_runner: ^2.3.0
+  icalendar_parser: ^1.0.2
+  json_serializable: ^6.5.4
+  json_annotation: ^4.7.0
 
 dev_dependencies:
   flutter_test:

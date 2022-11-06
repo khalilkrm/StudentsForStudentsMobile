@@ -23,7 +23,7 @@ class UserRepository {
           await _userApi.google(idToken: idToken).timeout(timelimit);
 
       // set the sign in state
-      _setSignInStateBasedOnErrorBoolean(apiModel.error);
+      _setSignInStateBasedOnErrorBoolean(apiModel.error ?? false);
 
       // based on sign in state set model or else set error message
       _onSucceedSetModelElseSetErrorMessage(
@@ -50,7 +50,7 @@ class UserRepository {
           .timeout(timelimit);
 
       // set the sign in state
-      _setSignInStateBasedOnErrorBoolean(apiModel.error);
+      _setSignInStateBasedOnErrorBoolean(apiModel.error ?? false);
 
       // based on sign in state set model or else set error message
       _onSucceedSetModelElseSetErrorMessage(
