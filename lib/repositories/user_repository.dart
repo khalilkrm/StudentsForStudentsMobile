@@ -32,9 +32,6 @@ class UserRepository {
       );
     } on TimeoutException {
       _onTimeoutException(timelimit);
-    } on Exception catch (e) {
-      _signInState = SignInState.failed;
-      _errorMessage = "Unexpected error : $e";
     }
   }
 
@@ -59,9 +56,6 @@ class UserRepository {
       );
     } on TimeoutException {
       _onTimeoutException(timelimit);
-    } on Exception catch (e) {
-      _signInState = SignInState.failed;
-      _errorMessage = "Unexpected error : $e";
     }
   }
 
