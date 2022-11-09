@@ -52,14 +52,14 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                           ),
                     TextFormFieldMolecule(
                       controller: widget._emailTextFieldController,
-                      label: "email",
+                      label: "Adresse mail",
                       errorText:
                           _emailLocalError ?? store.state.emailErrorMessage,
                       prefixiIcon: const Icon(Icons.mail),
                     ),
                     TextFormFieldMolecule(
                       controller: widget._passwordTextFieldController,
-                      label: "password",
+                      label: "Mot de passe",
                       errorText: _passwordLocalError ??
                           store.state.passwordErrorMessage,
                       prefixiIcon: const Icon(Icons.lock),

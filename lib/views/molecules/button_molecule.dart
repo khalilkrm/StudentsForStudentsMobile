@@ -96,6 +96,6 @@ class ButtonMolecule extends StatelessWidget {
   }
 
   Color getBackgroundColor(BuildContext context) {
-    return _backgroundColor ?? Theme.of(context).primaryColor;
+    return _backgroundColor ?? const Color(0xC1884500);
   }
 }

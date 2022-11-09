@@ -25,7 +25,7 @@ class TextFormFieldMolecule extends StatefulWidget {
 }
 
 class _TextFormFieldMoleculeState extends State<TextFormFieldMolecule> {
-  bool _obscureText = false;
+  bool _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class _TextFormFieldMoleculeState extends State<TextFormFieldMolecule> {
             ? InkWell(
                 onTap: () => setState(() => _obscureText = !_obscureText),
                 child: Icon(
-                    _obscureText ? Icons.visibility : Icons.visibility_off),
+                    _obscureText ? Icons.visibility_off : Icons.visibility),
               )
             : const SizedBox(),
       ),
