@@ -9,6 +9,7 @@ import 'package:student_for_student_mobile/repositories/horairix_repository.dart
 import 'package:student_for_student_mobile/repositories/user_repository.dart';
 import 'package:student_for_student_mobile/stores/calendar_store.dart';
 import 'package:student_for_student_mobile/stores/user_store.dart';
+import 'package:student_for_student_mobile/views/pages/authentication_page.dart';
 import 'package:student_for_student_mobile/views/pages/calendar_page.dart';
 
 Future<void> main() async {
@@ -50,7 +51,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const Scaffold(body: CalendarPage()),
+      home: Scaffold(body: AuthenticationPage()),
     );
   }
 }
