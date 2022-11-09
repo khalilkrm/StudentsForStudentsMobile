@@ -2,8 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:student_for_student_mobile/apis/urls.dart' as url;
 import 'package:json_annotation/json_annotation.dart';
-
-part 'user_api.g.dart';
+import 'package:student_for_student_mobile/models/user/UserApiModel.dart';
 
 Uri _signinUri = Uri.https(url.base, url.signIn);
 Uri _googleUri = Uri.https(url.base, url.googleSignIn);
@@ -31,20 +30,4 @@ class UserApi {
 
     return UserApiModel.fromJson(jsonDecode(response.body));
   }
-}
-
-@JsonSerializable()
-class UserApiModel {
-  bool? error;
-  String? message;
-
-  String? username;
-  String? email;
-  String? token;
-
-  UserApiModel(
-      {this.error, this.message, this.username, this.email, this.token});
-
-  factory UserApiModel.fromJson(Map<String, dynamic> json) =>
-      _$UserApiModelFromJson(json);
 }

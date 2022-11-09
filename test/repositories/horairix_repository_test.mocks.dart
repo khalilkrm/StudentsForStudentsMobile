@@ -3,10 +3,12 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i3;
+import 'dart:async' as _i4;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:student_for_student_mobile/apis/horairix_api.dart' as _i2;
+import 'package:student_for_student_mobile/apis/horairix_api.dart' as _i3;
+import 'package:student_for_student_mobile/models/horairix/HorairixApiModel.dart'
+    as _i2;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -33,15 +35,15 @@ class _FakeHorairixApiModel_0 extends _i1.SmartFake
 /// A class which mocks [HorairixApi].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockHorairixApi extends _i1.Mock implements _i2.HorairixApi {
+class MockHorairixApi extends _i1.Mock implements _i3.HorairixApi {
   @override
-  _i3.Future<_i2.HorairixApiModel> fetchTimeSheet() => (super.noSuchMethod(
+  _i4.Future<_i2.HorairixApiModel> fetchTimeSheet() => (super.noSuchMethod(
         Invocation.method(
           #fetchTimeSheet,
           [],
         ),
         returnValue:
-            _i3.Future<_i2.HorairixApiModel>.value(_FakeHorairixApiModel_0(
+            _i4.Future<_i2.HorairixApiModel>.value(_FakeHorairixApiModel_0(
           this,
           Invocation.method(
             #fetchTimeSheet,
@@ -49,12 +51,12 @@ class MockHorairixApi extends _i1.Mock implements _i2.HorairixApi {
           ),
         )),
         returnValueForMissingStub:
-            _i3.Future<_i2.HorairixApiModel>.value(_FakeHorairixApiModel_0(
+            _i4.Future<_i2.HorairixApiModel>.value(_FakeHorairixApiModel_0(
           this,
           Invocation.method(
             #fetchTimeSheet,
             [],
           ),
         )),
-      ) as _i3.Future<_i2.HorairixApiModel>);
+      ) as _i4.Future<_i2.HorairixApiModel>);
 }

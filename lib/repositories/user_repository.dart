@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:student_for_student_mobile/apis/user_api.dart';
+import 'package:student_for_student_mobile/models/user/UserApiModel.dart';
+import 'package:student_for_student_mobile/models/user/UserModel.dart';
 
 class UserRepository {
   final UserApi _userApi;
@@ -117,18 +119,6 @@ class UserRepository {
     _errorMessage =
         "La requête n'a pas pu être résolu dans le temps imparti de ${timelimit.inSeconds} secondes";
   }
-}
-
-class UserModel {
-  final String username;
-  final String email;
-  final String token;
-
-  UserModel({
-    required this.username,
-    required this.email,
-    required this.token,
-  });
 }
 
 enum SignInState { idle, failed, succeed }

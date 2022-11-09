@@ -6,7 +6,8 @@
 import 'dart:async' as _i3;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:student_for_student_mobile/apis/user_api.dart' as _i2;
+import 'package:student_for_student_mobile/models/user/UserApiModel.dart' as _i2;
+import 'package:student_for_student_mobile/apis/user_api.dart' as _i4;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -32,7 +33,7 @@ class _FakeUserApiModel_0 extends _i1.SmartFake implements _i2.UserApiModel {
 /// A class which mocks [UserApi].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockUserApi extends _i1.Mock implements _i2.UserApi {
+class MockUserApi extends _i1.Mock implements _i4.UserApi {
   MockUserApi() {
     _i1.throwOnMissingStub(this);
   }

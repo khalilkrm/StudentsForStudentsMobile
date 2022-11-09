@@ -4,6 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:student_for_student_mobile/apis/horairix_api.dart';
+import 'package:student_for_student_mobile/models/horairix/HorairixApiEventModel.dart';
+import 'package:student_for_student_mobile/models/horairix/HorairixApiModel.dart';
 import 'package:student_for_student_mobile/repositories/horairix_repository.dart';
 
 import 'horairix_repository_test.mocks.dart';

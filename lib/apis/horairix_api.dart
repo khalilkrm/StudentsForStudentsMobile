@@ -2,11 +2,9 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:icalendar_parser/icalendar_parser.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:student_for_student_mobile/apis/urls.dart';
 import 'package:student_for_student_mobile/logger.dart';
-
-part 'horairix_api.g.dart';
+import 'package:student_for_student_mobile/models/horairix/HorairixApiModel.dart';
 
 final Uri timesheetUri = Uri.https(horairixBaseUrl, horairixAgenda, {
   'type': '0',
@@ -35,73 +33,5 @@ class HorairixApi {
       logger.e("${(HorairixApi).toString()} une erreur de formatage a eu lieu");
       return HorairixApiModel(error: true);
     }
-  }
-}
-
-@JsonSerializable()
-class HorairixApiModel {
-  final bool? error;
-
-  final String? version;
-  final String? prodid;
-  final String? calscale;
-  final String? method;
-  final List<HorairixApiEventModel>? data;
-
-  HorairixApiModel(
-      {this.version,
-      this.prodid,
-      this.calscale,
-      this.method,
-      this.data,
-      required this.error});
-
-  factory HorairixApiModel.fromJson(Map<String, dynamic> json) =>
-      _$HorairixApiModelFromJson(json);
-}
-
-@JsonSerializable()
-class HorairixApiEventModel {
-  final String? type;
-  final String? description;
-  final HorairixApiEventDatetimeModel? dtend;
-  final HorairixApiEventDatetimeModel? dtstamp;
-  final HorairixApiEventDatetimeModel? dtstart;
-  final String? location;
-  final String? sequence;
-  final String? summary;
-  final String? uid;
-
-  HorairixApiEventModel({
-    this.type,
-    this.description,
-    this.dtend,
-    this.dtstamp,
-    this.dtstart,
-    this.location,
-    this.sequence,
-    this.summary,
-    this.uid,
-  });
-
-  factory HorairixApiEventModel.fromJson(Map<String, dynamic> json) =>
-      _$HorairixApiEventModelFromJson(json);
-}
-
-@JsonSerializable()
-class HorairixApiEventDatetimeModel {
-  final DateTime? dt;
-  HorairixApiEventDatetimeModel({
-    this.dt,
-  });
-
-  factory HorairixApiEventDatetimeModel.fromJson(Map<String, dynamic> json) {
-    final String? jsondt = json['dt'] as String?;
-
-    if (jsondt == null) return HorairixApiEventDatetimeModel();
-
-    DateTime local = DateTime.parse(jsondt);
-
-    return HorairixApiEventDatetimeModel(dt: local);
   }
 }

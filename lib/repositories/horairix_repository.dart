@@ -1,5 +1,7 @@
 import 'package:student_for_student_mobile/apis/horairix_api.dart';
 import 'package:student_for_student_mobile/logger.dart';
+import 'package:student_for_student_mobile/models/horairix/Event.dart';
+import 'package:student_for_student_mobile/models/horairix/HorairixApiModel.dart';
 
 class HorairixRepository {
   final HorairixApi _horairixApi;
@@ -38,21 +40,4 @@ class HorairixRepository {
   List<Event> get events {
     return _events;
   }
-}
-
-class Event {
-  final String? uid;
-  final String? description;
-  final DateTime? endDate;
-  final DateTime? startDate;
-  final String? location;
-  final String? summary;
-
-  Event(
-      {this.uid,
-      this.description,
-      this.endDate,
-      this.startDate,
-      this.location,
-      this.summary});
 }
