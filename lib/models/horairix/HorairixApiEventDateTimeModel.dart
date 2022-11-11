@@ -12,7 +12,7 @@ class HorairixApiEventDateTimeModel {
 
     if (jsondt == null) return HorairixApiEventDateTimeModel();
 
-    DateTime local = DateTime.parse(jsondt);
+    DateTime local = DateTime.parse(jsondt).add(const Duration(hours: 1));
 
     return HorairixApiEventDateTimeModel(dt: local);
   }

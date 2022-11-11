@@ -87,11 +87,15 @@ class ButtonMolecule extends StatelessWidget {
                 ? Size.fromWidth(MediaQuery.of(context).size.width)
                 : const Size.fromWidth(double.infinity),
             shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(50.0)),
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
             )),
         label: Text(
           _label,
-          style: GoogleFonts.roboto(fontSize: 16),
+          style: GoogleFonts.roboto(
+              fontSize: 16,
+              textStyle: const TextStyle(
+                fontWeight: FontWeight.bold,
+              )),
         ));
   }
 

@@ -73,6 +73,8 @@ class UserStore extends ChangeNotifier {
     ));
   }
 
+  get user => _userRepository.userModel;
+
   void _setState(UserStoreState state) {
     this.state = state;
     notifyListeners();

@@ -25,7 +25,7 @@ class TextFormFieldMolecule extends StatefulWidget {
 }
 
 class _TextFormFieldMoleculeState extends State<TextFormFieldMolecule> {
-  bool _obscureText = true;
+  bool _obscureText = false;
 
   @override
   Widget build(BuildContext context) {

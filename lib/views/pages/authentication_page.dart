@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:student_for_student_mobile/models/user/UserStoreState.dart';
 import 'package:student_for_student_mobile/stores/user_store.dart';
 import 'package:student_for_student_mobile/views/molecules/button_molecule.dart';
 import 'package:student_for_student_mobile/views/molecules/error_ahead_molecule.dart';
+import 'package:student_for_student_mobile/views/molecules/screen_title.dart';
+import 'package:student_for_student_mobile/views/molecules/social_button.dart';
 import 'package:student_for_student_mobile/views/molecules/text_form_field_molecule.dart';
+import 'package:student_for_student_mobile/views/organisms/display_social_buttons.dart';
+import 'package:student_for_student_mobile/views/organisms/screen_content.dart';
 
 class AuthenticationPage extends StatefulWidget {
   final TextEditingController _emailTextFieldController =
@@ -32,71 +35,94 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
     _tryingToConnect =
         getState(context).isAuthLoading || getState(context).isGoogleLoading;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Wrap(
-            runSpacing: 40.0,
-            children: [
-              Consumer<UserStore>(
-                builder: (context, store, child) => Wrap(
-                  runSpacing: 48.0,
-                  children: [
-                    _hideTopErrors
-                        ? const SizedBox()
-                        : ErrorAheadMolecule(
-                            errors: store.state.othersErrorMessages,
-                          ),
-                    TextFormFieldMolecule(
-                      controller: widget._emailTextFieldController,
-                      label: "Adresse mail",
-                      errorText:
-                          _emailLocalError ?? store.state.emailErrorMessage,
-                      prefixiIcon: const Icon(Icons.mail),
-                    ),
-                    TextFormFieldMolecule(
-                      controller: widget._passwordTextFieldController,
-                      label: "Mot de passe",
-                      errorText: _passwordLocalError ??
-                          store.state.passwordErrorMessage,
-                      prefixiIcon: const Icon(Icons.lock),
-                      isForPassword: true,
-                    ),
-                    Wrap(
-                      runSpacing: 20.0,
-                      children: [
-                        ButtonMolecule(
-                          isSuccess: store.state.isSignedWithAuth,
-                          isLoading: store.state.isAuthLoading,
-                          stretch: true,
-                          onPressed: _tryingToConnect
-                              ? null
-                              : () => _onConnectClicked(store),
-                          label: "Se connecter",
-                        ),
-                        ButtonMolecule(
-                          backgroundColor: const Color(0xFFDB4437),
-                          isLoading: store.state.isGoogleLoading,
-                          isSuccess: store.state.isSignedInWithGoogle,
-                          stretch: true,
-                          onPressed: _tryingToConnect
-                              ? null
-                              : () => _onGoogleConnexionClicked(store),
-                          icon: const Icon(MdiIcons.google),
-                          label: "Google",
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              )
-            ],
-          )
-        ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const ScreenTitle(title: 'STUDENTS FOR STUDENTS'),
       ),
+      body: ScreenContent(children: [
+        Consumer<UserStore>(
+          builder: (context, store, child) =>
+              Wrap(
+                runSpacing: 48.0,
+                alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  _hideTopErrors
+                      ? const SizedBox()
+                      : ErrorAheadMolecule(
+                    errors: store.state.othersErrorMessages,
+                  ),
+                  TextFormFieldMolecule(
+                    controller: widget._emailTextFieldController,
+                    label: "Adresse mail",
+                    errorText: _emailLocalError ??
+                        store.state.emailErrorMessage,
+                    prefixiIcon: const Icon(Icons.mail),
+                  ),
+                  TextFormFieldMolecule(
+                    controller: widget._passwordTextFieldController,
+                    label: "Mot de passe",
+                    errorText:
+                    _passwordLocalError ?? store.state.passwordErrorMessage,
+                    prefixiIcon: const Icon(Icons.lock),
+                    isForPassword: true,
+                  ),
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    runSpacing: 20.0,
+                    children: [
+                      ButtonMolecule(
+                        isSuccess: store.state.isSignedWithAuth,
+                        isLoading: store.state.isAuthLoading,
+                        stretch: true,
+                        onPressed: _tryingToConnect
+                            ? null
+                            : () => _onConnectClicked(store),
+                        label: "SE CONNECTER",
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Container(
+                              margin: const EdgeInsets.only(right: 10.0),
+                              height: 2.0,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 5.0),
+                            margin: const EdgeInsets.symmetric(horizontal: 3.0),
+                            child: const Text("OU",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold)),
+                          ),
+                          Expanded(
+                            child: Container(
+                              margin: const EdgeInsets.only(right: 10.0),
+                              height: 2.0,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                      DisplaySocialButtons(
+                        socialButtons: [
+                          SocialButton(
+                            onTap: () => _onGoogleConnexionClicked(store),
+                            logo: const AssetImage(
+                                "assets/logos/icons8-logo-google-100.png"),
+                          )
+                        ],
+                      ),
+                    ],
+                  )
+                ],
+              ),
+        ),
+      ]),
     );
   }
 

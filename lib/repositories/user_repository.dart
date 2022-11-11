@@ -117,7 +117,7 @@ class UserRepository {
   void _onTimeoutException(Duration timelimit) {
     _signInState = SignInState.failed;
     _errorMessage =
-        "La requête n'a pas pu être résolu dans le temps imparti de ${timelimit.inSeconds} secondes";
+        "La requête n'a pas pu être résolue dans le temps imparti de ${timelimit.inSeconds} secondes";
   }
 }
 

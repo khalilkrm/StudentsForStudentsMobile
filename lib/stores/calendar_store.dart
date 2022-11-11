@@ -3,7 +3,6 @@ import 'package:student_for_student_mobile/models/calendar/CalendarEvent.dart';
 import 'package:student_for_student_mobile/models/calendar/CalendarEventDataSource.dart';
 import 'package:student_for_student_mobile/models/calendar/CalendarStoreState.dart';
 import 'package:student_for_student_mobile/repositories/horairix_repository.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class CalendarStore extends ChangeNotifier {
   CalendarStoreState state = CalendarStoreState(isLoading: true);
@@ -25,7 +24,7 @@ class CalendarStore extends ChangeNotifier {
           event.summary != null &&
           event.uid != null) {
         events.add(CalendarEvent(
-          background: Colors.red,
+          background: const Color(0xFFC18845),
           eventName: event.summary!,
           isAllDay: false,
           from: event.startDate!,

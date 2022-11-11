@@ -5,22 +5,20 @@ import 'package:icalendar_parser/icalendar_parser.dart';
 import 'package:student_for_student_mobile/apis/urls.dart';
 import 'package:student_for_student_mobile/logger.dart';
 import 'package:student_for_student_mobile/models/horairix/HorairixApiModel.dart';
+import 'package:student_for_student_mobile/repositories/user_repository.dart';
 
-final Uri timesheetUri = Uri.https(horairixBaseUrl, horairixAgenda, {
-  'type': '0',
-  'token': 'G6ZhjOQU4XffW50lo7PiSRuRMi7gWcHFdJaMe2mB84Ip5Fn2LLPzTQizLHUARt8a'
-});
+final Uri timesheetUri = Uri.https(base, calendar);
 
 class HorairixApi {
+  late final UserRepository? _userRepository;
+
   Future<HorairixApiModel> fetchTimeSheet() async {
     http.Response response = await http.get(timesheetUri, headers: {
-      'Content-Type': 'text/calendar',
-      'charset': 'UTF-8',
+      'Authorization': 'bearer ${_userRepository!.userModel!.token}',
     });
 
     try {
-      String body = utf8.decode(response.bodyBytes);
-      ICalendar ics = ICalendar.fromString(body);
+      ICalendar ics = ICalendar.fromLines(response.body.replaceAll("\"", "").split('\\r\\n'));
       var model = HorairixApiModel.fromJson(ics.toJson());
 
       logger.d(
@@ -33,5 +31,9 @@ class HorairixApi {
       logger.e("${(HorairixApi).toString()} une erreur de formatage a eu lieu");
       return HorairixApiModel(error: true);
     }
+  }
+
+  void setUserRepository(UserRepository userRepository) {
+    _userRepository = userRepository;
   }
 }
