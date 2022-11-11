@@ -15,7 +15,7 @@ class ScreenContent extends StatelessWidget {
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.symmetric(
           horizontal: 50.0,
-          vertical: 100.0,
+          vertical: 50.0,
         ),
         child: Column(
           children: <Widget>[

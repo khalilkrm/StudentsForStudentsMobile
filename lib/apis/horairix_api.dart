@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 import 'package:icalendar_parser/icalendar_parser.dart';
 import 'package:student_for_student_mobile/apis/urls.dart';
@@ -12,10 +10,27 @@ final Uri timesheetUri = Uri.https(base, calendar);
 class HorairixApi {
   late final UserRepository? _userRepository;
 
+  Future<bool> linkCalendar({required String link}) async {
+    String encodedLink = Uri.encodeComponent(link);
+    Uri linkCalendarUri = Uri.https(base, "User/$encodedLink");
+
+    http.Response response = await http.put(linkCalendarUri,
+        headers: {
+          'Authorization': 'Bearer ${_userRepository?.userModel?.token}'
+        });
+
+    return response.statusCode == 200;
+  }
+
   Future<HorairixApiModel> fetchTimeSheet() async {
     http.Response response = await http.get(timesheetUri, headers: {
       'Authorization': 'bearer ${_userRepository!.userModel!.token}',
     });
+
+    if(response.statusCode == 404) {
+      logger.w("${(HorairixApi).toString()}: The api returned an error, could not get events");
+      return HorairixApiModel(error: true);
+    }
 
     try {
       ICalendar ics = ICalendar.fromLines(response.body.replaceAll("\"", "").split('\\r\\n'));

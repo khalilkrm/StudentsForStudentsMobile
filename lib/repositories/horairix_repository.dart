@@ -12,12 +12,17 @@ class HorairixRepository {
 
   HorairixRepository({required horairixApi}) : _horairixApi = horairixApi;
 
+  Future<bool> linkCalendar({required String link}) async {
+    return await _horairixApi.linkCalendar(link: link);
+  }
+
   Future<void> loadAllEvents() async {
     final HorairixApiModel model = await _horairixApi.fetchTimeSheet();
 
     if (model.error ?? false) {
       logger.w(
           "${(HorairixRepository).toString()}: The api returned an error, could not get events");
+
       return;
     } else if (model.data == null) {
       logger.w(

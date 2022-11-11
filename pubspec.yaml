@@ -48,6 +48,9 @@ dependencies:
   json_annotation: ^4.7.0
   logger: ^1.1.0
   syncfusion_flutter_calendar: ^20.3.56
+  syncfusion_localizations: ^20.3.56
+  flutter_localizations:
+    sdk: flutter
   flutter_dotenv: ^5.0.2
   indexed: ^0.0.8
 

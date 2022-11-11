@@ -18,7 +18,7 @@ class _ScreenNavigationBarState extends State<ScreenNavigationBar> {
             type: BottomNavigationBarType.fixed,
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                icon: Icon(Icons.add, size: 25),
+                icon: Icon(Icons.add_box, size: 25),
                 label: 'Demandes',
               ),
               BottomNavigationBarItem(
@@ -34,7 +34,7 @@ class _ScreenNavigationBarState extends State<ScreenNavigationBar> {
                 label: 'Profil',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_today, size: 25),
+                icon: Icon(Icons.calendar_month, size: 25),
                 label: 'Calendrier',
               ),
             ],

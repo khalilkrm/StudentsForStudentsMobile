@@ -1,10 +1,9 @@
-import 'package:student_for_student_mobile/models/user/UserApiModel.dart';
-import 'package:test/test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-
-import 'package:student_for_student_mobile/repositories/user_repository.dart';
 import 'package:student_for_student_mobile/apis/user_api.dart';
+import 'package:student_for_student_mobile/models/user/UserApiModel.dart';
+import 'package:student_for_student_mobile/repositories/user_repository.dart';
+import 'package:test/test.dart';
 
 import 'user_repository_test.mocks.dart';
 

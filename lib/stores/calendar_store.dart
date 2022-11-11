@@ -5,13 +5,22 @@ import 'package:student_for_student_mobile/models/calendar/CalendarStoreState.da
 import 'package:student_for_student_mobile/repositories/horairix_repository.dart';
 
 class CalendarStore extends ChangeNotifier {
-  CalendarStoreState state = CalendarStoreState(isLoading: true);
+  CalendarStoreState state = CalendarStoreState(isLoading: true, isCalendarLinked: false);
   final HorairixRepository _horairixRepository;
 
   CalendarStore({required HorairixRepository horairixRepository})
       : _horairixRepository = horairixRepository;
 
+  Future<void> linkCalendar({required String calendarLink}) async {
+    state = CalendarStoreState(isLoading: true, isCalendarLinked: false);
+    notifyListeners();
+
+    bool isCalendarLinked = await _horairixRepository.linkCalendar(link: calendarLink);
+    if(isCalendarLinked) load();
+  }
+
   load() async {
+    if(_horairixRepository.events.isNotEmpty) return;
     await _horairixRepository.loadAllEvents();
 
     List<CalendarEvent> events = [];
@@ -33,13 +42,23 @@ class CalendarStore extends ChangeNotifier {
       }
     }
 
-    print(events[0].from.toLocal().timeZoneOffset);
+    //print(events[0].from.toLocal().timeZoneOffset);
 
-    state = CalendarStoreState(
-      timezone: DateTime.now().toLocal().timeZoneName,
-      isLoading: false,
-      source: CalendarEventDataSource(source: events),
-    );
+    if(events.isEmpty) {
+      state = CalendarStoreState(
+        timezone: DateTime.now().toLocal().timeZoneName,
+        isLoading: false,
+        isCalendarLinked: false,
+        source: CalendarEventDataSource(source: events),
+      );
+    } else {
+      state = CalendarStoreState(
+        timezone: DateTime.now().toLocal().timeZoneName,
+        isLoading: false,
+        isCalendarLinked: true,
+        source: CalendarEventDataSource(source: events),
+      );
+    }
 
     notifyListeners();
   }

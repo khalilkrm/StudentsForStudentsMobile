@@ -47,6 +47,21 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                 alignment: WrapAlignment.center,
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
+                  Column(
+                    children: const [
+                      Icon(
+                        Icons.lock_outline,
+                        size: 40.0,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 20.0),
+                        child: Text(
+                          'CONNEXION',
+                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
                   _hideTopErrors
                       ? const SizedBox()
                       : ErrorAheadMolecule(

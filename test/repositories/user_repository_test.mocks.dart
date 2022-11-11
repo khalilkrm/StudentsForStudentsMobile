@@ -6,8 +6,8 @@
 import 'dart:async' as _i3;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:student_for_student_mobile/models/user/UserApiModel.dart' as _i2;
 import 'package:student_for_student_mobile/apis/user_api.dart' as _i4;
+import 'package:student_for_student_mobile/models/user/UserApiModel.dart' as _i2;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
