@@ -15,6 +15,10 @@ class UserRepository {
 
   // ------ PUBLIC ------
 
+  set userModel(UserModel? userModel) {
+    _userModel = userModel;
+  }
+
   Future<void> signInWithGoogle({
     required String idToken,
     Duration timelimit = const Duration(seconds: 5),

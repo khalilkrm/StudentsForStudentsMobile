@@ -5,11 +5,14 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:student_for_student_mobile/apis/horairix_api.dart';
+import 'package:student_for_student_mobile/apis/request_api.dart';
 import 'package:student_for_student_mobile/apis/user_api.dart';
 import 'package:student_for_student_mobile/repositories/horairix_repository.dart';
+import 'package:student_for_student_mobile/repositories/request_repository.dart';
 import 'package:student_for_student_mobile/repositories/user_repository.dart';
 import 'package:student_for_student_mobile/stores/calendar_store.dart';
 import 'package:student_for_student_mobile/stores/nav_store.dart';
+import 'package:student_for_student_mobile/stores/request_store.dart';
 import 'package:student_for_student_mobile/stores/user_store.dart';
 import 'package:student_for_student_mobile/views/pages/authentication_page.dart';
 import 'package:student_for_student_mobile/views/pages/calendar_page.dart';
@@ -28,15 +31,18 @@ Future<void> main() async {
   // apis
   final UserApi userApi = UserApi();
   final HorairixApi horairixApi = HorairixApi();
+  final RequestApi requestApi = RequestApi();
 
   // repositories
   final UserRepository userRepository = UserRepository(userApi: userApi);
   final HorairixRepository horairixRepository =
   HorairixRepository(horairixApi: horairixApi);
+  final RequestRepository requestRepository = RequestRepository(requestApi: requestApi);
 
   userApi.setUserRepository(userRepository);
   userApi.setHorairixRepository(horairixRepository);
   horairixApi.setUserRepository(userRepository);
+  requestApi.setUserRepository(userRepository);
 
   // stores
   final UserStore userStore = UserStore(
@@ -48,11 +54,14 @@ Future<void> main() async {
 
   final NavStore navStore = NavStore();
 
+  final RequestStore requestStore = RequestStore(requestRepository: requestRepository, userStore: userStore);
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => userStore),
       ChangeNotifierProvider(create: (_) => calendarStore),
-      ChangeNotifierProvider(create: (_) => navStore)
+      ChangeNotifierProvider(create: (_) => navStore),
+      ChangeNotifierProvider(create: (_) => requestStore),
     ],
     child: const MyApp(),
   ));

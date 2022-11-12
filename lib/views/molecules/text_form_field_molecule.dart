@@ -5,11 +5,13 @@ class TextFormFieldMolecule extends StatefulWidget {
   final Widget? _prefixIcon;
   final bool _isForPassword;
   final String _label;
+  final int _minLines;
   final String? _errorText;
 
   const TextFormFieldMolecule(
       {required TextEditingController controller,
       required String label,
+      required int minLines,
       Widget? prefixiIcon,
       String? errorText,
       bool isForPassword = false,
@@ -18,6 +20,7 @@ class TextFormFieldMolecule extends StatefulWidget {
         _prefixIcon = prefixiIcon,
         _isForPassword = isForPassword,
         _label = label,
+        _minLines = minLines,
         _errorText = errorText;
 
   @override
@@ -30,6 +33,8 @@ class _TextFormFieldMoleculeState extends State<TextFormFieldMolecule> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      minLines: widget._minLines,
+      maxLines: null,
       controller: widget._controller,
       obscureText: _obscureText,
       decoration: InputDecoration(

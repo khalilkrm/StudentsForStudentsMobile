@@ -37,6 +37,7 @@ class _CalendarBoxState extends State<CalendarBox> {
                     ),
                     const SizedBox(height: 20),
                     TextFormFieldMolecule(
+                      minLines: 1,
                       prefixiIcon: const Icon(Icons.link),
                       controller: widget._calendarLinkController,
                       label: 'Lien du calendrier',

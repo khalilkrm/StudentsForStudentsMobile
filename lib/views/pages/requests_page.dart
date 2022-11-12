@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:student_for_student_mobile/views/molecules/screen_title.dart';
+import 'package:student_for_student_mobile/views/templates/request_content.dart';
 
 import '../organisms/screen_navigation_bar.dart';
 
@@ -12,8 +13,8 @@ class RequestsPage extends StatelessWidget {
       appBar: AppBar(
         title: const ScreenTitle(title: 'DEMANDES'),
       ),
-      body: const Center(
-        child: Text('DEMANDES'),
+      body: Center(
+      child: RequestContent(),
       ),
       bottomNavigationBar: const ScreenNavigationBar(),
     );

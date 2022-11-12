@@ -98,4 +98,14 @@ class UserStore extends ChangeNotifier {
         ? [message]
         : [];
   }
+
+  void signOut() {
+    _userRepository.userModel = null;
+    _setState(UserStoreState(
+        isSignedInWithGoogle: false,
+        isSignedWithAuth: false,
+        isAuthLoading: false,
+        isGoogleLoading: false));
+    notifyListeners();
+  }
 }

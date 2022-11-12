@@ -3,11 +3,16 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i3;
+import 'dart:async' as _i4;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:student_for_student_mobile/apis/user_api.dart' as _i4;
-import 'package:student_for_student_mobile/models/user/UserApiModel.dart' as _i2;
+import 'package:student_for_student_mobile/apis/user_api.dart' as _i3;
+import 'package:student_for_student_mobile/models/user/UserApiModel.dart'
+    as _i2;
+import 'package:student_for_student_mobile/repositories/horairix_repository.dart'
+    as _i6;
+import 'package:student_for_student_mobile/repositories/user_repository.dart'
+    as _i5;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -33,20 +38,20 @@ class _FakeUserApiModel_0 extends _i1.SmartFake implements _i2.UserApiModel {
 /// A class which mocks [UserApi].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockUserApi extends _i1.Mock implements _i4.UserApi {
+class MockUserApi extends _i1.Mock implements _i3.UserApi {
   MockUserApi() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.Future<_i2.UserApiModel> google({required String? idToken}) =>
+  _i4.Future<_i2.UserApiModel> google({required String? idToken}) =>
       (super.noSuchMethod(
         Invocation.method(
           #google,
           [],
           {#idToken: idToken},
         ),
-        returnValue: _i3.Future<_i2.UserApiModel>.value(_FakeUserApiModel_0(
+        returnValue: _i4.Future<_i2.UserApiModel>.value(_FakeUserApiModel_0(
           this,
           Invocation.method(
             #google,
@@ -54,9 +59,9 @@ class MockUserApi extends _i1.Mock implements _i4.UserApi {
             {#idToken: idToken},
           ),
         )),
-      ) as _i3.Future<_i2.UserApiModel>);
+      ) as _i4.Future<_i2.UserApiModel>);
   @override
-  _i3.Future<_i2.UserApiModel> signIn({
+  _i4.Future<_i2.UserApiModel> signIn({
     required String? email,
     required String? password,
   }) =>
@@ -69,7 +74,7 @@ class MockUserApi extends _i1.Mock implements _i4.UserApi {
             #password: password,
           },
         ),
-        returnValue: _i3.Future<_i2.UserApiModel>.value(_FakeUserApiModel_0(
+        returnValue: _i4.Future<_i2.UserApiModel>.value(_FakeUserApiModel_0(
           this,
           Invocation.method(
             #signIn,
@@ -80,5 +85,23 @@ class MockUserApi extends _i1.Mock implements _i4.UserApi {
             },
           ),
         )),
-      ) as _i3.Future<_i2.UserApiModel>);
+      ) as _i4.Future<_i2.UserApiModel>);
+  @override
+  void setUserRepository(_i5.UserRepository? userRepository) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #setUserRepository,
+          [userRepository],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  void setHorairixRepository(_i6.HorairixRepository? horairixRepository) =>
+      super.noSuchMethod(
+        Invocation.method(
+          #setHorairixRepository,
+          [horairixRepository],
+        ),
+        returnValueForMissingStub: null,
+      );
 }

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+  import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:student_for_student_mobile/models/user/UserStoreState.dart';
 import 'package:student_for_student_mobile/stores/user_store.dart';
@@ -68,6 +68,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                     errors: store.state.othersErrorMessages,
                   ),
                   TextFormFieldMolecule(
+                    minLines: 1,
                     controller: widget._emailTextFieldController,
                     label: "Adresse mail",
                     errorText: _emailLocalError ??
@@ -75,6 +76,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                     prefixiIcon: const Icon(Icons.mail),
                   ),
                   TextFormFieldMolecule(
+                    minLines: 1,
                     controller: widget._passwordTextFieldController,
                     label: "Mot de passe",
                     errorText:
@@ -168,7 +170,9 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
     if (_emailLocalError == null && _passwordLocalError == null) {
       setState(() => _tryingToConnect = true);
       await store.signIn(email: email, password: password);
-      setState(() => _hideTopErrors = store.state.othersErrorMessages.isEmpty);
+      setState(() {
+        _hideTopErrors = store.state.othersErrorMessages.isEmpty;
+      });
     }
   }
 
