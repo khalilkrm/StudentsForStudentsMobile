@@ -10,22 +10,22 @@ import 'package:student_for_student_mobile/views/organisms/screen_content.dart';
 
 class RequestContent extends StatefulWidget {
   final TextEditingController _nameTextFieldController =
-      TextEditingController();
+  TextEditingController();
 
   final TextEditingController _descriptionTextFieldController =
-      TextEditingController();
+  TextEditingController();
 
   final TextEditingController _streetTextFieldController =
-      TextEditingController();
+  TextEditingController();
 
   final TextEditingController _numberTextFieldController =
-      TextEditingController();
+  TextEditingController();
 
   final TextEditingController _postalCodeTextFieldController =
-      TextEditingController();
+  TextEditingController();
 
   final TextEditingController _localityTextFieldController =
-      TextEditingController();
+  TextEditingController();
 
   RequestContent({super.key});
 
@@ -52,158 +52,170 @@ class _RequestContentState extends State<RequestContent> {
       Consumer<RequestStore>(
         builder: (context, store, child) => store.mode
             ? Center(
-                child: Column(children: [
-                Column(
-                  children: const [
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 30.0),
-                      child: Text(
-                        'AJOUT D\'UNE ADRESSE',
-                        style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
-                ),
-                TextFormFieldMolecule(
-                  minLines: 1,
-                  controller: widget._streetTextFieldController,
-                  label: "Rue",
-                  prefixiIcon: const Icon(Icons.add_road),
-                ),
-                TextFormFieldMolecule(
-                  minLines: 1,
-                  controller: widget._numberTextFieldController,
-                  label: "Numéro",
-                  prefixiIcon: const Icon(Icons.numbers),
-                ),
-                TextFormFieldMolecule(
-                  type: true,
-                  minLines: 1,
-                  controller: widget._postalCodeTextFieldController,
-                  label: "Code postal",
-                  prefixiIcon: const Icon(Icons.local_post_office),
-                ),
-                TextFormFieldMolecule(
-                  minLines: 1,
-                  controller: widget._localityTextFieldController,
-                  label: "Localité",
-                  prefixiIcon: const Icon(Icons.location_city),
-                ),
-                  const SizedBox(height: 20),
-                  ButtonMolecule(
-                    label: 'AJOUTER MON ADRESSE',
-                    onPressed: () => _onSubmitAddress(store),
-                  ),
-                  const SizedBox(height: 10),
-                  InkWell(
-                    onTap: () => store.changeMode(),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Text('Annuler',
-                            style: TextStyle(
-                                decoration: TextDecoration.underline,
-                                color: Colors.black)),
-                      ],
+            child: Column(children: [
+              Column(
+                children: const [
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 30.0),
+                    child: Text(
+                      'AJOUT D\'UNE ADRESSE',
+                      style: TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                   ),
-              ]))
-            : Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Column(
-                      children: const [
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 30.0),
-                          child: Text(
-                            'DEMANDE DE TUTORAT',
-                            style: TextStyle(
-                                fontSize: 24, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
-                    ),
-                    TextFormFieldMolecule(
+                ],
+              ),
+              TextFormFieldMolecule(
+                minLines: 1,
+                controller: widget._streetTextFieldController,
+                label: "Rue",
+                prefixiIcon: const Icon(Icons.add_road),
+              ),
+              Row(children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 10.0),
+                  child: SizedBox(
+                    width: 145,
+                    child: TextFormFieldMolecule(
                       minLines: 1,
-                      controller: widget._nameTextFieldController,
-                      label: "Nom de la demande",
-                      prefixiIcon: const Icon(Icons.add),
+                      controller: widget._numberTextFieldController,
+                      label: "Numéro",
+                      prefixiIcon: const Icon(Icons.numbers),
                     ),
-                    TextFormFieldMolecule(
-                      minLines: 5,
-                      controller: widget._descriptionTextFieldController,
-                      label: "Description de la demande",
-                      prefixiIcon: const Icon(Icons.description),
+                  ),
+                ), Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: SizedBox(
+                    width: 145,
+                    child: TextFormFieldMolecule(
+                      minLines: 1,
+                      controller: widget._postalCodeTextFieldController,
+                      label: "Code postal",
+                      prefixiIcon: const Icon(Icons.local_post_office),
                     ),
-                    const SizedBox(height: 20),
-                    DropDownMolecule(
-                      label: "Choississez une addresse",
-                      value: _selectedPlace,
-                      onChanged: (place) {
-                        setState(() {
-                          _selectedPlace = place;
-                        });
-                      },
-                      items: store.places
-                          .map<DropdownMenuItem<PlaceModel>>((place) {
-                        return DropdownMenuItem<PlaceModel>(
-                          value: place,
-                          child: Text(
-                            place.content,
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                    const SizedBox(height: 10),
-                    InkWell(
-                      onTap: () => store.changeMode(),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Text('Ajouter une nouvelle addresse',
-                              style: TextStyle(
-                                  decoration: TextDecoration.underline,
-                                  color: Colors.black)),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    DropDownMolecule(
-                      label: "Choississez un cours",
-                      value: _selectedCourse,
-                      onChanged: (course) {
-                        setState(() {
-                          _selectedCourse = course;
-                        });
-                      },
-                      items: store.courses
-                          .map<DropdownMenuItem<CourseModel>>((course) {
-                        return DropdownMenuItem<CourseModel>(
-                          value: course,
-                          child: Text(
-                            course.content,
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                    const SizedBox(height: 20),
-                    ButtonMolecule(
-                      label: 'ENVOYER MA DEMANDE',
-                      onPressed: () => _onSubmitRequest(store),
-                    ),
+                  ),
+                ),
+              ]),
+              TextFormFieldMolecule(
+                minLines: 1,
+                controller: widget._localityTextFieldController,
+                label: "Localité",
+                prefixiIcon: const Icon(Icons.location_city),
+              ),
+              const SizedBox(height: 20),
+              ButtonMolecule(
+                label: 'AJOUTER MON ADRESSE',
+                onPressed: () => _onSubmitAddress(store),
+              ),
+              const SizedBox(height: 10),
+              InkWell(
+                onTap: () => store.changeMode(),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text('Annuler',
+                        style: TextStyle(
+                            decoration: TextDecoration.underline,
+                            color: Colors.black)),
                   ],
                 ),
               ),
+            ]))
+            : Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Column(
+                children: const [
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 30.0),
+                    child: Text(
+                      'DEMANDE DE TUTORAT',
+                      style: TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+              TextFormFieldMolecule(
+                minLines: 1,
+                controller: widget._nameTextFieldController,
+                label: "Nom de la demande",
+                prefixiIcon: const Icon(Icons.add),
+              ),
+              TextFormFieldMolecule(
+                minLines: 5,
+                controller: widget._descriptionTextFieldController,
+                label: "Description de la demande",
+                prefixiIcon: const Icon(Icons.description),
+              ),
+              const SizedBox(height: 20),
+              DropDownMolecule(
+                label: "Choississez une addresse",
+                value: _selectedPlace,
+                onChanged: (place) {
+                  setState(() {
+                    _selectedPlace = place;
+                  });
+                },
+                items: store.places
+                    .map<DropdownMenuItem<PlaceModel>>((place) {
+                  return DropdownMenuItem<PlaceModel>(
+                    value: place,
+                    child: Text(
+                      place.content,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 10),
+              InkWell(
+                onTap: () => store.changeMode(),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text('Ajouter une nouvelle addresse',
+                        style: TextStyle(
+                            decoration: TextDecoration.underline,
+                            color: Colors.black)),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              DropDownMolecule(
+                label: "Choississez un cours",
+                value: _selectedCourse,
+                onChanged: (course) {
+                  setState(() {
+                    _selectedCourse = course;
+                  });
+                },
+                items: store.courses
+                    .map<DropdownMenuItem<CourseModel>>((course) {
+                  return DropdownMenuItem<CourseModel>(
+                    value: course,
+                    child: Text(
+                      course.content,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 20),
+              ButtonMolecule(
+                label: 'ENVOYER MA DEMANDE',
+                onPressed: () => _onSubmitRequest(store),
+              ),
+            ],
+          ),
+        ),
       )
     ]);
   }
 
   _onSubmitAddress(RequestStore store) async {
-    if(widget._streetTextFieldController.text.isEmpty) {
+    if (widget._streetTextFieldController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           padding: EdgeInsets.all(20),
@@ -214,7 +226,7 @@ class _RequestContentState extends State<RequestContent> {
       return;
     }
 
-    if(widget._numberTextFieldController.text.isEmpty) {
+    if (widget._numberTextFieldController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           padding: EdgeInsets.all(20),
@@ -225,7 +237,7 @@ class _RequestContentState extends State<RequestContent> {
       return;
     }
 
-    if(widget._postalCodeTextFieldController.text.isEmpty) {
+    if (widget._postalCodeTextFieldController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           padding: EdgeInsets.all(20),
@@ -236,7 +248,7 @@ class _RequestContentState extends State<RequestContent> {
       return;
     }
 
-    if(widget._localityTextFieldController.text.isEmpty) {
+    if (widget._localityTextFieldController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           padding: EdgeInsets.all(20),
