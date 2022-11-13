@@ -151,7 +151,7 @@ class _RequestContentState extends State<RequestContent> {
               ),
               const SizedBox(height: 20),
               DropDownMolecule(
-                label: "Choississez une addresse",
+                label: "Choisissez une adresse",
                 value: _selectedPlace,
                 onChanged: (place) {
                   setState(() {
@@ -175,7 +175,7 @@ class _RequestContentState extends State<RequestContent> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
-                    Text('Ajouter une nouvelle addresse',
+                    Text('Ajouter une nouvelle adresse',
                         style: TextStyle(
                             decoration: TextDecoration.underline,
                             color: Colors.black)),
@@ -184,7 +184,7 @@ class _RequestContentState extends State<RequestContent> {
               ),
               const SizedBox(height: 20),
               DropDownMolecule(
-                label: "Choississez un cours",
+                label: "Choisissez un cours",
                 value: _selectedCourse,
                 onChanged: (course) {
                   setState(() {
