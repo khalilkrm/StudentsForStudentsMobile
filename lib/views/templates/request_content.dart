@@ -15,6 +15,18 @@ class RequestContent extends StatefulWidget {
   final TextEditingController _descriptionTextFieldController =
       TextEditingController();
 
+  final TextEditingController _streetTextFieldController =
+      TextEditingController();
+
+  final TextEditingController _numberTextFieldController =
+      TextEditingController();
+
+  final TextEditingController _postalCodeTextFieldController =
+      TextEditingController();
+
+  final TextEditingController _localityTextFieldController =
+      TextEditingController();
+
   RequestContent({super.key});
 
   @override
@@ -41,11 +53,61 @@ class _RequestContentState extends State<RequestContent> {
         builder: (context, store, child) => store.mode
             ? Center(
                 child: Column(children: [
-                const Text('Loading...'),
-                ButtonMolecule(
-                  label: 'TEST',
-                  onPressed: () => store.changeMode(),
+                Column(
+                  children: const [
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 30.0),
+                      child: Text(
+                        'AJOUT D\'UNE ADRESSE',
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
                 ),
+                TextFormFieldMolecule(
+                  minLines: 1,
+                  controller: widget._streetTextFieldController,
+                  label: "Rue",
+                  prefixiIcon: const Icon(Icons.add_road),
+                ),
+                TextFormFieldMolecule(
+                  minLines: 1,
+                  controller: widget._numberTextFieldController,
+                  label: "Numéro",
+                  prefixiIcon: const Icon(Icons.numbers),
+                ),
+                TextFormFieldMolecule(
+                  type: true,
+                  minLines: 1,
+                  controller: widget._postalCodeTextFieldController,
+                  label: "Code postal",
+                  prefixiIcon: const Icon(Icons.local_post_office),
+                ),
+                TextFormFieldMolecule(
+                  minLines: 1,
+                  controller: widget._localityTextFieldController,
+                  label: "Localité",
+                  prefixiIcon: const Icon(Icons.location_city),
+                ),
+                  const SizedBox(height: 20),
+                  ButtonMolecule(
+                    label: 'AJOUTER MON ADRESSE',
+                    onPressed: () => _onSubmitAddress(store),
+                  ),
+                  const SizedBox(height: 10),
+                  InkWell(
+                    onTap: () => store.changeMode(),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Text('Annuler',
+                            style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                color: Colors.black)),
+                      ],
+                    ),
+                  ),
               ]))
             : Center(
                 child: Column(
@@ -95,12 +157,16 @@ class _RequestContentState extends State<RequestContent> {
                         );
                       }).toList(),
                     ),
+                    const SizedBox(height: 10),
                     InkWell(
                       onTap: () => store.changeMode(),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
-                          Text('Ajouter une nouvelle addresse', style: TextStyle(decoration: TextDecoration.underline, color: Color(0xFF5D7052))),
+                          Text('Ajouter une nouvelle addresse',
+                              style: TextStyle(
+                                  decoration: TextDecoration.underline,
+                                  color: Colors.black)),
                         ],
                       ),
                     ),
@@ -127,7 +193,7 @@ class _RequestContentState extends State<RequestContent> {
                     const SizedBox(height: 20),
                     ButtonMolecule(
                       label: 'ENVOYER MA DEMANDE',
-                      onPressed: () => _onSubmit(store),
+                      onPressed: () => _onSubmitRequest(store),
                     ),
                   ],
                 ),
@@ -136,7 +202,62 @@ class _RequestContentState extends State<RequestContent> {
     ]);
   }
 
-  _onSubmit(RequestStore store) async {
+  _onSubmitAddress(RequestStore store) async {
+    if(widget._streetTextFieldController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          padding: EdgeInsets.all(20),
+          backgroundColor: Colors.red,
+          content: Text('Le nom de la rue est obligatoire'),
+        ),
+      );
+      return;
+    }
+
+    if(widget._numberTextFieldController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          padding: EdgeInsets.all(20),
+          backgroundColor: Colors.red,
+          content: Text('Le numéro est obligatoire'),
+        ),
+      );
+      return;
+    }
+
+    if(widget._postalCodeTextFieldController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          padding: EdgeInsets.all(20),
+          backgroundColor: Colors.red,
+          content: Text('Le code postal est obligatoire'),
+        ),
+      );
+      return;
+    }
+
+    if(widget._localityTextFieldController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          padding: EdgeInsets.all(20),
+          backgroundColor: Colors.red,
+          content: Text('La localité est obligatoire'),
+        ),
+      );
+      return;
+    }
+
+    await store.sendAddress(
+      street: widget._streetTextFieldController.text,
+      number: widget._numberTextFieldController.text,
+      postalCode: int.parse(widget._postalCodeTextFieldController.text),
+      locality: widget._localityTextFieldController.text,
+    );
+
+    _showMessage(store);
+  }
+
+  _onSubmitRequest(RequestStore store) async {
     if (widget._nameTextFieldController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

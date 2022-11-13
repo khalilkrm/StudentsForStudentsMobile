@@ -13,23 +13,24 @@ class RequestStore extends ChangeNotifier {
   String _successMessage;
   bool _mode;
 
-  RequestStore({required RequestRepository requestRepository, required UserStore userStore})
+  RequestStore(
+      {required RequestRepository requestRepository,
+      required UserStore userStore})
       : _requestRepository = requestRepository,
         _userStore = userStore,
         _errorMessage = '',
         _successMessage = '',
         _mode = false;
 
-
   load() async {
     bool succeed;
 
     succeed = await _requestRepository.getPlaces();
-    if(!succeed) {
+    if (!succeed) {
       _userStore.signOut();
     }
     succeed = await _requestRepository.getCourses();
-    if(!succeed) {
+    if (!succeed) {
       _userStore.signOut();
     }
 
@@ -37,10 +38,13 @@ class RequestStore extends ChangeNotifier {
   }
 
   get errorMessage => _errorMessage;
+
   get successMessage => _successMessage;
+
   get mode => _mode;
 
   get places => _requestRepository.places;
+
   get courses => _requestRepository.courses;
 
   changeMode() {
@@ -59,7 +63,7 @@ class RequestStore extends ChangeNotifier {
         placeId: placeId,
         courseId: courseId);
 
-    if(message == 'unauthorized') {
+    if (message == 'unauthorized') {
       _userStore.signOut();
     }
 
@@ -70,6 +74,34 @@ class RequestStore extends ChangeNotifier {
     } else {
       _successMessage = data['message'];
       _errorMessage = '';
+    }
+    notifyListeners();
+  }
+
+  sendAddress(
+      {required String street,
+      required String number,
+      required int postalCode,
+      required String locality}) async {
+    String message = await _requestRepository.sendAddress(
+        street: street,
+        number: number,
+        postalCode: postalCode,
+        locality: locality);
+
+    if (message == 'unauthorized') {
+      _userStore.signOut();
+    }
+
+    var data = jsonDecode(message);
+    if (data['error'] == true) {
+      _errorMessage = data['message'];
+      _successMessage = '';
+    } else {
+      _successMessage = data['message'];
+      _errorMessage = '';
+      await load();
+      changeMode();
     }
     notifyListeners();
   }

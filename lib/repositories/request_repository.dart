@@ -52,11 +52,24 @@ class RequestRepository {
       required String description,
       required int placeId,
       required int courseId}) async {
-    String? data = await _requestApi.sendRequest(
+    String data = await _requestApi.sendRequest(
         name: name,
         description: description,
         placeId: placeId,
         courseId: courseId);
+    return data;
+  }
+
+  Future<String> sendAddress(
+      {required String street,
+      required String number,
+      required int postalCode,
+      required String locality}) async {
+    String data = await _requestApi.sendAddress(
+        street: street,
+        number: number,
+        postalCode: postalCode,
+        locality: locality);
     return data;
   }
 }

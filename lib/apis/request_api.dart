@@ -73,4 +73,29 @@ class RequestApi {
     }
     return response.body;
   }
+
+  Future<String> sendAddress(
+      {required String street,
+      required String number,
+      required int postalCode,
+      required String locality}) async {
+    Uri addressUri = Uri.https(base, place);
+
+    http.Response response = await http.post(addressUri,
+        headers: {
+          'Authorization': 'Bearer ${_userRepository!.userModel!.token}',
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode({
+          'street': street,
+          'number': number,
+          'postalCode': postalCode,
+          'locality': locality
+        }));
+
+    if (response.statusCode == 401) {
+      return 'unauthorized';
+    }
+    return response.body;
+  }
 }
