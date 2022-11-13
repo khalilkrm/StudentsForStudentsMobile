@@ -38,7 +38,7 @@ class _TextFormFieldMoleculeState extends State<TextFormFieldMolecule> {
   Widget build(BuildContext context) {
     return TextFormField(
       minLines: widget._minLines,
-      maxLines: null,
+      maxLines: widget._minLines,
       controller: widget._controller,
       obscureText: _obscureText,
       inputFormatters: widget._type
