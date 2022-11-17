@@ -12,9 +12,9 @@ import 'package:student_for_student_mobile/views/organisms/screen_content.dart';
 
 class AuthenticationPage extends StatefulWidget {
   final TextEditingController _emailTextFieldController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _passwordTextFieldController =
-  TextEditingController();
+      TextEditingController();
 
   AuthenticationPage({super.key});
 
@@ -28,10 +28,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
   bool _tryingToConnect = false;
   bool _hideTopErrors = true;
   UserStoreState Function(BuildContext) getState =
-      (context) =>
-  Provider
-      .of<UserStore>(context)
-      .state;
+      (context) => Provider.of<UserStore>(context).state;
 
   @override
   Widget build(BuildContext context) {
@@ -44,109 +41,110 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
       ),
       body: ScreenContent(children: [
         Consumer<UserStore>(
-          builder: (context, store, child) =>
-              Wrap(
-                runSpacing: 48.0,
-                alignment: WrapAlignment.center,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30.0),
-                    child:
-                    Column(
-                      children: const [
-                        Icon(
-                          Icons.lock_outline,
-                          size: 40.0,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 20.0),
-                          child: Text(
-                            'CONNEXION',
-                            style: TextStyle(fontSize: 24,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  _hideTopErrors
-                      ? const SizedBox()
-                      : ErrorAheadMolecule(
-                    errors: store.state.othersErrorMessages,
-                  ),
-                  TextFormFieldMolecule(
-                    minLines: 1,
-                    controller: widget._emailTextFieldController,
-                    label: "Adresse mail",
-                    errorText: _emailLocalError ??
-                        store.state.emailErrorMessage,
-                    prefixiIcon: const Icon(Icons.mail),
-                  ),
-                  TextFormFieldMolecule(
-                    minLines: 1,
-                    controller: widget._passwordTextFieldController,
-                    label: "Mot de passe",
-                    errorText:
-                    _passwordLocalError ?? store.state.passwordErrorMessage,
-                    prefixiIcon: const Icon(Icons.lock),
-                    isForPassword: true,
-                  ),
-                  Wrap(
+            builder: (context, store, child) => Padding(
+                  padding: const EdgeInsets.only(left: 50, right: 50),
+                  child: Wrap(
+                    runSpacing: 48.0,
                     alignment: WrapAlignment.center,
-                    runSpacing: 20.0,
+                    crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
-                      ButtonMolecule(
-                        isSuccess: store.state.isSignedWithAuth,
-                        isLoading: store.state.isAuthLoading,
-                        stretch: true,
-                        onPressed: _tryingToConnect
-                            ? null
-                            : () => _onConnectClicked(store),
-                        label: "SE CONNECTER",
-                      ),
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Container(
-                              margin: const EdgeInsets.only(right: 10.0),
-                              height: 2.0,
-                              color: Colors.grey,
+                      Padding(
+                        padding: const EdgeInsets.only(top: 30.0),
+                        child: Column(
+                          children: const [
+                            Icon(
+                              Icons.lock_outline,
+                              size: 40.0,
                             ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 5.0),
-                            margin: const EdgeInsets.symmetric(horizontal: 3.0),
-                            child: const Text("OU",
+                            Padding(
+                              padding: EdgeInsets.only(top: 20.0),
+                              child: Text(
+                                'CONNEXION',
                                 style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold)),
-                          ),
-                          Expanded(
-                            child: Container(
-                              margin: const EdgeInsets.only(right: 10.0),
-                              height: 2.0,
-                              color: Colors.grey,
+                                    fontSize: 24, fontWeight: FontWeight.bold),
+                              ),
                             ),
+                          ],
+                        ),
+                      ),
+                      _hideTopErrors
+                          ? const SizedBox()
+                          : ErrorAheadMolecule(
+                              errors: store.state.othersErrorMessages,
+                            ),
+                      TextFormFieldMolecule(
+                        minLines: 1,
+                        controller: widget._emailTextFieldController,
+                        label: "Adresse mail",
+                        errorText:
+                            _emailLocalError ?? store.state.emailErrorMessage,
+                        prefixiIcon: const Icon(Icons.mail),
+                      ),
+                      TextFormFieldMolecule(
+                        minLines: 1,
+                        controller: widget._passwordTextFieldController,
+                        label: "Mot de passe",
+                        errorText: _passwordLocalError ??
+                            store.state.passwordErrorMessage,
+                        prefixiIcon: const Icon(Icons.lock),
+                        isForPassword: true,
+                      ),
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        runSpacing: 20.0,
+                        children: [
+                          ButtonMolecule(
+                            isSuccess: store.state.isSignedWithAuth,
+                            isLoading: store.state.isAuthLoading,
+                            stretch: true,
+                            onPressed: _tryingToConnect
+                                ? null
+                                : () => _onConnectClicked(store),
+                            label: "SE CONNECTER",
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Container(
+                                  margin: const EdgeInsets.only(right: 10.0),
+                                  height: 2.0,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0, vertical: 5.0),
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 3.0),
+                                child: const Text("OU",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.bold)),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  margin: const EdgeInsets.only(right: 10.0),
+                                  height: 2.0,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                          DisplaySocialButtons(
+                            socialButtons: [
+                              SocialButton(
+                                onTap: () => _onGoogleConnexionClicked(store),
+                                logo: const AssetImage(
+                                    "assets/logos/icons8-logo-google-100.png"),
+                              )
+                            ],
                           ),
                         ],
-                      ),
-                      DisplaySocialButtons(
-                        socialButtons: [
-                          SocialButton(
-                            onTap: () => _onGoogleConnexionClicked(store),
-                            logo: const AssetImage(
-                                "assets/logos/icons8-logo-google-100.png"),
-                          )
-                        ],
-                      ),
+                      )
                     ],
-                  )
-                ],
-              ),
-        ),
+                  ),
+                )),
       ]),
     );
   }
@@ -190,9 +188,9 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
     _emailLocalError = email.isEmpty
         ? "Veuillez entrer une adresse email"
         : !regexp.hasMatch(email)
-        ? "Veuillez entrer une adresse mail valide"
-        : null;
+            ? "Veuillez entrer une adresse mail valide"
+            : null;
     _passwordLocalError =
-    password.isEmpty ? "Veuillez entrer un mot de passe" : null;
+        password.isEmpty ? "Veuillez entrer un mot de passe" : null;
   }
 }

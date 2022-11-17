@@ -13,9 +13,6 @@ class ScreenContent extends StatelessWidget {
       width: double.infinity,
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 50.0,
-        ),
         child: Column(
           children: <Widget>[
             ..._children,

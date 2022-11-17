@@ -13,6 +13,8 @@ class HomeContent extends StatefulWidget {
 class _HomeContentState extends State<HomeContent> {
   @override
   Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
+
     return ScreenContent(children: [
       Consumer<HomeStore>(
           builder: (context, store, child) => Column(
@@ -21,10 +23,10 @@ class _HomeContentState extends State<HomeContent> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        width: 150,
+                        width: width / 2,
                         decoration: BoxDecoration(
                           color: store.mode
-                              ? const Color(0xFF5D7052)
+                              ? Colors.black
                               : Colors.white,
                           border: const Border(
                             left:
@@ -44,10 +46,10 @@ class _HomeContentState extends State<HomeContent> {
                                         : Colors.black))),
                       ),
                       Container(
-                        width: 150,
+                        width: width / 2,
                         decoration: BoxDecoration(
                           color: !store.mode
-                              ? const Color(0xFF5D7052)
+                              ? Colors.black
                               : Colors.white,
                           border: const Border(
                             left:

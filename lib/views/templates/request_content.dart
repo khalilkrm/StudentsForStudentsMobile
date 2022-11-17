@@ -50,89 +50,17 @@ class _RequestContentState extends State<RequestContent> {
   Widget build(BuildContext context) {
     return ScreenContent(children: [
       Consumer<RequestStore>(
-        builder: (context, store, child) => store.mode
-            ? Center(
-                child: Column(children: [
-                Column(
-                  children: const [
-                    Padding(
-                      padding: EdgeInsets.only(top: 30.0, bottom: 30.0),
-                      child: Text(
-                        'AJOUT D\'UNE ADRESSE',
-                        style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
-                ),
-                TextFormFieldMolecule(
-                  minLines: 1,
-                  controller: widget._streetTextFieldController,
-                  label: "Rue",
-                  prefixiIcon: const Icon(Icons.add_road),
-                ),
-                Row(children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 10.0),
-                    child: SizedBox(
-                      width: 145,
-                      child: TextFormFieldMolecule(
-                        minLines: 1,
-                        controller: widget._numberTextFieldController,
-                        label: "Numéro",
-                        prefixiIcon: const Icon(Icons.numbers),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10.0),
-                    child: SizedBox(
-                      width: 145,
-                      child: TextFormFieldMolecule(
-                        minLines: 1,
-                        type: true,
-                        controller: widget._postalCodeTextFieldController,
-                        label: "Code postal",
-                        prefixiIcon: const Icon(Icons.local_post_office),
-                      ),
-                    ),
-                  ),
-                ]),
-                TextFormFieldMolecule(
-                  minLines: 1,
-                  controller: widget._localityTextFieldController,
-                  label: "Localité",
-                  prefixiIcon: const Icon(Icons.location_city),
-                ),
-                const SizedBox(height: 20),
-                ButtonMolecule(
-                  label: 'AJOUTER MON ADRESSE',
-                  onPressed: () => _onSubmitAddress(store),
-                ),
-                const SizedBox(height: 10),
-                InkWell(
-                  onTap: () => store.changeMode(),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text('Annuler',
-                          style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              color: Colors.black)),
-                    ],
-                  ),
-                ),
-              ]))
-            : Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+          builder: (context, store, child) => store.mode
+              ? Padding(
+                  padding: const EdgeInsets.only(left: 50, right: 50),
+                  child: Center(
+                      child: Column(children: [
                     Column(
                       children: const [
                         Padding(
                           padding: EdgeInsets.only(top: 30.0, bottom: 30.0),
                           child: Text(
-                            'DEMANDE DE TUTORAT',
+                            'AJOUT D\'UNE ADRESSE',
                             style: TextStyle(
                                 fontSize: 24, fontWeight: FontWeight.bold),
                           ),
@@ -141,35 +69,47 @@ class _RequestContentState extends State<RequestContent> {
                     ),
                     TextFormFieldMolecule(
                       minLines: 1,
-                      controller: widget._nameTextFieldController,
-                      label: "Nom de la demande",
-                      prefixiIcon: const Icon(Icons.add),
+                      controller: widget._streetTextFieldController,
+                      label: "Rue",
+                      prefixiIcon: const Icon(Icons.add_road),
                     ),
+                    Row(children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10.0),
+                        child: SizedBox(
+                          width: 145,
+                          child: TextFormFieldMolecule(
+                            minLines: 1,
+                            controller: widget._numberTextFieldController,
+                            label: "Numéro",
+                            prefixiIcon: const Icon(Icons.numbers),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: SizedBox(
+                          width: 145,
+                          child: TextFormFieldMolecule(
+                            minLines: 1,
+                            type: true,
+                            controller: widget._postalCodeTextFieldController,
+                            label: "Code postal",
+                            prefixiIcon: const Icon(Icons.local_post_office),
+                          ),
+                        ),
+                      ),
+                    ]),
                     TextFormFieldMolecule(
-                      minLines: 5,
-                      controller: widget._descriptionTextFieldController,
-                      label: "Description de la demande",
-                      prefixiIcon: const Icon(Icons.description),
+                      minLines: 1,
+                      controller: widget._localityTextFieldController,
+                      label: "Localité",
+                      prefixiIcon: const Icon(Icons.location_city),
                     ),
                     const SizedBox(height: 20),
-                    DropDownMolecule(
-                      label: "Choisissez une adresse",
-                      value: _selectedPlace,
-                      onChanged: (place) {
-                        setState(() {
-                          _selectedPlace = place;
-                        });
-                      },
-                      items: store.places
-                          .map<DropdownMenuItem<PlaceModel>>((place) {
-                        return DropdownMenuItem<PlaceModel>(
-                          value: place,
-                          child: Text(
-                            place.content,
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                        );
-                      }).toList(),
+                    ButtonMolecule(
+                      label: 'AJOUTER MON ADRESSE',
+                      onPressed: () => _onSubmitAddress(store),
                     ),
                     const SizedBox(height: 10),
                     InkWell(
@@ -177,42 +117,107 @@ class _RequestContentState extends State<RequestContent> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
-                          Text('Ajouter une nouvelle adresse',
+                          Text('Annuler',
                               style: TextStyle(
                                   decoration: TextDecoration.underline,
                                   color: Colors.black)),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    DropDownMolecule(
-                      label: "Choisissez un cours",
-                      value: _selectedCourse,
-                      onChanged: (course) {
-                        setState(() {
-                          _selectedCourse = course;
-                        });
-                      },
-                      items: store.courses
-                          .map<DropdownMenuItem<CourseModel>>((course) {
-                        return DropdownMenuItem<CourseModel>(
-                          value: course,
-                          child: Text(
-                            course.content,
-                            style: const TextStyle(fontSize: 12),
+                  ])),
+                )
+              : Padding(
+                  padding: const EdgeInsets.only(left: 50, right: 50),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Column(
+                          children: const [
+                            Padding(
+                              padding: EdgeInsets.only(top: 30.0, bottom: 30.0),
+                              child: Text(
+                                'DEMANDE DE TUTORAT',
+                                style: TextStyle(
+                                    fontSize: 24, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                        TextFormFieldMolecule(
+                          minLines: 1,
+                          controller: widget._nameTextFieldController,
+                          label: "Nom de la demande",
+                          prefixiIcon: const Icon(Icons.add),
+                        ),
+                        TextFormFieldMolecule(
+                          minLines: 5,
+                          controller: widget._descriptionTextFieldController,
+                          label: "Description de la demande",
+                          prefixiIcon: const Icon(Icons.description),
+                        ),
+                        const SizedBox(height: 20),
+                        DropDownMolecule(
+                          label: "Choisissez une adresse",
+                          value: _selectedPlace,
+                          onChanged: (place) {
+                            setState(() {
+                              _selectedPlace = place;
+                            });
+                          },
+                          items: store.places
+                              .map<DropdownMenuItem<PlaceModel>>((place) {
+                            return DropdownMenuItem<PlaceModel>(
+                              value: place,
+                              child: Text(
+                                place.content,
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                        const SizedBox(height: 10),
+                        InkWell(
+                          onTap: () => store.changeMode(),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Text('Ajouter une nouvelle adresse',
+                                  style: TextStyle(
+                                      decoration: TextDecoration.underline,
+                                      color: Colors.black)),
+                            ],
                           ),
-                        );
-                      }).toList(),
+                        ),
+                        const SizedBox(height: 20),
+                        DropDownMolecule(
+                          label: "Choisissez un cours",
+                          value: _selectedCourse,
+                          onChanged: (course) {
+                            setState(() {
+                              _selectedCourse = course;
+                            });
+                          },
+                          items: store.courses
+                              .map<DropdownMenuItem<CourseModel>>((course) {
+                            return DropdownMenuItem<CourseModel>(
+                              value: course,
+                              child: Text(
+                                course.content,
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                        const SizedBox(height: 20),
+                        ButtonMolecule(
+                          label: 'ENVOYER MA DEMANDE',
+                          onPressed: () => _onSubmitRequest(store),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 20),
-                    ButtonMolecule(
-                      label: 'ENVOYER MA DEMANDE',
-                      onPressed: () => _onSubmitRequest(store),
-                    ),
-                  ],
-                ),
-              ),
-      )
+                  ),
+                ))
     ]);
   }
 
