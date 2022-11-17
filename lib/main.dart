@@ -11,6 +11,7 @@ import 'package:student_for_student_mobile/repositories/horairix_repository.dart
 import 'package:student_for_student_mobile/repositories/request_repository.dart';
 import 'package:student_for_student_mobile/repositories/user_repository.dart';
 import 'package:student_for_student_mobile/stores/calendar_store.dart';
+import 'package:student_for_student_mobile/stores/home_store.dart';
 import 'package:student_for_student_mobile/stores/nav_store.dart';
 import 'package:student_for_student_mobile/stores/request_store.dart';
 import 'package:student_for_student_mobile/stores/user_store.dart';
@@ -56,12 +57,15 @@ Future<void> main() async {
 
   final RequestStore requestStore = RequestStore(requestRepository: requestRepository, userStore: userStore);
 
+  final HomeStore homeStore = HomeStore();
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => userStore),
       ChangeNotifierProvider(create: (_) => calendarStore),
       ChangeNotifierProvider(create: (_) => navStore),
       ChangeNotifierProvider(create: (_) => requestStore),
+      ChangeNotifierProvider(create: (_) => homeStore),
     ],
     child: const MyApp(),
   ));

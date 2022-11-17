@@ -56,7 +56,7 @@ class _RequestContentState extends State<RequestContent> {
                 Column(
                   children: const [
                     Padding(
-                      padding: EdgeInsets.only(bottom: 30.0),
+                      padding: EdgeInsets.only(top: 30.0, bottom: 30.0),
                       child: Text(
                         'AJOUT D\'UNE ADRESSE',
                         style: TextStyle(
@@ -130,7 +130,7 @@ class _RequestContentState extends State<RequestContent> {
                     Column(
                       children: const [
                         Padding(
-                          padding: EdgeInsets.only(bottom: 30.0),
+                          padding: EdgeInsets.only(top: 30.0, bottom: 30.0),
                           child: Text(
                             'DEMANDE DE TUTORAT',
                             style: TextStyle(

@@ -1,4 +1,4 @@
-  import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:student_for_student_mobile/models/user/UserStoreState.dart';
 import 'package:student_for_student_mobile/stores/user_store.dart';
@@ -12,9 +12,9 @@ import 'package:student_for_student_mobile/views/organisms/screen_content.dart';
 
 class AuthenticationPage extends StatefulWidget {
   final TextEditingController _emailTextFieldController =
-      TextEditingController();
+  TextEditingController();
   final TextEditingController _passwordTextFieldController =
-      TextEditingController();
+  TextEditingController();
 
   AuthenticationPage({super.key});
 
@@ -28,7 +28,10 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
   bool _tryingToConnect = false;
   bool _hideTopErrors = true;
   UserStoreState Function(BuildContext) getState =
-      (context) => Provider.of<UserStore>(context).state;
+      (context) =>
+  Provider
+      .of<UserStore>(context)
+      .state;
 
   @override
   Widget build(BuildContext context) {
@@ -47,20 +50,25 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                 alignment: WrapAlignment.center,
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
-                  Column(
-                    children: const [
-                      Icon(
-                        Icons.lock_outline,
-                        size: 40.0,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 20.0),
-                        child: Text(
-                          'CONNEXION',
-                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30.0),
+                    child:
+                    Column(
+                      children: const [
+                        Icon(
+                          Icons.lock_outline,
+                          size: 40.0,
                         ),
-                      ),
-                    ],
+                        Padding(
+                          padding: EdgeInsets.only(top: 20.0),
+                          child: Text(
+                            'CONNEXION',
+                            style: TextStyle(fontSize: 24,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   _hideTopErrors
                       ? const SizedBox()
@@ -182,9 +190,9 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
     _emailLocalError = email.isEmpty
         ? "Veuillez entrer une adresse email"
         : !regexp.hasMatch(email)
-            ? "Veuillez entrer une adresse mail valide"
-            : null;
+        ? "Veuillez entrer une adresse mail valide"
+        : null;
     _passwordLocalError =
-        password.isEmpty ? "Veuillez entrer un mot de passe" : null;
+    password.isEmpty ? "Veuillez entrer un mot de passe" : null;
   }
 }
