@@ -27,6 +27,23 @@ class HomeApi {
     return null;
   }
 
+  Future<String?> fetchCourses() async {
+    Uri coursesUri = Uri.https(base, courses);
+
+    http.Response response = await http.get(coursesUri, headers: {
+      'Authorization': 'Bearer ${_userRepository!.userModel!.token}',
+    });
+
+    if (response.statusCode == 401) {
+      return 'unauthorized';
+    }
+
+    if (response.statusCode == 200) {
+      return response.body;
+    }
+    return null;
+  }
+
   Future<String> acceptRequest({required int requestId}) async {
     Uri acceptUri = Uri.https(base, '$request/$requestId');
 

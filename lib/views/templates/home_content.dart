@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:student_for_student_mobile/stores/home_store.dart';
+import 'package:student_for_student_mobile/views/molecules/button_molecule.dart';
 import 'package:student_for_student_mobile/views/molecules/request_accordion.dart';
 import 'package:student_for_student_mobile/views/molecules/waiting_message.dart';
 import 'package:student_for_student_mobile/views/organisms/screen_content.dart';
@@ -74,32 +75,90 @@ class _HomeContentState extends State<HomeContent> {
                   store.mode
                       ? Padding(
                           padding: const EdgeInsets.only(top: 20),
-                          child: store.hasRequests
-                              ? Column(
-                                  children: store.requests
-                                      .map<RequestAccordion>((request) =>
-                                          RequestAccordion(
-                                            name: request.requestName,
-                                            description: request.description,
-                                            date: request.date,
-                                            author: request.sender,
-                                            placeAddress: request.place.content,
-                                            courseName: request.course.content,
-                                            onAccept: () =>
-                                                _onAccept(store, request.id),
-                                          ))
-                                      .toList())
-                              : Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const [
-                                      Icon(Icons.sentiment_dissatisfied,
-                                          size: 50),
-                                      SizedBox(height: 20),
-                                      Text('Aucune demande à accepter'),
-                                    ],
-                                  ),
-                                ))
+                          child: Column(
+                            children: [
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(children: [
+                                  ...store.courses
+                                      .map<Padding>(
+                                        (course) => Padding(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 20),
+                                          child: TextButton(
+                                            onPressed: () =>
+                                                _handleFilter(store, course.id),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  color:
+                                                      store.selectedCourseId ==
+                                                              course.id
+                                                          ? const Color(
+                                                              0xC1884500)
+                                                          : Colors.white,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                        color: Colors.grey
+                                                            .withOpacity(0.5),
+                                                        spreadRadius: 5,
+                                                        blurRadius: 7,
+                                                        offset:
+                                                            const Offset(0, 3))
+                                                  ]),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 10),
+                                                child: Text(
+                                                  course.content,
+                                                  style: TextStyle(
+                                                      color:
+                                                          store.selectedCourseId ==
+                                                                  course.id
+                                                              ? Colors.white
+                                                              : Colors.black),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
+                                ]),
+                              ),
+                              store.hasRequests
+                                  ? Column(children: [
+                                      ...store.requests
+                                          .map<RequestAccordion>(
+                                              (request) => RequestAccordion(
+                                                    name: request.requestName,
+                                                    description:
+                                                        request.description,
+                                                    date: request.date,
+                                                    author: request.sender,
+                                                    placeAddress:
+                                                        request.place.content,
+                                                    courseName:
+                                                        request.course.content,
+                                                    onAccept: () => _onAccept(
+                                                        store, request.id),
+                                                  ))
+                                          .toList()
+                                    ])
+                                  : Center(
+                                      child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: const [
+                                        Icon(Icons.sentiment_dissatisfied,
+                                            size: 50),
+                                        SizedBox(height: 20),
+                                        Text('Aucune demande à accepter'),
+                                      ],
+                                    )),
+                            ],
+                          ))
                       : Padding(
                           padding: const EdgeInsets.only(top: 20),
                           child: Column(
@@ -142,5 +201,9 @@ class _HomeContentState extends State<HomeContent> {
         ),
       );
     }
+  }
+
+  _handleFilter(HomeStore store, int id) async {
+    await store.filterRequests(id);
   }
 }

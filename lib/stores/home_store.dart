@@ -10,17 +10,24 @@ class HomeStore extends ChangeNotifier {
   String _errorMessage;
   String _successMessage;
   bool _mode = true;
+  int _selectedCourseId;
 
   HomeStore({required HomeRepository homeRepository, required UserStore userStore})
       : _homeRepository = homeRepository,
         _userStore = userStore,
         _errorMessage = '',
-        _successMessage = '';
+        _successMessage = '',
+        _selectedCourseId = -1;
 
   load() async {
+    _selectedCourseId = -1;
     bool succeed;
 
     succeed = await _homeRepository.getRequests();
+    if (!succeed) {
+      _userStore.signOut();
+    }
+    succeed = await _homeRepository.getCourses();
     if (!succeed) {
       _userStore.signOut();
     }
@@ -33,6 +40,8 @@ class HomeStore extends ChangeNotifier {
   get successMessage => _successMessage;
   get mode => _mode;
   get requests => _homeRepository.requests;
+  get courses => _homeRepository.courses;
+  get selectedCourseId => _selectedCourseId;
 
 
   void requestsMode() {
@@ -62,6 +71,17 @@ class HomeStore extends ChangeNotifier {
       await load();
     }
 
+    notifyListeners();
+  }
+
+  filterRequests(int id) async {
+    if(_selectedCourseId == id) {
+      await load();
+      return;
+    }
+
+    _selectedCourseId = id;
+    await _homeRepository.filterRequests(id);
     notifyListeners();
   }
 }
