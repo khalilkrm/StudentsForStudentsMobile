@@ -24,43 +24,46 @@ class _CalendarBoxState extends State<CalendarBox> {
   @override
   Widget build(BuildContext context) {
     return Consumer<CalendarStore>(
-      builder: (context, store, child) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Column(
-              children: const [
-                Padding(
-                  padding: EdgeInsets.only(bottom: 30.0),
-                  child: Text(
-                    'AFFICHAGE DE VOTRE CALENDRIER',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 24, fontWeight: FontWeight.bold),
+      builder: (context, store, child) => Padding(
+        padding: const EdgeInsets.only(left: 50, right: 50),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Column(
+                children: const [
+                  Padding(
+                    padding: EdgeInsets.only(top: 30, bottom: 30.0),
+                    child: Text(
+                      'AFFICHAGE DE VOTRE CALENDRIER',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
-                Text(
-                  'Pour afficher votre calendrier horiairix, veuillez entrer son lien ci-dessous',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            TextFormFieldMolecule(
-              minLines: 1,
-              prefixiIcon: const Icon(Icons.link),
-              controller: widget._calendarLinkController,
-              label: 'Lien du calendrier',
-            ),
-            const SizedBox(height: 20),
-            ButtonMolecule(
-              label: 'VALIDER',
-              onPressed: () => _onSubmit(store),
-            ),
-          ],
+                  Text(
+                    'Pour afficher votre calendrier horiairix, veuillez entrer son lien ci-dessous',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              TextFormFieldMolecule(
+                minLines: 1,
+                prefixiIcon: const Icon(Icons.link),
+                controller: widget._calendarLinkController,
+                label: 'Lien du calendrier',
+              ),
+              const SizedBox(height: 20),
+              ButtonMolecule(
+                label: 'VALIDER',
+                onPressed: () => _onSubmit(store),
+              ),
+            ],
+          ),
         ),
-      ),
+      )
     );
   }
 }

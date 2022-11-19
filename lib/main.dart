@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
+import 'package:student_for_student_mobile/apis/home_api.dart';
 import 'package:student_for_student_mobile/apis/horairix_api.dart';
 import 'package:student_for_student_mobile/apis/request_api.dart';
 import 'package:student_for_student_mobile/apis/user_api.dart';
+import 'package:student_for_student_mobile/repositories/home_repository.dart';
 import 'package:student_for_student_mobile/repositories/horairix_repository.dart';
 import 'package:student_for_student_mobile/repositories/request_repository.dart';
 import 'package:student_for_student_mobile/repositories/user_repository.dart';
@@ -33,17 +35,20 @@ Future<void> main() async {
   final UserApi userApi = UserApi();
   final HorairixApi horairixApi = HorairixApi();
   final RequestApi requestApi = RequestApi();
+  final HomeApi homeApi = HomeApi();
 
   // repositories
   final UserRepository userRepository = UserRepository(userApi: userApi);
   final HorairixRepository horairixRepository =
   HorairixRepository(horairixApi: horairixApi);
   final RequestRepository requestRepository = RequestRepository(requestApi: requestApi);
+  final HomeRepository homeRepository = HomeRepository(homeApi: homeApi);
 
   userApi.setUserRepository(userRepository);
   userApi.setHorairixRepository(horairixRepository);
   horairixApi.setUserRepository(userRepository);
   requestApi.setUserRepository(userRepository);
+  homeApi.setUserRepository(userRepository);
 
   // stores
   final UserStore userStore = UserStore(
@@ -57,7 +62,7 @@ Future<void> main() async {
 
   final RequestStore requestStore = RequestStore(requestRepository: requestRepository, userStore: userStore);
 
-  final HomeStore homeStore = HomeStore();
+  final HomeStore homeStore = HomeStore(homeRepository: homeRepository, userStore: userStore);
 
   runApp(MultiProvider(
     providers: [
