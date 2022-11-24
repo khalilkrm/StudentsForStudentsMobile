@@ -54,7 +54,7 @@ class RequestApi {
       required String description,
       required int placeId,
       required int courseId}) async {
-    Uri requestUri = Uri.https(base, request);
+    Uri requestUri = Uri.https(base, publicRequests);
 
     http.Response response = await http.post(requestUri,
         headers: {
