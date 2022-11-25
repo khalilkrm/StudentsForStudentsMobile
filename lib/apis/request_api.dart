@@ -2,10 +2,6 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:student_for_student_mobile/apis/urls.dart';
-import 'package:student_for_student_mobile/models/request/CourseModel.dart';
-import 'package:student_for_student_mobile/models/request/CourseModelList.dart';
-import 'package:student_for_student_mobile/models/request/PlaceModel.dart';
-import 'package:student_for_student_mobile/models/request/PlaceModelList.dart';
 import 'package:student_for_student_mobile/repositories/user_repository.dart';
 
 class RequestApi {

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:student_for_student_mobile/models/request/PlaceModel.dart';
 import 'package:student_for_student_mobile/stores/home_store.dart';
-import 'package:student_for_student_mobile/views/molecules/button_molecule.dart';
 import 'package:student_for_student_mobile/views/molecules/request_accordion.dart';
-import 'package:student_for_student_mobile/views/molecules/waiting_message.dart';
 import 'package:student_for_student_mobile/views/organisms/screen_content.dart';
 
 class HomeContent extends StatefulWidget {
@@ -130,20 +129,22 @@ class _HomeContentState extends State<HomeContent> {
                               store.hasRequests
                                   ? Column(children: [
                                       ...store.requests
-                                          .map<RequestAccordion>(
-                                              (request) => RequestAccordion(
-                                                    name: request.requestName,
-                                                    description:
-                                                        request.description,
-                                                    date: request.date,
-                                                    author: request.sender,
-                                                    placeAddress:
-                                                        request.place.content,
-                                                    courseName:
-                                                        request.course.content,
-                                                    onAccept: () => _onAccept(
-                                                        store, request.id),
-                                                  ))
+                                          .map<RequestAccordion>((request) =>
+                                              RequestAccordion(
+                                                name: request.requestName,
+                                                description:
+                                                    request.description,
+                                                date: request.date,
+                                                author: request.sender,
+                                                placeAddress:
+                                                    request.place.content,
+                                                courseName:
+                                                    request.course.content,
+                                                onAccept: () => _onAccept(
+                                                    store, request.id),
+                                                onLocalize: () => _onLocalize(
+                                                    store, request.place),
+                                              ))
                                           .toList()
                                     ])
                                   : Center(
@@ -177,7 +178,6 @@ class _HomeContentState extends State<HomeContent> {
 
   void _onAccept(HomeStore store, int requestId) async {
     await store.acceptRequest(requestId);
-
     _showMessage(store);
   }
 
@@ -205,5 +205,9 @@ class _HomeContentState extends State<HomeContent> {
 
   _handleFilter(HomeStore store, int id) async {
     await store.filterRequests(id);
+  }
+
+  _onLocalize(HomeStore store, PlaceModel place) {
+    print(place.locality);
   }
 }
