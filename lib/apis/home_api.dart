@@ -10,7 +10,7 @@ class HomeApi {
   }
 
   Future<String?> fetchRequests() async {
-    Uri requestsUri = Uri.https(base, request);
+    Uri requestsUri = Uri.https(base, publicRequests);
 
     http.Response response = await http.get(requestsUri, headers: {
       'Authorization' : 'Bearer ${_userRepository!.userModel!.token}',
@@ -45,7 +45,7 @@ class HomeApi {
   }
 
   Future<String> acceptRequest({required int requestId}) async {
-    Uri acceptUri = Uri.https(base, '$request/$requestId');
+    Uri acceptUri = Uri.https(base, '$publicRequests/$requestId');
 
     http.Response response = await http.put(acceptUri, headers: {
       'Authorization': 'Bearer ${_userRepository!.userModel!.token}',
