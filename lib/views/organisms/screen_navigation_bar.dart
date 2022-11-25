@@ -37,6 +37,10 @@ class _ScreenNavigationBarState extends State<ScreenNavigationBar> {
                 icon: Icon(Icons.calendar_month, size: 25),
                 label: 'Calendrier',
               ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.map, size: 25),
+                label: 'Carte'
+              )
             ],
             backgroundColor: const Color(0xFF5D7052),
             currentIndex: store.currentIndex,
