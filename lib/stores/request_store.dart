@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
-import 'package:student_for_student_mobile/models/request/CourseModel.dart';
-import 'package:student_for_student_mobile/models/request/PlaceModel.dart';
 import 'package:student_for_student_mobile/repositories/request_repository.dart';
 import 'package:student_for_student_mobile/stores/user_store.dart';
 

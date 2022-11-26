@@ -4,6 +4,7 @@ import 'package:student_for_student_mobile/models/request/PlaceModel.dart';
 import 'package:student_for_student_mobile/stores/home_store.dart';
 import 'package:student_for_student_mobile/views/molecules/request_accordion.dart';
 import 'package:student_for_student_mobile/views/organisms/screen_content.dart';
+import 'package:student_for_student_mobile/views/pages/map_page.dart';
 
 class HomeContent extends StatefulWidget {
   const HomeContent({super.key});
@@ -208,6 +209,13 @@ class _HomeContentState extends State<HomeContent> {
   }
 
   _onLocalize(HomeStore store, PlaceModel place) {
-    print(place.locality);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => MapPage(
+                destination:
+                    "${place.street}, ${place.number}, ${place.locality} ${place.postalCode}",
+              )),
+    );
   }
 }
