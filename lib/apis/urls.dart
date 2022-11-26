@@ -6,6 +6,7 @@ String linkCalendar = "User/{calendarLink}";
 String calendar = "Calendar";
 String place = "Place";
 String publicRequests = "Request/false";
+String requests = "Request";
 String courses = "School/Courses";
 String horairixBaseUrl = 'horairix.helmo.be';
 String horairixAgenda = "Services/SynchronisationAgenda";
