@@ -130,7 +130,7 @@ class MyApp extends StatelessWidget {
                   case 4:
                     return const CalendarPage();
                   case 5:
-                    return const MapPage();
+                    return const MapPage(destination: 'Barcelona');
                   default:
                     return const Text('Default');
                 }
