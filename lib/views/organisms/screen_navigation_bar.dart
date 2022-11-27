@@ -13,41 +13,36 @@ class _ScreenNavigationBarState extends State<ScreenNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return Consumer<NavStore>(
-      builder: (context, store, child) =>
-          BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.add_box, size: 25),
-                label: 'Demandes',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.message, size: 25),
-                label: 'Chat',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home, size: 25),
-                label: 'Accueil',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person, size: 25),
-                label: 'Profil',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_month, size: 25),
-                label: 'Calendrier',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.map, size: 25),
-                label: 'Carte'
-              )
-            ],
-            backgroundColor: const Color(0xFF5D7052),
-            currentIndex: store.currentIndex,
-            selectedItemColor: const Color(0xFFC18845),
-            unselectedItemColor: Colors.white,
-            onTap: store.setCurrentIndex,
+      builder: (context, store, child) => BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_box, size: 25),
+            label: 'Demandes',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.message, size: 25),
+            label: 'Chat',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home, size: 25),
+            label: 'Accueil',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person, size: 25),
+            label: 'Profil',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_month, size: 25),
+            label: 'Calendrier',
+          )
+        ],
+        backgroundColor: const Color(0xFF5D7052),
+        currentIndex: store.currentIndex,
+        selectedItemColor: const Color(0xFFC18845),
+        unselectedItemColor: Colors.white,
+        onTap: store.setCurrentIndex,
+      ),
     );
   }
 }
