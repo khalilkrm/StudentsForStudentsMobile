@@ -135,7 +135,7 @@ class _HomeContentState extends State<HomeContent> {
                                                 name: request.requestName,
                                                 description:
                                                     request.description,
-                                                date: request.date,
+                                                date: request.formatedDate,
                                                 author: request.sender,
                                                 placeAddress:
                                                     request.place.content,

@@ -10,3 +10,4 @@ String requests = "Request";
 String courses = "School/Courses";
 String horairixBaseUrl = 'horairix.helmo.be';
 String horairixAgenda = "Services/SynchronisationAgenda";
+String file = "File";

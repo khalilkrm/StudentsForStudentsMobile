@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
+import 'package:student_for_student_mobile/apis/files_api.dart';
 import 'package:student_for_student_mobile/apis/firebase_api.dart';
 import 'package:student_for_student_mobile/apis/google_map_api.dart';
 import 'package:student_for_student_mobile/apis/home_api.dart';
@@ -12,12 +13,14 @@ import 'package:student_for_student_mobile/apis/horairix_api.dart';
 import 'package:student_for_student_mobile/apis/request_api.dart';
 import 'package:student_for_student_mobile/apis/user_api.dart';
 import 'package:student_for_student_mobile/repositories/chat_repository.dart';
+import 'package:student_for_student_mobile/repositories/file_repository.dart';
 import 'package:student_for_student_mobile/repositories/home_repository.dart';
 import 'package:student_for_student_mobile/repositories/horairix_repository.dart';
 import 'package:student_for_student_mobile/repositories/request_repository.dart';
 import 'package:student_for_student_mobile/repositories/user_repository.dart';
 import 'package:student_for_student_mobile/stores/calendar_store.dart';
 import 'package:student_for_student_mobile/stores/chat_store.dart';
+import 'package:student_for_student_mobile/stores/file_store.dart';
 import 'package:student_for_student_mobile/stores/home_store.dart';
 import 'package:student_for_student_mobile/stores/map_store.dart';
 import 'package:student_for_student_mobile/stores/nav_store.dart';
@@ -26,6 +29,7 @@ import 'package:student_for_student_mobile/stores/user_store.dart';
 import 'package:student_for_student_mobile/views/pages/authentication_page.dart';
 import 'package:student_for_student_mobile/views/pages/calendar_page.dart';
 import 'package:student_for_student_mobile/views/pages/chat_page.dart';
+import 'package:student_for_student_mobile/views/pages/file_page.dart';
 import 'package:student_for_student_mobile/views/pages/home_page.dart';
 import 'package:student_for_student_mobile/views/pages/profile_page.dart';
 import 'package:student_for_student_mobile/views/pages/requests_page.dart';
@@ -47,6 +51,7 @@ Future<void> main() async {
   final HomeApi homeApi = HomeApi();
   final GoogleMapApi googleMapApi = GoogleMapApi();
   final FirebaseApi firebaseApi = FirebaseApi();
+  final FilesApi filesApi = FilesApi();
 
   // repositories
   final UserRepository userRepository = UserRepository(userApi: userApi);
@@ -56,6 +61,7 @@ Future<void> main() async {
       RequestRepository(requestApi: requestApi);
   final HomeRepository homeRepository = HomeRepository(homeApi: homeApi);
   final ChatRepository chatRepository = ChatRepository(api: firebaseApi);
+  final FileRepository fileRepository = FileRepository(api: filesApi);
 
   userApi.setUserRepository(userRepository);
   userApi.setHorairixRepository(horairixRepository);
@@ -71,18 +77,14 @@ Future<void> main() async {
 
   final CalendarStore calendarStore =
       CalendarStore(horairixRepository: horairixRepository);
-
   final NavStore navStore = NavStore();
-
   final RequestStore requestStore =
       RequestStore(requestRepository: requestRepository, userStore: userStore);
-
   final HomeStore homeStore =
       HomeStore(homeRepository: homeRepository, userStore: userStore);
-
   final MapStore mapStore = MapStore(api: googleMapApi);
-
   final ChatStore chatStore = ChatStore(repository: chatRepository);
+  final FileStore fileStore = FileStore(repository: fileRepository);
 
   runApp(MultiProvider(
     providers: [
@@ -93,6 +95,7 @@ Future<void> main() async {
       ChangeNotifierProvider(create: (_) => homeStore),
       ChangeNotifierProvider(create: (_) => mapStore),
       ChangeNotifierProvider(create: (_) => chatStore),
+      ChangeNotifierProvider(create: (_) => fileStore),
     ],
     child: const MyApp(),
   ));
@@ -141,6 +144,8 @@ class MyApp extends StatelessWidget {
                     return const ProfilePage();
                   case 4:
                     return const CalendarPage();
+                  case 5:
+                    return const FilePage();
                   default:
                     return const Text('Default');
                 }
