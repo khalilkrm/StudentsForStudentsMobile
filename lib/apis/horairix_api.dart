@@ -14,10 +14,9 @@ class HorairixApi {
     String encodedLink = Uri.encodeComponent(link);
     Uri linkCalendarUri = Uri.https(base, "User/$encodedLink");
 
-    http.Response response = await http.put(linkCalendarUri,
-        headers: {
-          'Authorization': 'Bearer ${_userRepository?.userModel?.token}'
-        });
+    http.Response response = await http.put(linkCalendarUri, headers: {
+      'Authorization': 'Bearer ${_userRepository?.userModel?.token}'
+    });
 
     return response.statusCode == 200;
   }
@@ -27,19 +26,21 @@ class HorairixApi {
       'Authorization': 'bearer ${_userRepository!.userModel!.token}',
     });
 
-    if(response.statusCode == 404) {
-      logger.w("${(HorairixApi).toString()}: The api returned an error, could not get events");
+    if (response.statusCode == 404) {
+      logger.w(
+          "${(HorairixApi).toString()}: The api returned an error, could not get events");
       return HorairixApiModel(error: true);
     }
 
     try {
-      ICalendar ics = ICalendar.fromLines(response.body.replaceAll("\"", "").split('\\r\\n'));
+      ICalendar ics = ICalendar.fromLines(
+          response.body.replaceAll("\"", "").split('\\r\\n'));
       var model = HorairixApiModel.fromJson(ics.toJson());
 
       logger.d(
           "${model.data![0].dtstamp!.dt!} => ${model.data![0].dtstamp!.dt!.timeZoneName} : ${model.data![0].dtstamp!.dt!.timeZoneOffset.inHours}");
-      print(model.data![0].dtstart!.dt!);
-      print(model.data![0].dtend!.dt!);
+      //print(model.data![0].dtstart!.dt!);
+      //print(model.data![0].dtend!.dt!);
 
       return model;
     } on FormatException {
