@@ -35,7 +35,8 @@ class MapPageState extends State<MapPage> {
           markers: store.markers,
           polylines: store.polylines,
           initialCameraPosition: CameraPosition(
-            target: LatLng(store.currentLatitude, store.currentLongitude),
+            target:
+                LatLng(store.userPositionLatitude, store.userPositionLongitude),
             zoom: 14.4746,
           ),
           onMapCreated: (GoogleMapController controller) {
@@ -52,8 +53,8 @@ class MapPageState extends State<MapPage> {
               splashColor: Colors.grey, // inkwell color
               child: const SizedBox(
                   width: 56, height: 56, child: Icon(Icons.my_location)),
-              onTap: () {
-                store.setCameraToCurrentPosition(_controller);
+              onTap: () async {
+                await store.setCameraToCurrentPosition(_controller);
               },
             ),
           ),

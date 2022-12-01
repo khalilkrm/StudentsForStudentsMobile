@@ -14,6 +14,7 @@ import 'package:student_for_student_mobile/apis/request_api.dart';
 import 'package:student_for_student_mobile/apis/user_api.dart';
 import 'package:student_for_student_mobile/repositories/chat_repository.dart';
 import 'package:student_for_student_mobile/repositories/file_repository.dart';
+import 'package:student_for_student_mobile/repositories/google_map_repository.dart';
 import 'package:student_for_student_mobile/repositories/home_repository.dart';
 import 'package:student_for_student_mobile/repositories/horairix_repository.dart';
 import 'package:student_for_student_mobile/repositories/request_repository.dart';
@@ -62,6 +63,8 @@ Future<void> main() async {
   final HomeRepository homeRepository = HomeRepository(homeApi: homeApi);
   final ChatRepository chatRepository = ChatRepository(api: firebaseApi);
   final FileRepository fileRepository = FileRepository(api: filesApi);
+  final GoogleMapRepository googleMapRepository =
+      GoogleMapRepository(api: googleMapApi);
 
   userApi.setUserRepository(userRepository);
   userApi.setHorairixRepository(horairixRepository);
@@ -82,7 +85,7 @@ Future<void> main() async {
       RequestStore(requestRepository: requestRepository, userStore: userStore);
   final HomeStore homeStore =
       HomeStore(homeRepository: homeRepository, userStore: userStore);
-  final MapStore mapStore = MapStore(api: googleMapApi);
+  final MapStore mapStore = MapStore(repository: googleMapRepository);
   final ChatStore chatStore = ChatStore(repository: chatRepository);
   final FileStore fileStore = FileStore(repository: fileRepository);
 

@@ -1,15 +1,13 @@
 import 'dart:async';
-import 'dart:math';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter/material.dart' as material;
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
-import 'package:student_for_student_mobile/apis/google_map_api.dart';
+import 'package:student_for_student_mobile/repositories/google_map_repository.dart';
 
-class MapStore extends ChangeNotifier {
-  final GoogleMapApi _api;
+class MapStore extends material.ChangeNotifier {
+  final GoogleMapRepository _repository;
 
   // Markers on the map
   final Set<Marker> markers = <Marker>{};
@@ -20,8 +18,8 @@ class MapStore extends ChangeNotifier {
   final int _polylineIdCounter = 1;
 
   // Current position inputs
-  double currentLatitude = 0;
-  double currentLongitude = 0;
+  double userPositionLatitude = 0;
+  double userPositionLongitude = 0;
 
   final Location _location = Location();
 
@@ -32,58 +30,63 @@ class MapStore extends ChangeNotifier {
   void Function(LatLng)? _onUserPositionChanged;
   void Function(String)? _onErrorListeningUserPosition;
 
-  MapStore({api}) : _api = api;
+  MapStore({required GoogleMapRepository repository})
+      : _repository = repository;
 
   Future<void> initialize(
     String destination,
     Completer<GoogleMapController> controller,
   ) async {
-    var current = await _location.getLocation();
+    // TODO Ask for permission to use location
 
-    currentLatitude = current.latitude ?? 0.0;
-    currentLongitude = current.longitude ?? 0.0;
+    // TODO Catch error of permission
+    var userPosition = await _location.getLocation();
+
+    userPositionLatitude = userPosition.latitude ?? 0.0;
+    userPositionLongitude = userPosition.longitude ?? 0.0;
 
     var origin = await _getCurrentLatLngAsAddress(
-      currentLatitude,
-      currentLongitude,
+      userPositionLatitude,
+      userPositionLongitude,
     );
 
-    var directions = await _getRoutesFromRemote(origin, destination);
+    var route = await _getRoute(origin, destination);
 
     _onUserPositionChanged = (latlng) async {
-      currentLatitude = latlng.latitude;
-      currentLongitude = latlng.longitude;
+      userPositionLatitude = latlng.latitude;
+      userPositionLongitude = latlng.longitude;
       notifyListeners();
     };
 
     _onErrorListeningUserPosition = (error) async {
-      debugPrint("Error listening user position: $error");
+      material.debugPrint("Error listening user position: $error");
       _setError(error);
       notifyListeners();
     };
 
     _startListeningUserPosition(_location);
 
-    _setPolylines(directions);
-    _moveCameraToDirections(controller, directions);
-    _setMarkers(LatLng(directions.latitude, directions.longitude));
+    _setPoints(route);
+
+    _setMarkers([
+      LatLng(
+        route.startLocation.latitude,
+        route.startLocation.longitude,
+      ),
+      LatLng(
+        route.endLocation.latitude,
+        route.endLocation.longitude,
+      ),
+    ]);
+
+    _moveCameraAboveRoute(controller, route);
 
     notifyListeners();
   }
 
-  Future<String> _getCurrentLatLngAsAddress(latitude, longitude) async {
-    return await latLngToAdress(latitude, longitude);
-  }
-
-  void _setMarkers(LatLng latLng) {
-    markers.clear();
-    markers.add(
-      Marker(
-        markerId: MarkerId(_nextMarkerId()),
-        position: latLng,
-      ),
-    );
-  }
+  // --------------------------------
+  // Store methods
+  // --------------------------------
 
   void _setError(String error) {
     this.error = error;
@@ -93,60 +96,64 @@ class MapStore extends ChangeNotifier {
   void _startListeningUserPosition(Location location) {
     var locationSubscription =
         location.onLocationChanged.listen((LocationData currentLocation) {
-      _onUserPositionChanged?.call(LatLng(
+      _onUserPositionChanged!.call(LatLng(
         currentLocation.latitude ?? 0.0,
         currentLocation.longitude ?? 0.0,
       ));
     });
 
     locationSubscription.onError((error) {
-      _onErrorListeningUserPosition?.call(error);
+      _onErrorListeningUserPosition!.call(error);
     });
 
     _locationSubscription = locationSubscription;
   }
 
-  /// TODO rep works
-  Future<Directions> _getRoutesFromRemote(
-    String origin,
-    String destination,
-  ) async {
-    var directions = await _api.getDirection(origin, destination);
-    return Directions(
-      latitude: directions['start_location']['lat'],
-      longitude: directions['start_location']['lng'],
-      boundsNe: directions['bounds_ne'],
-      boundsSw: directions['bounds_sw'],
-      polylines: PolylinePoints()
-          .decodePolyline(directions['polyline'])
-          .map((point) => LatLng(point.latitude, point.longitude))
-          .toList(),
-    );
+  // --------------------------------
+  // Drawing on the map methods
+  // --------------------------------
+
+  Future<void> setCameraToCurrentPosition(controller) async {
+    await _setCameraPosition(
+        controller, userPositionLatitude, userPositionLongitude);
   }
 
-  _setPolylines(Directions directions) {
+  /// Set the route on the array listened by the map
+  void _setPoints(Route route) {
     polylines.clear();
     polylines.add(
       Polyline(
         polylineId: PolylineId(_nextPolylineId()),
         width: 5,
-        points: directions.polylines,
-        color: Colors.blue,
+        points: route.points,
+        color: material.Colors.blue,
       ),
     );
   }
 
-  Future<void> _moveCameraToDirections(
+  /// Set the markers on the array listened by the map
+  /// Markers are the start and the end of the route
+  void _setMarkers(List<LatLng> latLngs) {
+    markers.clear();
+    markers.addAll(latLngs.map(
+      (latLng) => Marker(
+        markerId: MarkerId(_nextMarkerId()),
+        position: latLng,
+      ),
+    ));
+  }
+
+  Future<void> _moveCameraAboveRoute(
     Completer<GoogleMapController> completer,
-    Directions directions,
+    Route route,
   ) async {
     final GoogleMapController controller = await completer.future;
     _setCameraPosition(
       completer,
-      directions.latitude,
-      directions.longitude,
+      route.startLocation.latitude,
+      route.startLocation.longitude,
     );
-    _setCameraZoom(controller, directions.boundsSw, directions.boundsNe);
+    _setCameraZoom(controller, route.southwestBounds, route.northeastBounds);
   }
 
   void _setCameraZoom(
@@ -179,10 +186,6 @@ class MapStore extends ChangeNotifier {
     );
   }
 
-  setCameraToCurrentPosition(controller) {
-    _setCameraPosition(controller, currentLatitude, currentLongitude);
-  }
-
   String _nextPolylineId() {
     return "polyline_id_$_polylineIdCounter";
   }
@@ -191,27 +194,28 @@ class MapStore extends ChangeNotifier {
     return "polyline_id_$_markerIdCounter";
   }
 
+  // --------------------------------
+  // Fetching data methods
+  // --------------------------------
+
+  /// Get routes from an origin to a destination
+  Future<Route> _getRoute(
+    String origin,
+    String destination,
+  ) async {
+    return await _repository.getRoute(origin, destination);
+  }
+
+  Future<String> _getCurrentLatLngAsAddress(
+      double latitude, double longitude) async {
+    return await _repository.fetchAdressFromLatLng(latitude, longitude);
+  }
+
+  // --------------------------------
+  // Dispose methods
+  // --------------------------------
+
   void disposeFromListenCurrentLocation() {
     _locationSubscription?.cancel();
   }
-
-  Future<String> latLngToAdress(double latitude, double longitude) async {
-    return await _api.getAdressFromLatLng(latitude, longitude);
-  }
-}
-
-class Directions {
-  final double latitude;
-  final double longitude;
-  final List<LatLng> polylines;
-  Map<String, dynamic> boundsNe;
-  Map<String, dynamic> boundsSw;
-
-  Directions({
-    required this.latitude,
-    required this.longitude,
-    required this.boundsNe,
-    required this.boundsSw,
-    required this.polylines,
-  });
 }
