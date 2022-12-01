@@ -46,8 +46,7 @@ app.*.map.json
 # Generated
 *.g.dart
 *.mock.dart
-*/generated_*
-
+generated_*
 
 # Debug
 /test/debug_test.dart
