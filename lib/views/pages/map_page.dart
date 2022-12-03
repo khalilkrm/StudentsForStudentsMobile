@@ -16,14 +16,28 @@ class MapPage extends StatefulWidget {
 
 class MapPageState extends State<MapPage> {
   final Completer<GoogleMapController> _controller = Completer();
+  MapStore? _mapStore;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var store = Provider.of<MapStore>(context, listen: false);
+      store.onError(() => _showErrorDialog());
       store.initialize(widget._destination, _controller);
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    _mapStore ??= Provider.of<MapStore>(context);
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    _mapStore?.disposeFromListenCurrentLocation();
+    super.dispose();
   }
 
   @override
@@ -33,7 +47,7 @@ class MapPageState extends State<MapPage> {
         body: GoogleMap(
           mapType: MapType.normal,
           markers: store.markers,
-          polylines: store.polylines,
+          polylines: store.routes,
           initialCameraPosition: CameraPosition(
             target:
                 LatLng(store.userPositionLatitude, store.userPositionLongitude),
@@ -59,6 +73,22 @@ class MapPageState extends State<MapPage> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  _showErrorDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Error"),
+        content: Text(_mapStore?.error ?? "Unknown error"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text("OK"),
+          ),
+        ],
       ),
     );
   }

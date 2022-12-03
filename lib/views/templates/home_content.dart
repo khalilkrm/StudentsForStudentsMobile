@@ -135,7 +135,7 @@ class _HomeContentState extends State<HomeContent> {
                                                 name: request.requestName,
                                                 description:
                                                     request.description,
-                                                date: request.formatedDate,
+                                                date: request.date,
                                                 author: request.sender,
                                                 placeAddress:
                                                     request.place.content,
@@ -214,7 +214,7 @@ class _HomeContentState extends State<HomeContent> {
       MaterialPageRoute(
           builder: (context) => MapPage(
                 destination:
-                    "${place.street}, ${place.number}, ${place.locality} ${place.postalCode}",
+                    "${place.street} ${place.number}, ${place.postalCode} ${place.locality}",
               )),
     );
   }

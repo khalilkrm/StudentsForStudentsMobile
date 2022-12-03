@@ -4,6 +4,8 @@ import 'package:flutter/material.dart' as material;
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:student_for_student_mobile/models/map/route.dart';
+import 'package:student_for_student_mobile/models/map/route_location.dart';
 import 'package:student_for_student_mobile/repositories/google_map_repository.dart';
 
 class MapStore extends material.ChangeNotifier {
@@ -14,7 +16,7 @@ class MapStore extends material.ChangeNotifier {
   final int _markerIdCounter = 1;
 
   // Polylines on the map
-  final Set<Polyline> polylines = <Polyline>{};
+  final Set<Polyline> routes = <Polyline>{};
   final int _polylineIdCounter = 1;
 
   // Current position inputs
@@ -23,7 +25,9 @@ class MapStore extends material.ChangeNotifier {
 
   final Location _location = Location();
 
+  bool isError = false;
   String? error;
+  Function _onError = () {};
 
   StreamSubscription<LocationData>? _locationSubscription;
 
@@ -37,20 +41,44 @@ class MapStore extends material.ChangeNotifier {
     String destination,
     Completer<GoogleMapController> controller,
   ) async {
-    // TODO Ask for permission to use location
+    try {
+      var userPosition = await _location.getLocation();
+      userPositionLatitude = userPosition.latitude ?? 0.0;
+      userPositionLongitude = userPosition.longitude ?? 0.0;
+    } on Exception catch (e) {
+      _setError("Unexpected error while initializing map : ${e.toString()}");
+      material.debugPrint(
+          "ERROR: error while getting user position: '${e.toString()}'");
+      notifyListeners();
+      return;
+    }
 
-    // TODO Catch error of permission
-    var userPosition = await _location.getLocation();
+    String origin;
 
-    userPositionLatitude = userPosition.latitude ?? 0.0;
-    userPositionLongitude = userPosition.longitude ?? 0.0;
+    try {
+      origin = await _getCurrentLatLngAsAddress(
+        userPositionLatitude,
+        userPositionLongitude,
+      );
+    } on Exception catch (e) {
+      _setError("Unexpected error while initializing map : ${e.toString()}");
+      material.debugPrint(
+          "ERROR: error while getting current lat log as address: '${e.toString()}'");
+      notifyListeners();
+      return;
+    }
 
-    var origin = await _getCurrentLatLngAsAddress(
-      userPositionLatitude,
-      userPositionLongitude,
-    );
+    Route route;
 
-    var route = await _getRoute(origin, destination);
+    try {
+      route = await _getRoute(origin, destination);
+    } on Exception catch (e) {
+      _setError("Unexpected error while initializing map : ${e.toString()}");
+      material
+          .debugPrint("ERROR: error while getting route: '${e.toString()}'");
+      notifyListeners();
+      return;
+    }
 
     _onUserPositionChanged = (latlng) async {
       userPositionLatitude = latlng.latitude;
@@ -59,27 +87,60 @@ class MapStore extends material.ChangeNotifier {
     };
 
     _onErrorListeningUserPosition = (error) async {
-      material.debugPrint("Error listening user position: $error");
+      material
+          .debugPrint("Error listening user position: '${error.toString()}'");
       _setError(error);
       notifyListeners();
     };
 
-    _startListeningUserPosition(_location);
+    try {
+      _startListeningUserPosition(_location);
+    } on Exception catch (e) {
+      _setError("Unexpected error while initializing map : ${e.toString()}");
+      material.debugPrint(
+          "ERROR: error while listening user position: '${e.toString()}'");
+      notifyListeners();
+      return;
+    }
 
-    _setPoints(route);
+    try {
+      _setMarkers([
+        LatLng(
+          route.startLocation.latitude,
+          route.startLocation.longitude,
+        ),
+        LatLng(
+          route.endLocation.latitude,
+          route.endLocation.longitude,
+        ),
+      ]);
+    } on Exception catch (e) {
+      _setError("Unexpected error while initializing map : ${e.toString()}");
+      material
+          .debugPrint("ERROR: error while adding markers: '${e.toString()}'");
+      notifyListeners();
+      return;
+    }
 
-    _setMarkers([
-      LatLng(
-        route.startLocation.latitude,
-        route.startLocation.longitude,
-      ),
-      LatLng(
-        route.endLocation.latitude,
-        route.endLocation.longitude,
-      ),
-    ]);
+    try {
+      _setPoints(route);
+    } on Exception catch (e) {
+      _setError("Unexpected error while initializing map : ${e.toString()}");
+      material
+          .debugPrint("ERROR: error while adding polylines: '${e.toString()}'");
+      notifyListeners();
+      return;
+    }
 
-    _moveCameraAboveRoute(controller, route);
+    try {
+      _moveCameraAboveRoute(controller, route);
+    } on Exception catch (e) {
+      _setError("Unexpected error while initializing map : ${e.toString()}");
+      material
+          .debugPrint("ERROR: error while moving camera: '${e.toString()}'");
+      notifyListeners();
+      return;
+    }
 
     notifyListeners();
   }
@@ -89,7 +150,9 @@ class MapStore extends material.ChangeNotifier {
   // --------------------------------
 
   void _setError(String error) {
+    isError = true;
     this.error = error;
+    _onError();
   }
 
   /// Listen to the current position of the user
@@ -120,12 +183,17 @@ class MapStore extends material.ChangeNotifier {
 
   /// Set the route on the array listened by the map
   void _setPoints(Route route) {
-    polylines.clear();
-    polylines.add(
+    routes.clear();
+    routes.add(
       Polyline(
         polylineId: PolylineId(_nextPolylineId()),
         width: 5,
-        points: route.points,
+        points: route.points
+            .map((e) => LatLng(
+                  e.latitude,
+                  e.longitude,
+                ))
+            .toList(),
         color: material.Colors.blue,
       ),
     );
@@ -158,13 +226,15 @@ class MapStore extends material.ChangeNotifier {
 
   void _setCameraZoom(
     GoogleMapController controller,
-    Map<String, dynamic> boundsSw,
-    Map<String, dynamic> boundsNe,
+    LocationPoint southwestBounds,
+    LocationPoint northeastBounds,
   ) {
     controller.animateCamera(CameraUpdate.newLatLngBounds(
         LatLngBounds(
-          southwest: LatLng(boundsSw['lat'], boundsSw['lng']),
-          northeast: LatLng(boundsNe['lat'], boundsNe['lng']),
+          southwest:
+              LatLng(southwestBounds.latitude, southwestBounds.longitude),
+          northeast:
+              LatLng(northeastBounds.latitude, northeastBounds.longitude),
         ),
         25));
   }
@@ -217,5 +287,13 @@ class MapStore extends material.ChangeNotifier {
 
   void disposeFromListenCurrentLocation() {
     _locationSubscription?.cancel();
+  }
+
+  // --------------------------------
+  // Setters
+  // --------------------------------
+
+  void onError(Function() onError) {
+    _onError = onError;
   }
 }
