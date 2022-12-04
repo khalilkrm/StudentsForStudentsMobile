@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:student_for_student_mobile/stores/map_store.dart';
@@ -25,6 +26,7 @@ class MapPageState extends State<MapPage> {
       var store = Provider.of<MapStore>(context, listen: false);
       store.onError(() => _showErrorDialog());
       store.initialize(widget._destination, _controller);
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
     });
   }
 
@@ -44,32 +46,38 @@ class MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     return Consumer<MapStore>(
       builder: (context, store, child) => Scaffold(
-        body: GoogleMap(
-          mapType: MapType.normal,
-          markers: store.markers,
-          polylines: store.routes,
-          initialCameraPosition: CameraPosition(
-            target:
-                LatLng(store.userPositionLatitude, store.userPositionLongitude),
-            zoom: 14.4746,
+        body: Stack(children: [
+          GoogleMap(
+            mapType: MapType.normal,
+            markers: store.markers,
+            polylines: store.routes,
+            initialCameraPosition: CameraPosition(
+              target: LatLng(
+                  store.userPositionLatitude, store.userPositionLongitude),
+              zoom: 14.4746,
+            ),
+            onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);
+            },
+            myLocationEnabled: true,
+            myLocationButtonEnabled: true,
           ),
-          onMapCreated: (GoogleMapController controller) {
-            _controller.complete(controller);
-          },
-          myLocationEnabled: true,
-          myLocationButtonEnabled: true,
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-        floatingActionButton: ClipOval(
-          child: Material(
-            color: Colors.white, // button color
-            child: InkWell(
-              splashColor: Colors.grey, // inkwell color
-              child: const SizedBox(
-                  width: 56, height: 56, child: Icon(Icons.my_location)),
-              onTap: () async {
-                await store.setCameraToCurrentPosition(_controller);
-              },
+        ]),
+        floatingActionButtonLocation: FloatingActionButtonLocation.miniStartTop,
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(top: 15),
+          child: ClipOval(
+            child: Material(
+              color: Colors.white, // button color
+              child: InkWell(
+                splashColor: Colors.grey, // inkwell color
+                child: const SizedBox(
+                    width: 56, height: 56, child: Icon(Icons.arrow_back)),
+                onTap: () async {
+                  //await store.setCameraToCurrentPosition(_controller);
+                  Navigator.pop(context);
+                },
+              ),
             ),
           ),
         ),

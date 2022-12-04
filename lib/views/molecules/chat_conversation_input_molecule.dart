@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 
-class ChatConversationInputMolecule extends StatelessWidget {
-  ChatConversationInputMolecule({Key? key, required this.onSend})
+class ChatConversationInputMolecule extends StatefulWidget {
+  const ChatConversationInputMolecule({Key? key, required this.onSend})
       : super(key: key);
 
   final void Function(String) onSend;
+
+  @override
+  State<ChatConversationInputMolecule> createState() =>
+      _ChatConversationInputMoleculeState();
+}
+
+class _ChatConversationInputMoleculeState
+    extends State<ChatConversationInputMolecule> {
   final TextEditingController _controller = TextEditingController();
 
   @override
@@ -40,7 +48,7 @@ class ChatConversationInputMolecule extends StatelessWidget {
         GestureDetector(
           onTap: (() {
             if (_controller.text.isNotEmpty) {
-              onSend(_controller.text);
+              widget.onSend(_controller.text);
               _controller.text = "";
             }
           }),

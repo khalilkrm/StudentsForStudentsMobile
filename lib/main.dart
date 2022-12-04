@@ -25,6 +25,7 @@ import 'package:student_for_student_mobile/stores/file_store.dart';
 import 'package:student_for_student_mobile/stores/home_store.dart';
 import 'package:student_for_student_mobile/stores/map_store.dart';
 import 'package:student_for_student_mobile/stores/nav_store.dart';
+import 'package:student_for_student_mobile/stores/profile_store.dart';
 import 'package:student_for_student_mobile/stores/request_store.dart';
 import 'package:student_for_student_mobile/stores/user_store.dart';
 import 'package:student_for_student_mobile/views/pages/authentication_page.dart';
@@ -88,6 +89,8 @@ Future<void> main() async {
   final MapStore mapStore = MapStore(repository: googleMapRepository);
   final ChatStore chatStore = ChatStore(repository: chatRepository);
   final FileStore fileStore = FileStore(repository: fileRepository);
+  final ProfileStore profileStore =
+      ProfileStore(requestRepository: requestRepository);
 
   runApp(MultiProvider(
     providers: [
@@ -99,6 +102,7 @@ Future<void> main() async {
       ChangeNotifierProvider(create: (_) => mapStore),
       ChangeNotifierProvider(create: (_) => chatStore),
       ChangeNotifierProvider(create: (_) => fileStore),
+      ChangeNotifierProvider(create: (_) => profileStore),
     ],
     child: const MyApp(),
   ));

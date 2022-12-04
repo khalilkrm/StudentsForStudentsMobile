@@ -5,6 +5,7 @@ import 'package:student_for_student_mobile/models/request/CourseModel.dart';
 import 'package:student_for_student_mobile/models/request/CourseModelList.dart';
 import 'package:student_for_student_mobile/models/request/PlaceModel.dart';
 import 'package:student_for_student_mobile/models/request/PlaceModelList.dart';
+import 'package:student_for_student_mobile/models/request/RequestModel.dart';
 
 class RequestRepository {
   final RequestApi _requestApi;
@@ -71,5 +72,14 @@ class RequestRepository {
         postalCode: postalCode,
         locality: locality);
     return data;
+  }
+
+  Future<List<RequestModel>> getRequests({
+    required bool owned,
+    required String token,
+  }) async {
+    List<Map<String, dynamic>> data =
+        await _requestApi.getRequests(owned: owned, token: token);
+    return data.map((request) => RequestModel.fromJson(request)).toList();
   }
 }

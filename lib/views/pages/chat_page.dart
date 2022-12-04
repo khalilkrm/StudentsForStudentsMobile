@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:student_for_student_mobile/models/chat/room.dart';
 import 'package:student_for_student_mobile/stores/chat_store.dart';
 import 'package:student_for_student_mobile/stores/user_store.dart';
 import 'package:student_for_student_mobile/views/molecules/screen_title.dart';
@@ -47,83 +48,20 @@ class _ChatPageState extends State<ChatPage> {
       ),
       body: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10),
-        child: Consumer2<ChatStore, UserStore>(
-          builder: (context, chatStore, userStore, child) => ListView.builder(
-              padding: const EdgeInsets.only(bottom: 20),
-              shrinkWrap: true,
-              itemCount: chatStore.rooms.length,
-              itemBuilder: (context, int index) {
-                final room = chatStore.rooms[index];
-                return GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () async {
-                    if (!mounted) return;
-                    Navigator.push(context,
-                        CupertinoPageRoute(builder: (context) {
-                      return ChatRoom(roomIndex: index);
-                    }));
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 20),
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 40,
-                          width: 40,
-                          decoration: const BoxDecoration(
-                            color: Color(0xff5d7052),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Center(
-                            child: Text(room.name[0],
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                )),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        Container(
-                          constraints: BoxConstraints(
-                            maxWidth: MediaQuery.of(context).size.width * 0.65,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                room.name,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              Text(
-                                room.lastMessageText,
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Spacer(),
-                        Column(
-                          children: [
-                            Text(
-                              '${room.lastMessageDate.hour}:${room.lastMessageDate.minute}',
-                              style: const TextStyle(color: Colors.grey),
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              }),
+        child: Consumer<ChatStore>(
+          builder: (context, chatStore, child) => ListView.builder(
+            padding: const EdgeInsets.only(bottom: 20),
+            shrinkWrap: true,
+            itemCount: chatStore.rooms.length,
+            itemBuilder: (context, int index) {
+              final room = chatStore.rooms[index];
+              return RoomWidget(
+                  mounted: mounted,
+                  room: room,
+                  index: index,
+                  chatStore: chatStore);
+            },
+          ),
         ),
       ),
       bottomNavigationBar: const ScreenNavigationBar(),
@@ -131,14 +69,101 @@ class _ChatPageState extends State<ChatPage> {
   }
 }
 
+class RoomWidget extends StatelessWidget {
+  const RoomWidget({
+    Key? key,
+    required this.mounted,
+    required this.room,
+    required this.index,
+    required this.chatStore,
+  }) : super(key: key);
+
+  final bool mounted;
+  final Room room;
+  final int index;
+  final ChatStore chatStore;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () async {
+        if (!mounted) return;
+        Navigator.push(context, CupertinoPageRoute(builder: (context) {
+          return ChatRoom(roomIndex: index);
+        }));
+      },
+      child: Container(
+        margin: const EdgeInsets.only(top: 20),
+        child: Row(
+          children: [
+            Container(
+              height: 40,
+              width: 40,
+              decoration: const BoxDecoration(
+                color: Color(0xff5d7052),
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Text(room.name[0],
+                    style: const TextStyle(
+                      color: Colors.white,
+                    )),
+              ),
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            Container(
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.40,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    room.name,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    room.lastMessageText,
+                    style: const TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Spacer(),
+            Column(
+              children: [
+                Text(
+                  chatStore.formatDate(room.lastMessageDate),
+                  style: const TextStyle(color: Colors.grey),
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class UIRoomMessage {
   final String sender;
-  final String time;
+  final String date;
   final String text;
 
   UIRoomMessage({
     required this.sender,
-    required this.time,
+    required this.date,
     required this.text,
   });
 }

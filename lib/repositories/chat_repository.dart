@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:student_for_student_mobile/apis/firebase_api.dart';
+import 'package:student_for_student_mobile/models/chat/conversation.dart';
+import 'package:student_for_student_mobile/models/chat/message.dart';
+import 'package:student_for_student_mobile/models/chat/room.dart';
 
 class ChatRepository {
   final FirebaseApi _api;
@@ -87,99 +90,5 @@ class ChatRepository {
         onError(error);
       },
     );
-  }
-}
-
-class Room {
-  final String name;
-  final String uid;
-  final String lastMessageText;
-  final String lastMessageSenderUsername;
-  final DateTime lastMessageDate;
-
-  Room({
-    required this.name,
-    required this.uid,
-    required this.lastMessageDate,
-    required this.lastMessageText,
-    required this.lastMessageSenderUsername,
-  });
-
-  static Room fromDocument(doc) {
-    final name = doc['name'];
-    final uid = doc['uid'];
-
-    final lastMessage = doc['lastMessage'].length > 0
-        ? doc['lastMessage']
-        : {'text': '', 'timestamp': Timestamp.now(), 'senderUsername': ''};
-
-    final lastMessageSenderUsername = lastMessage['senderUsername'];
-    final lastMessageText = lastMessage['text'];
-    final lastMessageDate = lastMessage['timestamp'].toDate();
-
-    return Room(
-        name: name,
-        uid: uid,
-        lastMessageText: lastMessageText,
-        lastMessageDate: lastMessageDate,
-        lastMessageSenderUsername: lastMessageSenderUsername);
-  }
-
-  toJson() {
-    return {
-      'name': name,
-      'uid': uid,
-      'lastMessage': {
-        'text': lastMessageText,
-        'timestamp': Timestamp.fromDate(lastMessageDate),
-        'senderUsername': lastMessageSenderUsername,
-      },
-    };
-  }
-}
-
-class Conversation {
-  final List<Message> messages;
-
-  Conversation({required this.messages});
-
-  static Conversation fromDocument(doc) {
-    final messages = doc['messages'];
-
-    if (messages == null) return Conversation(messages: []);
-
-    return Conversation(
-        messages: messages
-            .map((message) => Message.fromDocument(message))
-            .toList()
-            .cast<Message>());
-  }
-}
-
-class Message {
-  final String senderUsername;
-  final String text;
-  final DateTime date;
-
-  Message({
-    required this.senderUsername,
-    required this.date,
-    required this.text,
-  });
-
-  static Message fromDocument(Map<String, dynamic> doc) {
-    return Message(
-      senderUsername: doc['senderUsername'],
-      date: doc['timestamp'].toDate(),
-      text: doc['text'],
-    );
-  }
-
-  toJson() {
-    return {
-      'senderUsername': senderUsername,
-      'timestamp': Timestamp.fromDate(date),
-      'text': text,
-    };
   }
 }

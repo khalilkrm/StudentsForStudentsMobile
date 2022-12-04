@@ -12,6 +12,7 @@ class RequestModel {
   final String date;
   final bool status;
   final String sender;
+  final String handler;
   final PlaceModel place;
   final CourseModel course;
 
@@ -24,10 +25,11 @@ class RequestModel {
     required this.sender,
     required this.place,
     required this.course,
+    required this.handler,
   });
 
   get requestName => name.length > 24 ? '${name.substring(0, 24)}...' : name;
 
-factory RequestModel.fromJson(Map<String, dynamic> json) =>
+  factory RequestModel.fromJson(Map<String, dynamic> json) =>
       _$RequestModelFromJson(json);
 }

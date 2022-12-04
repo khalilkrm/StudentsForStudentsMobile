@@ -8,6 +8,7 @@ import 'package:student_for_student_mobile/stores/user_store.dart';
 import 'package:student_for_student_mobile/views/molecules/avatar_molecule.dart';
 import 'package:student_for_student_mobile/views/molecules/chat_conversation_input_molecule.dart';
 import 'package:student_for_student_mobile/views/organisms/chat_conversation_organism.dart';
+import 'package:student_for_student_mobile/views/pages/chat_page.dart';
 
 class ChatRoom extends StatefulWidget {
   const ChatRoom({super.key, required this.roomIndex});
@@ -16,6 +17,7 @@ class ChatRoom extends StatefulWidget {
   State<ChatRoom> createState() => _ChatRoomState();
 
   final int roomIndex;
+  final String message = '';
 }
 
 class _ChatRoomState extends State<ChatRoom> {
@@ -79,15 +81,15 @@ class _ChatRoomState extends State<ChatRoom> {
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(30),
                           topRight: Radius.circular(30))),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30),
-                    ),
-                    child: ChatConversationOrganism(
-                      currentUsername: userStore.state.username ?? "",
-                      conversation: chatStore.conversation,
-                    ),
+                  child: ChatConversationOrganism(
+                    currentUsername: userStore.state.username ?? "",
+                    conversation: chatStore.conversation.messages
+                        .map((message) => UIRoomMessage(
+                              sender: message.senderUsername,
+                              date: chatStore.formatDate(message.date),
+                              text: message.text,
+                            ))
+                        .toList(),
                   ),
                 ),
               ),

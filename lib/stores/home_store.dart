@@ -9,10 +9,10 @@ class HomeStore extends ChangeNotifier {
   final UserStore _userStore;
   String _errorMessage;
   String _successMessage;
-  bool _mode = true;
   int _selectedCourseId;
 
-  HomeStore({required HomeRepository homeRepository, required UserStore userStore})
+  HomeStore(
+      {required HomeRepository homeRepository, required UserStore userStore})
       : _homeRepository = homeRepository,
         _userStore = userStore,
         _errorMessage = '',
@@ -38,31 +38,19 @@ class HomeStore extends ChangeNotifier {
   get hasRequests => _homeRepository.requests.isNotEmpty;
   get errorMessage => _errorMessage;
   get successMessage => _successMessage;
-  get mode => _mode;
   get requests => _homeRepository.requests;
   get courses => _homeRepository.courses;
   get selectedCourseId => _selectedCourseId;
 
-
-  void requestsMode() {
-    _mode = true;
-    notifyListeners();
-  }
-
-  void synthesesMode() {
-    _mode = false;
-    notifyListeners();
-  }
-
   acceptRequest(int requestId) async {
     String message = await _homeRepository.acceptRequest(requestId: requestId);
 
-    if(message == 'unauthorized') {
+    if (message == 'unauthorized') {
       _userStore.signOut();
     }
 
     var data = jsonDecode(message);
-    if(data['error'] == true) {
+    if (data['error'] == true) {
       _errorMessage = data['message'];
       _successMessage = '';
     } else {
@@ -75,7 +63,7 @@ class HomeStore extends ChangeNotifier {
   }
 
   filterRequests(int id) async {
-    if(_selectedCourseId == id) {
+    if (_selectedCourseId == id) {
       await load();
       return;
     }

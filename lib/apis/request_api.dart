@@ -94,4 +94,28 @@ class RequestApi {
     }
     return response.body;
   }
+
+  /// If [owned] is true then it returns a list of requests
+  /// user has created or is assigned to, else
+  /// it returns the requests that are not assigned to the user
+  Future<dynamic> getRequests({
+    required bool owned,
+    required String token,
+  }) async {
+    Uri requestUri = Uri.https(base, "$requests/$owned");
+    http.Response response = await http.get(requestUri, headers: {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json'
+    });
+
+    if (response.statusCode == 401) {
+      throw Exception('unauthorized');
+    }
+
+    if (response.statusCode != 200) {
+      throw Exception('Something went wrong while fetching requests');
+    }
+
+    return jsonDecode(response.body);
+  }
 }

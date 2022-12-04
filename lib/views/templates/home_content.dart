@@ -35,143 +35,101 @@ class _HomeContentState extends State<HomeContent> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
-                          width: width / 3,
-                          child: Column(children: [
-                            TextButton(
-                                onPressed: () => store.requestsMode(),
-                                child: Text('DEMANDES',
-                                    style: TextStyle(
-                                        color: store.mode
-                                            ? Colors.black
-                                            : Colors.grey,
-                                        fontSize: 15))),
-                            Container(
-                                height: 2,
-                                width: width / 10,
-                                color: store.mode
-                                    ? Colors.black
-                                    : Colors.transparent)
-                          ])),
-                      SizedBox(
-                          width: width / 3,
-                          child: Column(children: [
-                            TextButton(
-                                onPressed: () => store.synthesesMode(),
-                                child: Text('SYNTHESES',
-                                    style: TextStyle(
-                                        color: !store.mode
-                                            ? Colors.black
-                                            : Colors.grey,
-                                        fontSize: 15))),
-                            Container(
-                                height: 2,
-                                width: width / 10,
-                                color: !store.mode
-                                    ? Colors.black
-                                    : Colors.transparent)
-                          ])),
+                        width: width,
+                        child: const Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Center(
+                            child: Text(
+                              'DEMANDES',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                  store.mode
-                      ? Padding(
-                          padding: const EdgeInsets.only(top: 20),
-                          child: Column(
-                            children: [
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(children: [
-                                  ...store.courses
-                                      .map<Padding>(
-                                        (course) => Padding(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 20),
-                                          child: TextButton(
-                                            onPressed: () =>
-                                                _handleFilter(store, course.id),
-                                            child: Container(
-                                              decoration: BoxDecoration(
+                  Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Column(
+                        children: [
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(children: [
+                              ...store.courses
+                                  .map<Padding>(
+                                    (course) => Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 20),
+                                      child: TextButton(
+                                        onPressed: () =>
+                                            _handleFilter(store, course.id),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color: store.selectedCourseId ==
+                                                      course.id
+                                                  ? const Color(0xC1884500)
+                                                  : Colors.white,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                    color: Colors.grey
+                                                        .withOpacity(0.5),
+                                                    spreadRadius: 5,
+                                                    blurRadius: 7,
+                                                    offset: const Offset(0, 3))
+                                              ]),
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 10, vertical: 10),
+                                            child: Text(
+                                              course.content,
+                                              style: TextStyle(
                                                   color:
                                                       store.selectedCourseId ==
                                                               course.id
-                                                          ? const Color(
-                                                              0xC1884500)
-                                                          : Colors.white,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                        color: Colors.grey
-                                                            .withOpacity(0.5),
-                                                        spreadRadius: 5,
-                                                        blurRadius: 7,
-                                                        offset:
-                                                            const Offset(0, 3))
-                                                  ]),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 10,
-                                                        vertical: 10),
-                                                child: Text(
-                                                  course.content,
-                                                  style: TextStyle(
-                                                      color:
-                                                          store.selectedCourseId ==
-                                                                  course.id
-                                                              ? Colors.white
-                                                              : Colors.black),
-                                                ),
-                                              ),
+                                                          ? Colors.white
+                                                          : Colors.black),
                                             ),
                                           ),
                                         ),
-                                      )
-                                      .toList(),
-                                ]),
-                              ),
-                              store.hasRequests
-                                  ? Column(children: [
-                                      ...store.requests
-                                          .map<RequestAccordion>((request) =>
-                                              RequestAccordion(
-                                                name: request.requestName,
-                                                description:
-                                                    request.description,
-                                                date: request.date,
-                                                author: request.sender,
-                                                placeAddress:
-                                                    request.place.content,
-                                                courseName:
-                                                    request.course.content,
-                                                onAccept: () => _onAccept(
-                                                    store, request.id),
-                                                onLocalize: () => _onLocalize(
-                                                    store, request.place),
-                                              ))
-                                          .toList()
-                                    ])
-                                  : Center(
-                                      child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: const [
-                                        Icon(Icons.sentiment_dissatisfied,
-                                            size: 50),
-                                        SizedBox(height: 20),
-                                        Text('Aucune demande à accepter'),
-                                      ],
-                                    )),
-                            ],
-                          ))
-                      : Padding(
-                          padding: const EdgeInsets.only(top: 20),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Icon(Icons.sentiment_dissatisfied, size: 50),
-                              SizedBox(height: 20),
-                              Text('Aucune synthèse à afficher'),
-                            ],
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                            ]),
                           ),
-                        ),
+                          store.hasRequests
+                              ? Column(children: [
+                                  ...store.requests
+                                      .map<RequestAccordion>((request) =>
+                                          RequestAccordion(
+                                            name: request.requestName,
+                                            description: request.description,
+                                            date: request.date,
+                                            author: request.sender,
+                                            placeAddress: request.place.content,
+                                            courseName: request.course.content,
+                                            onAccept: () =>
+                                                _onAccept(store, request.id),
+                                            onLocalize: () => _onLocalize(
+                                                store, request.place),
+                                          ))
+                                      .toList()
+                                ])
+                              : Center(
+                                  child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    Icon(Icons.sentiment_dissatisfied,
+                                        size: 50),
+                                    SizedBox(height: 20),
+                                    Text('Aucune demande à accepter'),
+                                  ],
+                                )),
+                        ],
+                      ))
                 ],
               )),
     ]);
