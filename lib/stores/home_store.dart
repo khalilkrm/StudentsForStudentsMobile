@@ -49,7 +49,9 @@ class HomeStore extends ChangeNotifier {
       _userStore.signOut();
     }
 
+    
     var data = jsonDecode(message);
+
     if (data['error'] == true) {
       _errorMessage = data['message'];
       _successMessage = '';

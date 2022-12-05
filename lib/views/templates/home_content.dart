@@ -171,8 +171,7 @@ class _HomeContentState extends State<HomeContent> {
       context,
       MaterialPageRoute(
           builder: (context) => MapPage(
-                destination:
-                    "${place.street} ${place.number}, ${place.postalCode} ${place.locality}",
+                destination: place.address,
               )),
     );
   }

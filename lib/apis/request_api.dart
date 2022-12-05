@@ -108,14 +108,37 @@ class RequestApi {
       'Content-Type': 'application/json'
     });
 
+    _reponseStatusIs200ElseThrow(
+        response: response, actionName: 'fetching requests');
+
+    return jsonDecode(response.body);
+  }
+
+  Future<void> deleteRequest({
+    required int requestId,
+    required String token,
+  }) async {
+    Uri uri = Uri.https(base, "$requests/$requestId");
+    http.Response response = await http.delete(uri, headers: {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json'
+    });
+
+    _reponseStatusIs200ElseThrow(
+      response: response,
+      actionName: 'deleting request',
+    );
+  }
+
+  void _reponseStatusIs200ElseThrow(
+      {required http.Response response, required String actionName}) {
     if (response.statusCode == 401) {
       throw Exception('unauthorized');
     }
 
     if (response.statusCode != 200) {
-      throw Exception('Something went wrong while fetching requests');
+      throw Exception(jsonDecode(response.body)['message'] ??
+          'Something went wrong while $actionName');
     }
-
-    return jsonDecode(response.body);
   }
 }

@@ -9,7 +9,7 @@ import 'package:student_for_student_mobile/stores/map_store.dart';
 class MapPage extends StatefulWidget {
   final String _destination;
 
-  const MapPage({super.key, destination}) : _destination = destination;
+  const MapPage({super.key, required destination}) : _destination = destination;
 
   @override
   State<MapPage> createState() => MapPageState();
@@ -74,7 +74,6 @@ class MapPageState extends State<MapPage> {
                 child: const SizedBox(
                     width: 56, height: 56, child: Icon(Icons.arrow_back)),
                 onTap: () async {
-                  //await store.setCameraToCurrentPosition(_controller);
                   Navigator.pop(context);
                 },
               ),

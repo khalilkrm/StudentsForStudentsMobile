@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:student_for_student_mobile/stores/profile_store.dart';
+import 'package:student_for_student_mobile/views/pages/map_page.dart';
 
 const Color _expansionTileTextColor = Colors.white;
 const Color _expansionTileIsAcceptedColor = Color(0xff46543d);
@@ -11,17 +13,19 @@ const Color _onExpansionTileIsPendingColor = Color(0xFF745229);
 class ProfileRequestExpansionTileOrganism extends StatelessWidget {
   const ProfileRequestExpansionTileOrganism({
     Key? key,
-    required this.profiledataModel,
+    required this.profileRequestdataModel,
+    required this.token,
   }) : super(key: key);
 
-  final ProfileDataModel profiledataModel;
+  final ProfileDataModel profileRequestdataModel;
+  final String token;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(5),
       decoration: BoxDecoration(
-        color: profiledataModel.isAccepted
+        color: profileRequestdataModel.isAccepted
             ? _expansionTileIsAcceptedColor
             : _expansionTileIsPendingColor,
         borderRadius: BorderRadius.circular(10),
@@ -30,24 +34,29 @@ class ProfileRequestExpansionTileOrganism extends StatelessWidget {
         collapsedTextColor: _expansionTileTextColor,
         collapsedIconColor: _expansionTileTextColor,
         textColor: _expansionTileTextColor,
-        leading:
-            Icon(profiledataModel.isAccepted ? Icons.check : Icons.timelapse),
+        leading: Icon(
+            profileRequestdataModel.isAccepted ? Icons.check : Icons.timelapse),
         iconColor: _expansionTileTextColor,
         title: Text(
-          profiledataModel.requestTitle,
+          profileRequestdataModel.requestTitle,
           style: GoogleFonts.montserrat(
             fontWeight: FontWeight.w800,
             fontSize: 16,
           ),
         ),
         subtitle: _ProfileRequestTitle(
-          handlerUsername: profiledataModel.handlerUsername,
-          isAccepted: profiledataModel.isAccepted,
-          isMeTheHandler: profiledataModel.isMeTheHandler,
+          handlerUsername: profileRequestdataModel.handlerUsername,
+          isAccepted: profileRequestdataModel.isAccepted,
+          isMeTheHandler: profileRequestdataModel.isMeTheHandler,
         ),
         children: [
           ...createRequestTiles(),
-          createRequestButtons(),
+          createRequestButtons(
+              token: token,
+              onNavigatePressed: (address) => Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                      builder: (context) => MapPage(destination: address)))),
         ],
       ),
     );
@@ -155,42 +164,40 @@ extension _ProfileRequestExpansionTileOrganismExtension
       _ProfileRequestListTile(
         icon: Icons.book_outlined,
         title: 'Cours',
-        subtitle: profiledataModel.courseName,
+        subtitle: profileRequestdataModel.courseName,
       ),
       _ProfileRequestListTile(
           icon: Icons.description_outlined,
           title: 'Description de la demande',
-          subtitle: profiledataModel.requestDescription),
+          subtitle: profileRequestdataModel.requestDescription),
       _ProfileRequestListTile(
           icon: Icons.location_on_outlined,
           title: 'Lieu de rencontre',
-          subtitle: profiledataModel.requestMeetLocation),
-      profiledataModel.isAccepted
-          ? _ProfileRequestListTile(
-              icon: Icons.person_outline,
-              title: 'Tuteur',
-              subtitle: profiledataModel.handlerUsername,
-            )
-          : const SizedBox.shrink()
+          subtitle: profileRequestdataModel.requestMeetLocation),
     ];
   }
 
-  ListTile createRequestButtons() {
+  ListTile createRequestButtons({
+    required token,
+    required void Function(String) onNavigatePressed,
+  }) {
     return ListTile(
         title: Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        if (profiledataModel.isAccepted)
+        if (profileRequestdataModel.isAccepted)
           _ProfileRequestListTileButton(
             icon: const Icon(Icons.navigation),
-            onPressed: profiledataModel.onNavigatePressed,
+            onPressed: () =>
+                onNavigatePressed(profileRequestdataModel.requestMeetLocation),
             text: 'Naviguer',
             color: _onExpansionTileIsAcceptedColor,
           ),
-        if (!profiledataModel.isAccepted)
+        if (!profileRequestdataModel.isAccepted)
           _ProfileRequestListTileButton(
             icon: const Icon(Icons.close),
-            onPressed: profiledataModel.onCancelPressed,
+            onPressed: () => profileRequestdataModel.onCancelPressed(
+                profileRequestdataModel.id, token),
             text: 'Annuler',
             color: _onExpansionTileIsPendingColor,
           ),

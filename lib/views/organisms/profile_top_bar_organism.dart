@@ -15,30 +15,28 @@ class ProfileTitleOrganism extends StatelessWidget {
     return Center(
       child: Column(
         children: [
-          SizedBox(
-            height: 250,
-            child: Container(
-              height: 150,
-              width: 150,
-              decoration: const BoxDecoration(
-                color: Color(0xff46543d),
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: Text(
-                  username[0],
-                  style: GoogleFonts.roboto(
-                    color: Colors.white,
-                    fontSize: 50,
-                  ),
+          Container(
+            height: 100,
+            width: 100,
+            decoration: const BoxDecoration(
+              color: Color(0xff46543d),
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: Text(
+                username[0],
+                style: GoogleFonts.roboto(
+                  color: Colors.white,
+                  fontSize: 50,
                 ),
               ),
             ),
           ),
           // The name
           SizedBox(
-            height: 50,
+            height: 70,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(username,
                     style: GoogleFonts.roboto(
@@ -46,8 +44,8 @@ class ProfileTitleOrganism extends StatelessWidget {
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     )),
-                const Spacer(),
-                Text('Etudiant',
+                const SizedBox(height: 5),
+                Text('Votre profile',
                     style: GoogleFonts.roboto(
                         color: Colors.black,
                         fontSize: 15,

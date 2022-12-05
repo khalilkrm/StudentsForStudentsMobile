@@ -13,14 +13,14 @@ class HomeApi {
     Uri requestsUri = Uri.https(base, publicRequests);
 
     http.Response response = await http.get(requestsUri, headers: {
-      'Authorization' : 'Bearer ${_userRepository!.userModel!.token}',
+      'Authorization': 'Bearer ${_userRepository!.userModel!.token}',
     });
 
-    if(response.statusCode == 401) {
+    if (response.statusCode == 401) {
       return 'unauthorized';
     }
 
-    if(response.statusCode == 200) {
+    if (response.statusCode == 200) {
       return response.body;
     }
 
@@ -45,13 +45,13 @@ class HomeApi {
   }
 
   Future<String> acceptRequest({required int requestId}) async {
-    Uri acceptUri = Uri.https(base, '$publicRequests/$requestId');
+    Uri acceptUri = Uri.https(base, '$requests/$requestId');
 
     http.Response response = await http.put(acceptUri, headers: {
       'Authorization': 'Bearer ${_userRepository!.userModel!.token}',
     });
 
-    if(response.statusCode == 401) {
+    if (response.statusCode == 401) {
       return 'unauthorized';
     }
 

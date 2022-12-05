@@ -84,4 +84,11 @@ class RequestRepository {
         data.map((request) => RequestModel.fromJson(request)).toList();
     return mapperd;
   }
+
+  Future<void> deleteRequest({
+    required int id,
+    required String token,
+  }) async {
+    await _requestApi.deleteRequest(requestId: id, token: token);
+  }
 }

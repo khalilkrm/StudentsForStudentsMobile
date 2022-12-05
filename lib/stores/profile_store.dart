@@ -5,21 +5,32 @@ import 'package:student_for_student_mobile/repositories/request_repository.dart'
 class ProfileStore with ChangeNotifier {
   final RequestRepository _requestRepository;
   List<ProfileDataModel> _requests = [];
+  List<ProfileDataModel> handledRequests = [];
+  List<ProfileDataModel> createdRequests = [];
+  String? error;
 
   ProfileStore({required RequestRepository requestRepository})
       : _requestRepository = requestRepository;
 
-  bool get isHandledRequestsEmpty => getHandledRequest().isEmpty;
-  bool get isCreatedRequestsEmpty => getCreatedRequest().isEmpty;
+  bool get isHandledRequestsEmpty => handledRequests.isEmpty;
+  bool get isCreatedRequestsEmpty => createdRequests.isEmpty;
 
   /// Owned requests means requests that I created or accepted
-  Future<void> loadOwnedRequests({required String token}) async {
+  Future<void> loadOwnedRequests({
+    required String token,
+    required String currentUsername,
+  }) async {
     final requests =
         await _requestRepository.getRequests(owned: true, token: token);
     _requests = requests
-        .map((request) => _TabBarTopDataModelExtension.from(
-            requestModel: request, currentUsername: request.sender))
+        .map((request) => request.toProfileDataModel(
+              currentUsername: currentUsername,
+              removeRequest: (id, token) =>
+                  cancelRequest(requestId: id, token: token),
+            ))
         .toList();
+    handledRequests = List.unmodifiable(getHandledRequest());
+    createdRequests = List.unmodifiable(getCreatedRequest());
     notifyListeners();
   }
 
@@ -32,10 +43,28 @@ class ProfileStore with ChangeNotifier {
   List<ProfileDataModel> getCreatedRequest() {
     return _requests.where((request) => !request.isMeTheHandler).toList();
   }
+
+  Future<void> cancelRequest({
+    required int requestId,
+    required String token,
+  }) async {
+    try {
+      await _requestRepository.deleteRequest(
+        id: requestId,
+        token: token,
+      );
+      _requests.removeWhere((request) => request.id == requestId);
+    } on Exception catch (e) {
+      error = e.toString();
+    } finally {
+      notifyListeners();
+    }
+  }
 }
 
-/// ata model specific to the profile page
+/// Data model specific to the profile page
 class ProfileDataModel {
+  final int id;
   final bool isAccepted;
   final bool isMeTheHandler;
   final String handlerUsername;
@@ -43,10 +72,10 @@ class ProfileDataModel {
   final String requestDescription;
   final String courseName;
   final String requestMeetLocation;
-  final void Function() onNavigatePressed;
-  final void Function() onCancelPressed;
+  final Future<void> Function(int, String) onCancelPressed;
 
   ProfileDataModel({
+    required this.id,
     required this.requestTitle,
     required this.requestDescription,
     required this.courseName,
@@ -54,7 +83,6 @@ class ProfileDataModel {
     required this.isAccepted,
     required this.isMeTheHandler,
     required this.handlerUsername,
-    required this.onNavigatePressed,
     required this.onCancelPressed,
   });
 }
@@ -63,21 +91,22 @@ class ProfileDataModel {
 // Extension
 //--------------------------
 
-extension _TabBarTopDataModelExtension on ProfileDataModel {
+extension _TabBarTopDataModelExtension on RequestModel {
   /// Private extension to convert RequestModel to TabBarTopDataModel for convenience
-  static ProfileDataModel from(
-      {required RequestModel requestModel, required String currentUsername}) {
+  ProfileDataModel toProfileDataModel({
+    required Future<void> Function(int, String) removeRequest,
+    required String currentUsername,
+  }) {
     return ProfileDataModel(
-      requestTitle: requestModel.name,
-      requestDescription: requestModel.description,
-      courseName: requestModel.course.label,
-      requestMeetLocation: requestModel.place.street,
-      isAccepted: requestModel.status,
-      isMeTheHandler:
-          requestModel.status && requestModel.handler == currentUsername,
-      handlerUsername: requestModel.status ? requestModel.handler : '',
-      onNavigatePressed: () {},
-      onCancelPressed: () {},
+      id: id,
+      requestTitle: name,
+      requestDescription: description,
+      courseName: course.label,
+      requestMeetLocation: place.address,
+      isAccepted: status,
+      isMeTheHandler: status && handler == currentUsername,
+      handlerUsername: status ? handler : '',
+      onCancelPressed: (id, token) => removeRequest(id, token),
     );
   }
 }
