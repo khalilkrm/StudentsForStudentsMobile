@@ -78,8 +78,10 @@ class RequestRepository {
     required bool owned,
     required String token,
   }) async {
-    List<Map<String, dynamic>> data =
+    List<dynamic> data =
         await _requestApi.getRequests(owned: owned, token: token);
-    return data.map((request) => RequestModel.fromJson(request)).toList();
+    var mapperd =
+        data.map((request) => RequestModel.fromJson(request)).toList();
+    return mapperd;
   }
 }

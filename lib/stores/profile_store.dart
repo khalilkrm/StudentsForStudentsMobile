@@ -1,13 +1,73 @@
 import 'package:flutter/cupertino.dart';
 import 'package:student_for_student_mobile/models/request/RequestModel.dart';
 import 'package:student_for_student_mobile/repositories/request_repository.dart';
-import 'package:student_for_student_mobile/views/pages/profile_page.dart';
 
-extension _TabBarTopDataModelExtension on TabBarTopDataModel {
-  // Private extension to convert RequestModel to TabBarTopDataModel for convenience
-  static TabBarTopDataModel from(
+class ProfileStore with ChangeNotifier {
+  final RequestRepository _requestRepository;
+  List<ProfileDataModel> _requests = [];
+
+  ProfileStore({required RequestRepository requestRepository})
+      : _requestRepository = requestRepository;
+
+  bool get isHandledRequestsEmpty => getHandledRequest().isEmpty;
+  bool get isCreatedRequestsEmpty => getCreatedRequest().isEmpty;
+
+  /// Owned requests means requests that I created or accepted
+  Future<void> loadOwnedRequests({required String token}) async {
+    final requests =
+        await _requestRepository.getRequests(owned: true, token: token);
+    _requests = requests
+        .map((request) => _TabBarTopDataModelExtension.from(
+            requestModel: request, currentUsername: request.sender))
+        .toList();
+    notifyListeners();
+  }
+
+  /// Handled requests means requests that I accepted
+  List<ProfileDataModel> getHandledRequest() {
+    return _requests.where((request) => request.isMeTheHandler).toList();
+  }
+
+  /// Created requests means requests that I created
+  List<ProfileDataModel> getCreatedRequest() {
+    return _requests.where((request) => !request.isMeTheHandler).toList();
+  }
+}
+
+/// ata model specific to the profile page
+class ProfileDataModel {
+  final bool isAccepted;
+  final bool isMeTheHandler;
+  final String handlerUsername;
+  final String requestTitle;
+  final String requestDescription;
+  final String courseName;
+  final String requestMeetLocation;
+  final void Function() onNavigatePressed;
+  final void Function() onCancelPressed;
+
+  ProfileDataModel({
+    required this.requestTitle,
+    required this.requestDescription,
+    required this.courseName,
+    required this.requestMeetLocation,
+    required this.isAccepted,
+    required this.isMeTheHandler,
+    required this.handlerUsername,
+    required this.onNavigatePressed,
+    required this.onCancelPressed,
+  });
+}
+
+//--------------------------
+// Extension
+//--------------------------
+
+extension _TabBarTopDataModelExtension on ProfileDataModel {
+  /// Private extension to convert RequestModel to TabBarTopDataModel for convenience
+  static ProfileDataModel from(
       {required RequestModel requestModel, required String currentUsername}) {
-    return TabBarTopDataModel(
+    return ProfileDataModel(
       requestTitle: requestModel.name,
       requestDescription: requestModel.description,
       courseName: requestModel.course.label,
@@ -19,26 +79,5 @@ extension _TabBarTopDataModelExtension on TabBarTopDataModel {
       onNavigatePressed: () {},
       onCancelPressed: () {},
     );
-  }
-}
-
-class ProfileStore with ChangeNotifier {
-  final RequestRepository _requestRepository;
-  List<TabBarTopDataModel> _requests = [];
-
-  ProfileStore({required RequestRepository requestRepository})
-      : _requestRepository = requestRepository;
-
-  List<TabBarTopDataModel> get requests => _requests;
-
-  Future<void> getRequests(
-      {required String token, required String currentUsername}) async {
-    final requests =
-        await _requestRepository.getRequests(owned: true, token: token);
-    _requests = requests
-        .map((request) => _TabBarTopDataModelExtension.from(
-            requestModel: request, currentUsername: currentUsername))
-        .toList();
-    notifyListeners();
   }
 }
