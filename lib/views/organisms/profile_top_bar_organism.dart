@@ -45,7 +45,7 @@ class ProfileTitleOrganism extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     )),
                 const SizedBox(height: 5),
-                Text('Votre profile',
+                Text('Votre profil',
                     style: GoogleFonts.roboto(
                         color: Colors.black,
                         fontSize: 15,

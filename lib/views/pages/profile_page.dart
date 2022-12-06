@@ -16,7 +16,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   @override
-  void initState() async {
+  void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final userStore = Provider.of<UserStore>(context, listen: false);

@@ -67,8 +67,6 @@ Future<void> main() async {
   final GoogleMapRepository googleMapRepository =
       GoogleMapRepository(api: googleMapApi);
 
-  userApi.setUserRepository(userRepository);
-  userApi.setHorairixRepository(horairixRepository);
   horairixApi.setUserRepository(userRepository);
   requestApi.setUserRepository(userRepository);
   homeApi.setUserRepository(userRepository);
