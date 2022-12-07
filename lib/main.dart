@@ -67,10 +67,6 @@ Future<void> main() async {
   final GoogleMapRepository googleMapRepository =
       GoogleMapRepository(api: googleMapApi);
 
-  horairixApi.setUserRepository(userRepository);
-  requestApi.setUserRepository(userRepository);
-  homeApi.setUserRepository(userRepository);
-
   // stores
   final UserStore userStore = UserStore(
     userRepository: userRepository,
@@ -133,7 +129,7 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(body: Consumer<UserStore>(
         builder: (context, userStore, child) {
-          if (userStore.user == null) {
+          if (!userStore.isSignedIn) {
             return AuthenticationPage();
           } else {
             return Consumer<NavStore>(

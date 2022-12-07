@@ -23,7 +23,7 @@ class NestedScollableTabBarViewTemplate extends StatefulWidget {
   final List<Widget> tabs;
 
   /// Key is to know if the view - which is the widget value mapped - is empty or not
-  final Map<bool, Widget> views;
+  final List<TabBarViewModel> views;
 
   @override
   State<NestedScollableTabBarViewTemplate> createState() =>
@@ -79,18 +79,17 @@ class _NestedScollableTabBarViewTemplateState
             },
             // The nested scrollable body
             body: Container(
-              color: Colors.grey.shade100,
-              child: TabBarView(
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: widget.views.entries
-                      .map((entry) => entry.key
-                          ? entry.value
-                          : SingleChildScrollView(
-                              padding: const EdgeInsets.all(10),
-                              physics: const BouncingScrollPhysics(),
-                              child: entry.value))
-                      .toList()),
-            )),
+                color: Colors.grey.shade100,
+                child: TabBarView(
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: widget.views
+                        .map((w) => w.makeScrollable
+                            ? SingleChildScrollView(
+                                padding: const EdgeInsets.all(10),
+                                physics: const BouncingScrollPhysics(),
+                                child: w.child)
+                            : w.child)
+                        .toList()))),
         bottomNavigationBar: const ScreenNavigationBar(),
       ),
     );
@@ -128,4 +127,14 @@ class _TabBar extends StatelessWidget {
           tabs: tabs.map((widget) => Tab(child: widget)).toList()),
     );
   }
+}
+
+class TabBarViewModel {
+  final bool makeScrollable;
+  final Widget child;
+
+  TabBarViewModel({
+    required this.makeScrollable,
+    required this.child,
+  });
 }

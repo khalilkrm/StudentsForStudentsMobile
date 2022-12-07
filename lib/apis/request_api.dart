@@ -2,20 +2,13 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:student_for_student_mobile/apis/urls.dart';
-import 'package:student_for_student_mobile/repositories/user_repository.dart';
 
 class RequestApi {
-  late final UserRepository? _userRepository;
-
-  void setUserRepository(UserRepository userRepository) {
-    _userRepository = userRepository;
-  }
-
-  Future<String?> fetchPlaces() async {
+  Future<String?> fetchPlaces({required String token}) async {
     Uri placesUri = Uri.https(base, place);
 
     http.Response response = await http.get(placesUri, headers: {
-      'Authorization': 'Bearer ${_userRepository!.userModel!.token}',
+      'Authorization': 'Bearer $token',
     });
 
     if (response.statusCode == 401) {
@@ -28,11 +21,11 @@ class RequestApi {
     return null;
   }
 
-  Future<String?> fetchCourses() async {
+  Future<String?> fetchCourses({required String token}) async {
     Uri coursesUri = Uri.https(base, courses);
 
     http.Response response = await http.get(coursesUri, headers: {
-      'Authorization': 'Bearer ${_userRepository!.userModel!.token}',
+      'Authorization': 'Bearer $token',
     });
 
     if (response.statusCode == 401) {
@@ -46,15 +39,17 @@ class RequestApi {
   }
 
   Future<String> sendRequest(
-      {required String name,
-      required String description,
-      required int placeId,
-      required int courseId}) async {
+    String token, {
+    required String name,
+    required String description,
+    required int placeId,
+    required int courseId,
+  }) async {
     Uri requestUri = Uri.https(base, requests);
 
     http.Response response = await http.post(requestUri,
         headers: {
-          'Authorization': 'Bearer ${_userRepository!.userModel!.token}',
+          'Authorization': 'Bearer $token',
           'Content-Type': 'application/json'
         },
         body: jsonEncode({
@@ -70,7 +65,7 @@ class RequestApi {
     return response.body;
   }
 
-  Future<String> sendAddress(
+  Future<String> sendAddress(String token,
       {required String street,
       required String number,
       required int postalCode,
@@ -79,7 +74,7 @@ class RequestApi {
 
     http.Response response = await http.post(addressUri,
         headers: {
-          'Authorization': 'Bearer ${_userRepository!.userModel!.token}',
+          'Authorization': 'Bearer $token',
           'Content-Type': 'application/json'
         },
         body: jsonEncode({

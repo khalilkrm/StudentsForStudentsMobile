@@ -82,7 +82,7 @@ class _ChatRoomState extends State<ChatRoom> {
                           topLeft: Radius.circular(30),
                           topRight: Radius.circular(30))),
                   child: ChatConversationOrganism(
-                    currentUsername: userStore.state.username ?? "",
+                    currentUsername: userStore.user.username,
                     conversation: chatStore.conversation.messages
                         .map((message) => UIRoomMessage(
                               sender: message.senderUsername,
@@ -99,7 +99,7 @@ class _ChatRoomState extends State<ChatRoom> {
                     collectionName: "Développement d'applications",
                     room: chatStore.rooms[widget.roomIndex],
                     message: message,
-                    senderUsername: userStore.state.username ?? "",
+                    senderUsername: userStore.user.username,
                   );
                   await chatStore.updateLastRoomMessage(
                     collectionName: "Développement d'applications",

@@ -19,7 +19,8 @@ void main() async {
       HorairixApiModel(data: fakeEventsFromApi, error: false);
 
   whenFetchTimeSheetThenAnswer(HorairixApiModel model) {
-    when(api.fetchTimeSheet()).thenAnswer((_) => Future.value(model));
+    when(api.fetchTimeSheet(token: "token"))
+        .thenAnswer((_) => Future.value(model));
   }
 
   setUp(() {
@@ -29,7 +30,7 @@ void main() async {
   group('HorairixRepository', () {
     test('all events are loaded if api has "data" field', () async {
       whenFetchTimeSheetThenAnswer(fakeModel);
-      await repository.loadAllEvents();
+      await repository.loadAllEvents(token: "token");
       expect(repository.events, isA<List>());
       expect(repository.events.length, 5);
 

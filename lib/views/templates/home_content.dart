@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:student_for_student_mobile/models/request/PlaceModel.dart';
 import 'package:student_for_student_mobile/stores/home_store.dart';
+import 'package:student_for_student_mobile/stores/user_store.dart';
 import 'package:student_for_student_mobile/views/molecules/request_accordion.dart';
 import 'package:student_for_student_mobile/views/organisms/screen_content.dart';
 import 'package:student_for_student_mobile/views/pages/map_page.dart';
@@ -18,8 +19,9 @@ class _HomeContentState extends State<HomeContent> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      final store = Provider.of<HomeStore>(context, listen: false);
-      await store.load();
+      final homeStore = Provider.of<HomeStore>(context, listen: false);
+      final userStore = Provider.of<UserStore>(context, listen: false);
+      await homeStore.load(token: userStore.user.token);
     });
   }
 
@@ -28,8 +30,8 @@ class _HomeContentState extends State<HomeContent> {
     final double width = MediaQuery.of(context).size.width;
 
     return ScreenContent(children: [
-      Consumer<HomeStore>(
-          builder: (context, store, child) => Column(
+      Consumer2<HomeStore, UserStore>(
+          builder: (context, homeStore, userStore, child) => Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -58,20 +60,24 @@ class _HomeContentState extends State<HomeContent> {
                           SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Row(children: [
-                              ...store.courses
+                              ...homeStore.courses
                                   .map<Padding>(
                                     (course) => Padding(
                                       padding:
                                           const EdgeInsets.only(bottom: 20),
                                       child: TextButton(
-                                        onPressed: () =>
-                                            _handleFilter(store, course.id),
+                                        onPressed: () => _handleFilter(
+                                          store: homeStore,
+                                          id: course.id,
+                                          token: userStore.user.token,
+                                        ),
                                         child: Container(
                                           decoration: BoxDecoration(
-                                              color: store.selectedCourseId ==
-                                                      course.id
-                                                  ? const Color(0xC1884500)
-                                                  : Colors.white,
+                                              color:
+                                                  homeStore.selectedCourseId ==
+                                                          course.id
+                                                      ? const Color(0xC1884500)
+                                                      : Colors.white,
                                               boxShadow: [
                                                 BoxShadow(
                                                     color: Colors.grey
@@ -86,11 +92,11 @@ class _HomeContentState extends State<HomeContent> {
                                             child: Text(
                                               course.content,
                                               style: TextStyle(
-                                                  color:
-                                                      store.selectedCourseId ==
-                                                              course.id
-                                                          ? Colors.white
-                                                          : Colors.black),
+                                                  color: homeStore
+                                                              .selectedCourseId ==
+                                                          course.id
+                                                      ? Colors.white
+                                                      : Colors.black),
                                             ),
                                           ),
                                         ),
@@ -100,9 +106,9 @@ class _HomeContentState extends State<HomeContent> {
                                   .toList(),
                             ]),
                           ),
-                          store.hasRequests
+                          homeStore.hasRequests
                               ? Column(children: [
-                                  ...store.requests
+                                  ...homeStore.requests
                                       .map<RequestAccordion>((request) =>
                                           RequestAccordion(
                                             name: request.requestName,
@@ -111,10 +117,13 @@ class _HomeContentState extends State<HomeContent> {
                                             author: request.sender,
                                             placeAddress: request.place.content,
                                             courseName: request.course.content,
-                                            onAccept: () =>
-                                                _onAccept(store, request.id),
+                                            onAccept: () => _onAccept(
+                                              store: homeStore,
+                                              requestId: request.id,
+                                              token: request.token,
+                                            ),
                                             onLocalize: () => _onLocalize(
-                                                store, request.place),
+                                                homeStore, request.place),
                                           ))
                                       .toList()
                                 ])
@@ -135,8 +144,12 @@ class _HomeContentState extends State<HomeContent> {
     ]);
   }
 
-  void _onAccept(HomeStore store, int requestId) async {
-    await store.acceptRequest(requestId);
+  void _onAccept({
+    required HomeStore store,
+    required int requestId,
+    required String token,
+  }) async {
+    await store.acceptRequest(requestId: requestId, token: token);
     _showMessage(store);
   }
 
@@ -162,8 +175,12 @@ class _HomeContentState extends State<HomeContent> {
     }
   }
 
-  _handleFilter(HomeStore store, int id) async {
-    await store.filterRequests(id);
+  _handleFilter({
+    required HomeStore store,
+    required int id,
+    required String token,
+  }) async {
+    await store.filterRequests(id: id, token: token);
   }
 
   _onLocalize(HomeStore store, PlaceModel place) {

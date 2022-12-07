@@ -5,23 +5,26 @@ import 'package:student_for_student_mobile/models/calendar/CalendarStoreState.da
 import 'package:student_for_student_mobile/repositories/horairix_repository.dart';
 
 class CalendarStore extends ChangeNotifier {
-  CalendarStoreState state = CalendarStoreState(isLoading: true, isCalendarLinked: false);
+  CalendarStoreState state =
+      CalendarStoreState(isLoading: true, isCalendarLinked: false);
   final HorairixRepository _horairixRepository;
 
   CalendarStore({required HorairixRepository horairixRepository})
       : _horairixRepository = horairixRepository;
 
-  Future<void> linkCalendar({required String calendarLink}) async {
+  Future<void> linkCalendar(
+      {required String calendarLink, required String token}) async {
     state = CalendarStoreState(isLoading: true, isCalendarLinked: false);
     notifyListeners();
 
-    bool isCalendarLinked = await _horairixRepository.linkCalendar(link: calendarLink);
-    if(isCalendarLinked) load();
+    bool isCalendarLinked = await _horairixRepository.linkCalendar(
+        link: calendarLink, token: token);
+    if (isCalendarLinked) load(token: token);
   }
 
-  load() async {
-    if(_horairixRepository.events.isNotEmpty) return;
-    await _horairixRepository.loadAllEvents();
+  load({required String token}) async {
+    if (_horairixRepository.events.isNotEmpty) return;
+    await _horairixRepository.loadAllEvents(token: token);
 
     List<CalendarEvent> events = [];
 
@@ -44,7 +47,7 @@ class CalendarStore extends ChangeNotifier {
 
     //print(events[0].from.toLocal().timeZoneOffset);
 
-    if(events.isEmpty) {
+    if (events.isEmpty) {
       state = CalendarStoreState(
         timezone: DateTime.now().toLocal().timeZoneName,
         isLoading: false,

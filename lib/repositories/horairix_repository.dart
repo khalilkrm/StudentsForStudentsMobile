@@ -12,12 +12,16 @@ class HorairixRepository {
 
   HorairixRepository({required horairixApi}) : _horairixApi = horairixApi;
 
-  Future<bool> linkCalendar({required String link}) async {
-    return await _horairixApi.linkCalendar(link: link);
+  Future<bool> linkCalendar({
+    required String link,
+    required String token,
+  }) async {
+    return await _horairixApi.linkCalendar(link: link, token: token);
   }
 
-  Future<void> loadAllEvents() async {
-    final HorairixApiModel model = await _horairixApi.fetchTimeSheet();
+  Future<void> loadAllEvents({required String token}) async {
+    final HorairixApiModel model =
+        await _horairixApi.fetchTimeSheet(token: token);
 
     if (model.error ?? false) {
       logger.w(

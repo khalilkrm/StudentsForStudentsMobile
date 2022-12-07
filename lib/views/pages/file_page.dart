@@ -28,7 +28,7 @@ class _FilePageState extends State<FilePage> {
       FileStore fileStore = Provider.of<FileStore>(context, listen: false);
       UserStore userStore = Provider.of<UserStore>(context, listen: false);
 
-      await fileStore.loadFiles(token: userStore.state.token ?? "");
+      await fileStore.loadFiles(token: userStore.user.token);
     });
   }
 
@@ -74,7 +74,7 @@ class _FilePageState extends State<FilePage> {
     var fileStore = Provider.of<FileStore>(context, listen: false);
     UserStore userStore = Provider.of<UserStore>(context, listen: false);
     await fileStore.dowloadFile(
-        filename: result.filename, token: userStore.state.token ?? "");
+        filename: result.filename, token: userStore.user.token);
   }
 }
 

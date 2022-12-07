@@ -19,15 +19,15 @@ class HomeStore extends ChangeNotifier {
         _successMessage = '',
         _selectedCourseId = -1;
 
-  load() async {
+  load({required String token}) async {
     _selectedCourseId = -1;
     bool succeed;
 
-    succeed = await _homeRepository.getRequests();
+    succeed = await _homeRepository.getRequests(token: token);
     if (!succeed) {
       _userStore.signOut();
     }
-    succeed = await _homeRepository.getCourses();
+    succeed = await _homeRepository.getCourses(token: token);
     if (!succeed) {
       _userStore.signOut();
     }
@@ -42,14 +42,19 @@ class HomeStore extends ChangeNotifier {
   get courses => _homeRepository.courses;
   get selectedCourseId => _selectedCourseId;
 
-  acceptRequest(int requestId) async {
-    String message = await _homeRepository.acceptRequest(requestId: requestId);
+  acceptRequest({
+    required int requestId,
+    required String token,
+  }) async {
+    String message = await _homeRepository.acceptRequest(
+      requestId: requestId,
+      token: token,
+    );
 
     if (message == 'unauthorized') {
       _userStore.signOut();
     }
 
-    
     var data = jsonDecode(message);
 
     if (data['error'] == true) {
@@ -58,20 +63,20 @@ class HomeStore extends ChangeNotifier {
     } else {
       _successMessage = data['message'];
       _errorMessage = '';
-      await load();
+      await load(token: token);
     }
 
     notifyListeners();
   }
 
-  filterRequests(int id) async {
+  filterRequests({required int id, required String token}) async {
     if (_selectedCourseId == id) {
-      await load();
+      await load(token: token);
       return;
     }
 
     _selectedCourseId = id;
-    await _homeRepository.filterRequests(id);
+    await _homeRepository.filterRequests(id: id, token: token);
     notifyListeners();
   }
 }

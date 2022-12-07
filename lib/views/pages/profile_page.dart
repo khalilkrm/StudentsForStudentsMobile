@@ -22,8 +22,8 @@ class _ProfilePageState extends State<ProfilePage> {
       final userStore = Provider.of<UserStore>(context, listen: false);
       final profileStore = Provider.of<ProfileStore>(context, listen: false);
       await profileStore.loadOwnedRequests(
-        token: userStore.state.token!,
-        currentUsername: userStore.state.username!,
+        token: userStore.user.token,
+        currentUsername: userStore.user.username,
       );
     });
   }
@@ -34,12 +34,12 @@ class _ProfilePageState extends State<ProfilePage> {
         builder: (context, userStore, profileStore, child) =>
             NestedScollableTabBarViewTemplate(
                 tabs: _buildTabs(profileStore),
-                views: _buildTabBarPair(
+                views: _buildTabViews(
                   profileStore: profileStore,
-                  token: userStore.state.token!,
+                  token: userStore.user.token,
                 ),
                 title: ProfileTitleOrganism(
-                  username: userStore.state.username!,
+                  username: userStore.user.username,
                 )));
   }
 
@@ -58,52 +58,61 @@ class _ProfilePageState extends State<ProfilePage> {
     ];
   }
 
-  Map<bool, Widget> _buildTabBarPair(
+  List<TabBarViewModel> _buildTabViews(
       {required ProfileStore profileStore, required String token}) {
-    return {
-      profileStore.isCreatedRequestsEmpty: profileStore.isCreatedRequestsEmpty
-          ? Center(
-              child: Text("Vous n'avez pas encore de demande",
+    return [
+      TabBarViewModel(
+        makeScrollable: !profileStore.isCreatedRequestsEmpty,
+        child: profileStore.isCreatedRequestsEmpty
+            ? Center(
+                child: Text(
+                  "Vous n'avez pas encore de demande",
                   textAlign: TextAlign.center,
                   style: GoogleFonts.montserrat(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                  )),
-            )
-          : Wrap(
-              children: [
-                ...profileStore
-                    .getCreatedRequest()
-                    .map((profiledataModel) =>
-                        ProfileRequestExpansionTileOrganism(
+                  ),
+                ),
+              )
+            : Wrap(
+                children: [
+                  ...profileStore
+                      .getCreatedRequest()
+                      .map(
+                        (profiledataModel) =>
+                            ProfileRequestExpansionTileOrganism(
                           token: token,
                           profileRequestdataModel: profiledataModel,
-                        ))
-                    .toList(),
-              ],
-            ),
-      profileStore.isHandledRequestsEmpty: profileStore.isHandledRequestsEmpty
-          ? Center(
-              child: Text("Vous n'avez pas encore accepté de demande",
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.montserrat(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  )),
-            )
-          : Wrap(
-              children: [
-                ...profileStore
-                    .getHandledRequest()
-                    .map((profiledataModel) =>
-                        ProfileRequestExpansionTileOrganism(
-                          token: token,
-                          profileRequestdataModel: profiledataModel,
-                        ))
-                    .toList(),
-              ],
-            ),
-    };
+                        ),
+                      )
+                      .toList(),
+                ],
+              ),
+      ),
+      TabBarViewModel(
+          makeScrollable: !profileStore.isHandledRequestsEmpty,
+          child: profileStore.isHandledRequestsEmpty
+              ? Center(
+                  child: Text("Vous n'avez pas encore accepté de demande",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.montserrat(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      )),
+                )
+              : Wrap(
+                  children: [
+                    ...profileStore
+                        .getHandledRequest()
+                        .map((profiledataModel) =>
+                            ProfileRequestExpansionTileOrganism(
+                              token: token,
+                              profileRequestdataModel: profiledataModel,
+                            ))
+                        .toList(),
+                  ],
+                ))
+    ];
   }
 }
 

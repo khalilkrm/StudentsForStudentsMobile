@@ -15,9 +15,9 @@ class RequestRepository {
   RequestRepository({required RequestApi requestApi})
       : _requestApi = requestApi;
 
-  Future<bool> getPlaces() async {
+  Future<bool> getPlaces({required String token}) async {
     _places.clear();
-    String? data = await _requestApi.fetchPlaces();
+    String? data = await _requestApi.fetchPlaces(token: token);
 
     if (data == 'unauthorized') {
       return false;
@@ -30,9 +30,9 @@ class RequestRepository {
     return true;
   }
 
-  Future<bool> getCourses() async {
+  Future<bool> getCourses({required String token}) async {
     _courses.clear();
-    String? data = await _requestApi.fetchCourses();
+    String? data = await _requestApi.fetchCourses(token: token);
 
     if (data == 'unauthorized') {
       return false;
@@ -48,29 +48,33 @@ class RequestRepository {
 
   List<CourseModel> get courses => _courses;
 
-  Future<String> sendRequest(
+  Future<String> sendRequest(String token,
       {required String name,
       required String description,
       required int placeId,
       required int courseId}) async {
     String data = await _requestApi.sendRequest(
-        name: name,
-        description: description,
-        placeId: placeId,
-        courseId: courseId);
+      token,
+      name: name,
+      description: description,
+      placeId: placeId,
+      courseId: courseId,
+    );
     return data;
   }
 
-  Future<String> sendAddress(
+  Future<String> sendAddress(String token,
       {required String street,
       required String number,
       required int postalCode,
       required String locality}) async {
     String data = await _requestApi.sendAddress(
-        street: street,
-        number: number,
-        postalCode: postalCode,
-        locality: locality);
+      token,
+      street: street,
+      number: number,
+      postalCode: postalCode,
+      locality: locality,
+    );
     return data;
   }
 

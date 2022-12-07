@@ -19,7 +19,9 @@ class _CalendarContentState extends State<CalendarContent> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Provider.of<CalendarStore>(context, listen: false).load();
+      final userStore = Provider.of<UserStore>(context, listen: false);
+      Provider.of<CalendarStore>(context, listen: false)
+          .load(token: userStore.user.token);
     });
   }
 

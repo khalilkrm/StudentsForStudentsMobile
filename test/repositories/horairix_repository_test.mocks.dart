@@ -9,8 +9,6 @@ import 'package:mockito/mockito.dart' as _i1;
 import 'package:student_for_student_mobile/apis/horairix_api.dart' as _i3;
 import 'package:student_for_student_mobile/models/horairix/HorairixApiModel.dart'
     as _i2;
-import 'package:student_for_student_mobile/repositories/user_repository.dart'
-    as _i5;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -39,20 +37,29 @@ class _FakeHorairixApiModel_0 extends _i1.SmartFake
 /// See the documentation for Mockito's code generation for more information.
 class MockHorairixApi extends _i1.Mock implements _i3.HorairixApi {
   @override
-  _i4.Future<bool> linkCalendar({required String? link}) => (super.noSuchMethod(
+  _i4.Future<bool> linkCalendar({
+    required String? link,
+    required String? token,
+  }) =>
+      (super.noSuchMethod(
         Invocation.method(
           #linkCalendar,
           [],
-          {#link: link},
+          {
+            #link: link,
+            #token: token,
+          },
         ),
         returnValue: _i4.Future<bool>.value(false),
         returnValueForMissingStub: _i4.Future<bool>.value(false),
       ) as _i4.Future<bool>);
   @override
-  _i4.Future<_i2.HorairixApiModel> fetchTimeSheet() => (super.noSuchMethod(
+  _i4.Future<_i2.HorairixApiModel> fetchTimeSheet({required String? token}) =>
+      (super.noSuchMethod(
         Invocation.method(
           #fetchTimeSheet,
           [],
+          {#token: token},
         ),
         returnValue:
             _i4.Future<_i2.HorairixApiModel>.value(_FakeHorairixApiModel_0(
@@ -60,6 +67,7 @@ class MockHorairixApi extends _i1.Mock implements _i3.HorairixApi {
           Invocation.method(
             #fetchTimeSheet,
             [],
+            {#token: token},
           ),
         )),
         returnValueForMissingStub:
@@ -68,16 +76,8 @@ class MockHorairixApi extends _i1.Mock implements _i3.HorairixApi {
           Invocation.method(
             #fetchTimeSheet,
             [],
+            {#token: token},
           ),
         )),
       ) as _i4.Future<_i2.HorairixApiModel>);
-  @override
-  void setUserRepository(_i5.UserRepository? userRepository) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #setUserRepository,
-          [userRepository],
-        ),
-        returnValueForMissingStub: null,
-      );
 }

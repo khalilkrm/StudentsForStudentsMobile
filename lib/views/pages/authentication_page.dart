@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:student_for_student_mobile/models/user/UserStoreState.dart';
 import 'package:student_for_student_mobile/stores/user_store.dart';
 import 'package:student_for_student_mobile/views/molecules/button_molecule.dart';
 import 'package:student_for_student_mobile/views/molecules/error_ahead_molecule.dart';
@@ -11,29 +10,28 @@ import 'package:student_for_student_mobile/views/organisms/display_social_button
 import 'package:student_for_student_mobile/views/organisms/screen_content.dart';
 
 class AuthenticationPage extends StatefulWidget {
-  final TextEditingController _emailTextFieldController =
-      TextEditingController();
-  final TextEditingController _passwordTextFieldController =
-      TextEditingController();
-
-  AuthenticationPage({super.key});
+  const AuthenticationPage({super.key});
 
   @override
   State<AuthenticationPage> createState() => _AuthenticationPageState();
 }
 
 class _AuthenticationPageState extends State<AuthenticationPage> {
+  final TextEditingController _emailTextFieldController =
+      TextEditingController();
+  final TextEditingController _passwordTextFieldController =
+      TextEditingController();
   String? _emailLocalError;
   String? _passwordLocalError;
   bool _tryingToConnect = false;
   bool _hideTopErrors = true;
-  UserStoreState Function(BuildContext) getState =
-      (context) => Provider.of<UserStore>(context).state;
+
+  UserStore Function(BuildContext) getState =
+      (context) => Provider.of<UserStore>(context);
 
   @override
   Widget build(BuildContext context) {
-    _tryingToConnect =
-        getState(context).isAuthLoading || getState(context).isGoogleLoading;
+    _tryingToConnect = getState(context).isLoading;
 
     return Scaffold(
       appBar: AppBar(
@@ -70,22 +68,36 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                       _hideTopErrors
                           ? const SizedBox()
                           : ErrorAheadMolecule(
-                              errors: store.state.othersErrorMessages,
+                              errors: [
+                                store.isError &&
+                                        !store.error.toLowerCase().contains(
+                                            RegExp(r"(mail|mot de passe)"))
+                                    ? store.error
+                                    : ""
+                              ],
                             ),
                       TextFormFieldMolecule(
                         minLines: 1,
-                        controller: widget._emailTextFieldController,
+                        controller: _emailTextFieldController,
                         label: "Adresse mail",
-                        errorText:
-                            _emailLocalError ?? store.state.emailErrorMessage,
+                        errorText: _emailLocalError ??
+                            (store.isError &&
+                                    store.error.toLowerCase().contains('mail')
+                                ? store.error
+                                : null),
                         prefixiIcon: const Icon(Icons.mail),
                       ),
                       TextFormFieldMolecule(
                         minLines: 1,
-                        controller: widget._passwordTextFieldController,
+                        controller: _passwordTextFieldController,
                         label: "Mot de passe",
                         errorText: _passwordLocalError ??
-                            store.state.passwordErrorMessage,
+                            (store.isError &&
+                                    store.error
+                                        .toLowerCase()
+                                        .contains('mot de passe')
+                                ? store.error
+                                : null),
                         prefixiIcon: const Icon(Icons.lock),
                         isForPassword: true,
                       ),
@@ -94,8 +106,8 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                         runSpacing: 20.0,
                         children: [
                           ButtonMolecule(
-                            isSuccess: store.state.isSignedWithAuth,
-                            isLoading: store.state.isAuthLoading,
+                            isSuccess: store.isSignedIn,
+                            isLoading: store.isLoading,
                             stretch: true,
                             onPressed: _tryingToConnect
                                 ? null
@@ -160,13 +172,14 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
     await store.signInWithGoogle();
 
     setState(() {
-      _hideTopErrors = store.state.othersErrorMessages.isEmpty;
+      _hideTopErrors = store.isError &&
+          store.error.toLowerCase().contains(RegExp(r"(mail|mot de passe)"));
     });
   }
 
   void _onConnectClicked(UserStore store) async {
-    final String email = widget._emailTextFieldController.text;
-    final String password = widget._passwordTextFieldController.text;
+    final String email = _emailTextFieldController.text;
+    final String password = _passwordTextFieldController.text;
 
     setState(() {
       _hideTopErrors = true;
@@ -177,7 +190,8 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
       setState(() => _tryingToConnect = true);
       await store.signIn(email: email, password: password);
       setState(() {
-        _hideTopErrors = store.state.othersErrorMessages.isEmpty;
+        _hideTopErrors = store.isError &&
+            store.error.toLowerCase().contains(RegExp(r"(mail|mot de passe)"));
       });
     }
   }

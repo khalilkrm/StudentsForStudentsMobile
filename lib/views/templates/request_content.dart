@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:student_for_student_mobile/models/request/CourseModel.dart';
 import 'package:student_for_student_mobile/models/request/PlaceModel.dart';
 import 'package:student_for_student_mobile/stores/request_store.dart';
+import 'package:student_for_student_mobile/stores/user_store.dart';
 import 'package:student_for_student_mobile/views/molecules/button_molecule.dart';
 import 'package:student_for_student_mobile/views/molecules/drop_down_molecule.dart';
 import 'package:student_for_student_mobile/views/molecules/text_form_field_molecule.dart';
@@ -42,15 +43,17 @@ class _RequestContentState extends State<RequestContent> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       final store = Provider.of<RequestStore>(context, listen: false);
-      await store.load();
+      final userStore = Provider.of<UserStore>(context, listen: false);
+      await store.load(token: userStore.user.token);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return ScreenContent(children: [
-      Consumer<RequestStore>(
-          builder: (context, store, child) => store.mode
+      Consumer2<RequestStore, UserStore>(
+          builder: (context, requestStore, userStore, child) => requestStore
+                  .mode
               ? Padding(
                   padding: const EdgeInsets.only(left: 50, right: 50),
                   child: Center(
@@ -109,11 +112,12 @@ class _RequestContentState extends State<RequestContent> {
                     const SizedBox(height: 20),
                     ButtonMolecule(
                       label: 'AJOUTER MON ADRESSE',
-                      onPressed: () => _onSubmitAddress(store),
+                      onPressed: () => _onSubmitAddress(
+                          store: requestStore, token: userStore.user.token),
                     ),
                     const SizedBox(height: 10),
                     InkWell(
-                      onTap: () => store.changeMode(),
+                      onTap: () => requestStore.changeMode(),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
@@ -165,7 +169,7 @@ class _RequestContentState extends State<RequestContent> {
                               _selectedPlace = place;
                             });
                           },
-                          items: store.places
+                          items: requestStore.places
                               .map<DropdownMenuItem<PlaceModel>>((place) {
                             return DropdownMenuItem<PlaceModel>(
                               value: place,
@@ -178,7 +182,7 @@ class _RequestContentState extends State<RequestContent> {
                         ),
                         const SizedBox(height: 10),
                         InkWell(
-                          onTap: () => store.changeMode(),
+                          onTap: () => requestStore.changeMode(),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: const [
@@ -198,7 +202,7 @@ class _RequestContentState extends State<RequestContent> {
                               _selectedCourse = course;
                             });
                           },
-                          items: store.courses
+                          items: requestStore.courses
                               .map<DropdownMenuItem<CourseModel>>((course) {
                             return DropdownMenuItem<CourseModel>(
                               value: course,
@@ -212,7 +216,8 @@ class _RequestContentState extends State<RequestContent> {
                         const SizedBox(height: 20),
                         ButtonMolecule(
                           label: 'ENVOYER MA DEMANDE',
-                          onPressed: () => _onSubmitRequest(store),
+                          onPressed: () => _onSubmitRequest(
+                              store: requestStore, token: userStore.user.token),
                         ),
                       ],
                     ),
@@ -221,7 +226,10 @@ class _RequestContentState extends State<RequestContent> {
     ]);
   }
 
-  _onSubmitAddress(RequestStore store) async {
+  _onSubmitAddress({
+    required RequestStore store,
+    required String token,
+  }) async {
     final RegExp regex = RegExp(r'^[0-9]{1,4}[a-zA-Z]?$');
 
     if (widget._streetTextFieldController.text.isEmpty) {
@@ -280,6 +288,7 @@ class _RequestContentState extends State<RequestContent> {
     }
 
     await store.sendAddress(
+      token,
       street: widget._streetTextFieldController.text,
       number: widget._numberTextFieldController.text,
       postalCode: int.parse(widget._postalCodeTextFieldController.text),
@@ -289,7 +298,10 @@ class _RequestContentState extends State<RequestContent> {
     _showMessage(store);
   }
 
-  _onSubmitRequest(RequestStore store) async {
+  _onSubmitRequest({
+    required RequestStore store,
+    required String token,
+  }) async {
     if (widget._nameTextFieldController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -335,6 +347,7 @@ class _RequestContentState extends State<RequestContent> {
     }
 
     await store.sendRequest(
+      token,
       name: widget._nameTextFieldController.text,
       description: widget._descriptionTextFieldController.text,
       placeId: _selectedPlace!.id,

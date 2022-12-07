@@ -20,14 +20,14 @@ class RequestStore extends ChangeNotifier {
         _successMessage = '',
         _mode = false;
 
-  load() async {
+  load({required String token}) async {
     bool succeed;
 
-    succeed = await _requestRepository.getPlaces();
+    succeed = await _requestRepository.getPlaces(token: token);
     if (!succeed) {
       _userStore.signOut();
     }
-    succeed = await _requestRepository.getCourses();
+    succeed = await _requestRepository.getCourses(token: token);
     if (!succeed) {
       _userStore.signOut();
     }
@@ -51,11 +51,13 @@ class RequestStore extends ChangeNotifier {
   }
 
   sendRequest(
-      {required String name,
-      required String description,
-      required int placeId,
-      required int courseId}) async {
-    String message = await _requestRepository.sendRequest(
+    String token, {
+    required String name,
+    required String description,
+    required int placeId,
+    required int courseId,
+  }) async {
+    String message = await _requestRepository.sendRequest(token,
         name: name,
         description: description,
         placeId: placeId,
@@ -76,12 +78,12 @@ class RequestStore extends ChangeNotifier {
     notifyListeners();
   }
 
-  sendAddress(
+  sendAddress(String token,
       {required String street,
       required String number,
       required int postalCode,
       required String locality}) async {
-    String message = await _requestRepository.sendAddress(
+    String message = await _requestRepository.sendAddress(token,
         street: street,
         number: number,
         postalCode: postalCode,
@@ -98,7 +100,7 @@ class RequestStore extends ChangeNotifier {
     } else {
       _successMessage = data['message'];
       _errorMessage = '';
-      await load();
+      await load(token: token);
       changeMode();
     }
     notifyListeners();

@@ -11,12 +11,11 @@ class HomeRepository {
   final List<RequestModel> _requests = [];
   final List<CourseModel> _courses = [];
 
-  HomeRepository({required HomeApi homeApi})
-      : _homeApi = homeApi;
+  HomeRepository({required HomeApi homeApi}) : _homeApi = homeApi;
 
-  Future<bool> getRequests() async {
+  Future<bool> getRequests({required String token}) async {
     _requests.clear();
-    String? data = await _homeApi.fetchRequests();
+    String? data = await _homeApi.fetchRequests(token: token);
 
     if (data == 'unauthorized') {
       return false;
@@ -29,9 +28,9 @@ class HomeRepository {
     return true;
   }
 
-  Future<bool> getCourses() async {
+  Future<bool> getCourses({required String token}) async {
     _courses.clear();
-    String? data = await _homeApi.fetchCourses();
+    String? data = await _homeApi.fetchCourses(token: token);
 
     if (data == 'unauthorized') {
       return false;
@@ -47,13 +46,19 @@ class HomeRepository {
 
   List<CourseModel> get courses => _courses;
 
-  Future<String> acceptRequest({required int requestId}) async {
-    String data = await _homeApi.acceptRequest(requestId: requestId);
+  Future<String> acceptRequest({
+    required int requestId,
+    required String token,
+  }) async {
+    String data = await _homeApi.acceptRequest(
+      requestId: requestId,
+      token: token,
+    );
     return data;
   }
 
-  filterRequests(int id) async {
-    await getRequests();
+  filterRequests({required int id, required String token}) async {
+    await getRequests(token: token);
     _requests.removeWhere((request) => request.course.id != id);
   }
 }
