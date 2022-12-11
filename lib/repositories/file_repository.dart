@@ -17,7 +17,7 @@ class FileRepository {
     return files;
   }
 
-  Future<String> downloadFile({
+  Future<String> downloadFileContent({
     required String token,
     required String fileName,
   }) async {

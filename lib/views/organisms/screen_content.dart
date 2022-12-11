@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class ScreenContent extends StatelessWidget {
   final List<Widget> _children;
@@ -8,7 +8,8 @@ class ScreenContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      color: Colors.white,
       height: double.infinity,
       width: double.infinity,
       child: SingleChildScrollView(

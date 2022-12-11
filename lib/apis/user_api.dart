@@ -5,6 +5,7 @@ import 'package:student_for_student_mobile/apis/urls.dart' as url;
 
 Uri _signinUri = Uri.https(url.base, url.signIn);
 Uri _googleUri = Uri.https(url.base, url.googleSignIn);
+Uri _whoamiUri = Uri.https(url.base, url.whoami);
 
 class UserApi {
   Future<dynamic> google({required String idToken}) async {
@@ -36,11 +37,31 @@ class UserApi {
     return jsonDecode(response.body);
   }
 
+  Future<dynamic> getUserFromToken({required String token}) async {
+    http.Response response = await http.get(_whoamiUri, headers: {
+      'accept': 'application/json',
+      'Authorization': "bearer $token"
+    });
+
+    _reponseStatusIs200ElseThrow(
+        response: response, actionName: "getting user");
+
+    return jsonDecode(response.body);
+  }
+
   void _reponseStatusIs200ElseThrow(
       {required http.Response response, required String actionName}) {
+    final json = jsonDecode(response.body);
+
     if (response.statusCode != 200) {
-      throw Exception(jsonDecode(response.body)['message'] ??
-          'Something went wrong while $actionName');
+      if (response.statusCode == 401) {
+        throw Exception('unauthorized');
+      }
+      if (response.statusCode == 404) {
+        throw Exception("Aucun compte avec le mail ${json['message']}");
+      }
+      throw Exception(
+          json['message'] ?? 'Something went wrong while $actionName');
     }
   }
 }

@@ -46,15 +46,15 @@ class _ProfilePageState extends State<ProfilePage> {
   List<Widget> _buildTabs(ProfileStore profileStore) {
     return [
       _ProfileTabBar(
-        text: "J'ai demandé",
+        text: "Créées",
         icon: const Icon(Icons.school),
         length: profileStore.createdRequests.length,
       ),
       _ProfileTabBar(
-        text: "J'ai accepté",
+        text: "Accéptées",
         icon: const Icon(Icons.check),
         length: profileStore.handledRequests.length,
-      ),
+      )
     ];
   }
 
@@ -111,7 +111,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ))
                         .toList(),
                   ],
-                ))
+                )),
     ];
   }
 }

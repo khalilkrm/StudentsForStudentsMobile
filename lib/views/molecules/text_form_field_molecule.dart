@@ -32,7 +32,7 @@ class TextFormFieldMolecule extends StatefulWidget {
 }
 
 class _TextFormFieldMoleculeState extends State<TextFormFieldMolecule> {
-  bool _obscureText = false;
+  bool _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
@@ -40,21 +40,31 @@ class _TextFormFieldMoleculeState extends State<TextFormFieldMolecule> {
       minLines: widget._minLines,
       maxLines: widget._minLines,
       controller: widget._controller,
-      obscureText: _obscureText,
+      obscureText: widget._isForPassword && _obscureText,
       inputFormatters: widget._type
           ? <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly]
           : null,
       decoration: InputDecoration(
+        enabledBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.white),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        focusedBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.transparent),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        filled: true,
+        fillColor: const Color(0XFFf4f4f4),
         labelText: widget._label,
         errorText: widget._errorText,
-        prefixIcon: widget._prefixIcon ?? const SizedBox(),
+        prefixIcon: widget._prefixIcon ?? const SizedBox.shrink(),
         suffixIcon: widget._isForPassword
             ? InkWell(
                 onTap: () => setState(() => _obscureText = !_obscureText),
                 child: Icon(
-                    _obscureText ? Icons.visibility_off : Icons.visibility),
+                    _obscureText ? Icons.visibility : Icons.visibility_off),
               )
-            : const SizedBox(),
+            : const SizedBox.shrink(),
       ),
     );
   }

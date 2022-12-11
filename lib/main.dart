@@ -73,6 +73,8 @@ Future<void> main() async {
     googleSignIn: GoogleSignIn(scopes: scopes),
   );
 
+  await userStore.findUserFromLocalStorage();
+
   final CalendarStore calendarStore =
       CalendarStore(horairixRepository: horairixRepository);
   final NavStore navStore = NavStore();
@@ -130,7 +132,7 @@ class MyApp extends StatelessWidget {
       home: Scaffold(body: Consumer<UserStore>(
         builder: (context, userStore, child) {
           if (!userStore.isSignedIn) {
-            return AuthenticationPage();
+            return const AuthenticationPage();
           } else {
             return Consumer<NavStore>(
               builder: (context, navStore, child) {

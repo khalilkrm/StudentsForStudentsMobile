@@ -21,8 +21,6 @@ class NestedScollableTabBarViewTemplate extends StatefulWidget {
 
   final Widget title;
   final List<Widget> tabs;
-
-  /// Key is to know if the view - which is the widget value mapped - is empty or not
   final List<TabBarViewModel> views;
 
   @override
@@ -117,7 +115,6 @@ class _TabBar extends StatelessWidget {
           color: const Color(0xFF85a074),
           borderRadius: BorderRadius.circular(25.0)),
       child: TabBar(
-          isScrollable: false,
           padding: const EdgeInsets.all(_tabBarPadding),
           unselectedLabelColor: Colors.black,
           indicator: const BoxDecoration(

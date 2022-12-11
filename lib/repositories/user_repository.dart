@@ -15,7 +15,7 @@ class UserRepository {
     Duration timelimit = const Duration(seconds: 5),
   }) async {
     try {
-      final map = await _userApi.google(idToken: idToken).timeout(timelimit);
+      final map = await _userApi.google(idToken: idToken);
       return User.fromMap(map);
     } on TimeoutException {
       throw Exception(
@@ -32,6 +32,20 @@ class UserRepository {
       final map = await _userApi
           .signIn(email: email, password: password)
           .timeout(timelimit);
+      return User.fromMap(map);
+    } on TimeoutException {
+      throw Exception(
+          "La requête n'a pas pu être résolue dans le temps imparti de ${timelimit.inSeconds} secondes");
+    }
+  }
+
+  Future<User> getUserFromToken({
+    required String token,
+    Duration timelimit = const Duration(seconds: 5),
+  }) async {
+    try {
+      final map =
+          await _userApi.getUserFromToken(token: token).timeout(timelimit);
       return User.fromMap(map);
     } on TimeoutException {
       throw Exception(

@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:student_for_student_mobile/stores/user_store.dart';
 import 'package:student_for_student_mobile/views/molecules/button_molecule.dart';
 import 'package:student_for_student_mobile/views/molecules/error_ahead_molecule.dart';
-import 'package:student_for_student_mobile/views/molecules/screen_title.dart';
 import 'package:student_for_student_mobile/views/molecules/social_button.dart';
 import 'package:student_for_student_mobile/views/molecules/text_form_field_molecule.dart';
 import 'package:student_for_student_mobile/views/organisms/display_social_buttons.dart';
 import 'package:student_for_student_mobile/views/organisms/screen_content.dart';
+
+const _toolbarHeigth = 200.0;
 
 class AuthenticationPage extends StatefulWidget {
   const AuthenticationPage({super.key});
@@ -35,36 +37,48 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const ScreenTitle(title: 'STUDENTS FOR STUDENTS'),
+        toolbarHeight: _toolbarHeigth,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        title: Container(
+          alignment: Alignment.center,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "BONJOUR !",
+                style: GoogleFonts.montserrat(
+                  color: Colors.black,
+                  fontSize: 35,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                "Content de vous revoir, vous nous manquiez !",
+                textAlign: TextAlign.center,
+                softWrap: true,
+                overflow: TextOverflow.visible,
+                style: GoogleFonts.montserrat(
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
       body: ScreenContent(children: [
         Consumer<UserStore>(
             builder: (context, store, child) => Padding(
-                  padding: const EdgeInsets.only(left: 50, right: 50),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Wrap(
                     runSpacing: 48.0,
-                    alignment: WrapAlignment.center,
-                    crossAxisAlignment: WrapCrossAlignment.center,
+                    // alignment: WrapAlignment.center,
+                    // crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 30.0),
-                        child: Column(
-                          children: const [
-                            Icon(
-                              Icons.lock_outline,
-                              size: 40.0,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 20.0),
-                              child: Text(
-                                'CONNEXION',
-                                style: TextStyle(
-                                    fontSize: 24, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
                       _hideTopErrors
                           ? const SizedBox()
                           : ErrorAheadMolecule(
@@ -102,7 +116,6 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                         isForPassword: true,
                       ),
                       Wrap(
-                        alignment: WrapAlignment.center,
                         runSpacing: 20.0,
                         children: [
                           ButtonMolecule(
@@ -114,35 +127,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                                 : () => _onConnectClicked(store),
                             label: "SE CONNECTER",
                           ),
-                          Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: Container(
-                                  margin: const EdgeInsets.only(right: 10.0),
-                                  height: 2.0,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 5.0),
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 3.0),
-                                child: const Text("OU",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold)),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  margin: const EdgeInsets.only(right: 10.0),
-                                  height: 2.0,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
+                          const _Divider(),
                           DisplaySocialButtons(
                             socialButtons: [
                               SocialButton(
@@ -206,5 +191,42 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
             : null;
     _passwordLocalError =
         password.isEmpty ? "Veuillez entrer un mot de passe" : null;
+  }
+}
+
+class _Divider extends StatelessWidget {
+  const _Divider({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: Container(
+            margin: const EdgeInsets.only(right: 10.0),
+            height: 2.0,
+            color: Colors.grey,
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+          margin: const EdgeInsets.symmetric(horizontal: 3.0),
+          child: const Text("OU",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold)),
+        ),
+        Expanded(
+          child: Container(
+            margin: const EdgeInsets.only(right: 10.0),
+            height: 2.0,
+            color: Colors.grey,
+          ),
+        ),
+      ],
+    );
   }
 }

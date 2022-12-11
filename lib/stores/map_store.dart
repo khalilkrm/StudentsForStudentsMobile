@@ -13,11 +13,11 @@ class MapStore extends material.ChangeNotifier {
 
   // Markers on the map
   final Set<Marker> markers = <Marker>{};
-  final int _markerIdCounter = 1;
+  int _markerIdCounter = 1;
 
   // Polylines on the map
   final Set<Polyline> routes = <Polyline>{};
-  final int _polylineIdCounter = 1;
+  int _polylineIdCounter = 1;
 
   // Current position inputs
   double userPositionLatitude = 0;
@@ -245,7 +245,6 @@ class MapStore extends material.ChangeNotifier {
     double longitude,
   ) async {
     final GoogleMapController controller = await completer.future;
-
     controller.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
@@ -257,11 +256,11 @@ class MapStore extends material.ChangeNotifier {
   }
 
   String _nextPolylineId() {
-    return "polyline_id_$_polylineIdCounter";
+    return "polyline_id_${_polylineIdCounter++}";
   }
 
   String _nextMarkerId() {
-    return "polyline_id_$_markerIdCounter";
+    return "marker_id_${_markerIdCounter++}";
   }
 
   // --------------------------------

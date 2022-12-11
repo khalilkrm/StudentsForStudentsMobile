@@ -1,10 +1,13 @@
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:open_file_plus/open_file_plus.dart';
-import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:student_for_student_mobile/models/files/file.dart';
 import 'package:student_for_student_mobile/models/files/files.dart';
 import 'package:student_for_student_mobile/repositories/file_repository.dart';
+import 'dart:convert';
 import 'dart:io' as io;
 
 class FileStore extends ChangeNotifier {
@@ -12,6 +15,7 @@ class FileStore extends ChangeNotifier {
   Files files = Files(files: []);
   bool isError = false;
   String error = '';
+  void Function(String)? onErrorCallback;
 
   FileStore({required FileRepository repository}) : _repository = repository;
 
@@ -21,9 +25,14 @@ class FileStore extends ChangeNotifier {
     } on Exception catch (e) {
       isError = true;
       error = e.toString();
+      onErrorCallback?.call(error);
     } finally {
       notifyListeners();
     }
+  }
+
+  set onError(void Function(String) callback) {
+    onErrorCallback = callback;
   }
 
   Future<void> dowloadFile({
@@ -33,47 +42,55 @@ class FileStore extends ChangeNotifier {
     try {
       if (!await Permission.storage.request().isGranted) return;
 
-      final int index =
-          files.files.indexWhere((file) => file.filename == filename);
-      final File file = files.files[index];
+      File file = _findFileByIndex(filename);
 
-      final String content = await _repository.downloadFile(
+      final String base64Content = await _repository.downloadFileContent(
         token: token,
         fileName: file.filename,
       );
 
-      final io.File iofile =
-          await _writeFile("${file.filename}.${file.extension}", content);
+      final Uint8List decodedContent =
+          base64.decode(base64Content.replaceAll('\n', ''));
+
+      final io.File iofile = await _writeFileAsBytes(
+          "${file.filename}.${file.extension}", decodedContent);
+
       await OpenFile.open(iofile.path);
     } on Exception catch (e) {
       isError = true;
       error = e.toString();
+      onErrorCallback?.call(error);
     } finally {
       notifyListeners();
     }
   }
 
-  static Future<String> get _localPath async {
+  File _findFileByIndex(String filename) {
+    final int index =
+        files.files.indexWhere((file) => file.filename == filename);
+    final File file = files.files[index];
+    return file;
+  }
+
+  Future<String> get _localPath async {
     String documentsPath = '/storage/emulated/0/Documents/';
     if (io.Platform.isIOS) {
-      io.Directory path =
-          await path_provider.getApplicationDocumentsDirectory();
+      io.Directory path = await getApplicationDocumentsDirectory();
       documentsPath = path.path;
     } else if (io.Platform.isAndroid) {
-      io.Directory? documents =
-          await path_provider.getExternalStorageDirectory();
+      io.Directory? documents = await getExternalStorageDirectory();
       documentsPath = documents == null ? documentsPath : documents.path;
     }
     return documentsPath;
   }
 
-  static Future<io.File> _file(String name) async {
+  Future<io.File> _file(String name) async {
     final path = await _localPath;
     return io.File('$path/$name');
   }
 
-  static Future<io.File> _writeFile(String name, String content) async {
+  Future<io.File> _writeFileAsBytes(String name, Uint8List bytes) async {
     final file = await _file(name);
-    return file.writeAsString(content);
+    return await file.writeAsBytes(bytes.buffer.asUint8List());
   }
 }

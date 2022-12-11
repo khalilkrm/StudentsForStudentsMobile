@@ -20,6 +20,22 @@ class FilePage extends StatefulWidget {
 class _FilePageState extends State<FilePage> {
   bool hideIcon = false;
 
+  _showErrorDialog(String error) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Error"),
+        content: Text(error),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -27,6 +43,7 @@ class _FilePageState extends State<FilePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       FileStore fileStore = Provider.of<FileStore>(context, listen: false);
       UserStore userStore = Provider.of<UserStore>(context, listen: false);
+      fileStore.onError = _showErrorDialog;
 
       await fileStore.loadFiles(token: userStore.user.token);
     });
@@ -119,7 +136,11 @@ class FileSearchDelegate extends SearchDelegate<File?> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return Container();
+    return ResultFileSearchDelegate(
+      source: searchResult,
+      options: chips,
+      onFileTap: (uiFile) => close(context, uiFile),
+    );
   }
 
   @override

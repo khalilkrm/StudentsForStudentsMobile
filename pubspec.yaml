@@ -61,6 +61,8 @@ dependencies:
   open_file_plus: ^3.3.0
   path_provider: ^2.0.11
   permission_handler: ^10.2.0
+  flutter_secure_storage: ^6.1.0
+  uuid: ^3.0.7
 
 dev_dependencies:
   flutter_test:
