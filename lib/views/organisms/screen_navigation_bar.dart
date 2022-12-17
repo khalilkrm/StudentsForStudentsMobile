@@ -17,10 +17,6 @@ class _ScreenNavigationBarState extends State<ScreenNavigationBar> {
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.add_box, size: 25),
-            label: 'Demandes',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.message, size: 25),
             label: 'Chat',
           ),

@@ -12,9 +12,9 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const ScreenTitle(title: 'ACCUEIL'),
-      ),
+      appBar: const PreferredSize(
+          preferredSize: Size.fromHeight(50),
+          child: ScreenTitle(title: 'ACCUEIL')),
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.push(context,
             CupertinoPageRoute(builder: (context) => const RequestsPage())),

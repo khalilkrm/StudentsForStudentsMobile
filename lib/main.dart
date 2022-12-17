@@ -138,16 +138,14 @@ class MyApp extends StatelessWidget {
               builder: (context, navStore, child) {
                 switch (navStore.currentIndex) {
                   case 0:
-                    return const RequestsPage();
-                  case 1:
                     return const ChatPage();
-                  case 2:
+                  case 1:
                     return const HomePage();
-                  case 3:
+                  case 2:
                     return const ProfilePage();
-                  case 4:
+                  case 3:
                     return const CalendarPage();
-                  case 5:
+                  case 4:
                     return const FilePage();
                   default:
                     return const Text('Default');

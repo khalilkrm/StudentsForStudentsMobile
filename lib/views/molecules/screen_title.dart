@@ -8,6 +8,7 @@ class ScreenTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      leading: null,
       centerTitle: true,
       shadowColor: Colors.transparent,
       title: Padding(
