@@ -54,6 +54,8 @@ class ProfileStore with ChangeNotifier {
         token: token,
       );
       _requests.removeWhere((request) => request.id == requestId);
+      handledRequests = List.unmodifiable(getHandledRequest());
+      createdRequests = List.unmodifiable(getCreatedRequest());
     } on Exception catch (e) {
       error = e.toString();
     } finally {

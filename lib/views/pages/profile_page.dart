@@ -119,9 +119,12 @@ class _ProfilePageState extends State<ProfilePage> {
 }
 
 class _ProfileTabBar extends StatelessWidget {
-  const _ProfileTabBar(
-      {Key? key, required this.text, required this.length, required this.icon})
-      : super(key: key);
+  const _ProfileTabBar({
+    Key? key,
+    required this.text,
+    required this.length,
+    required this.icon,
+  }) : super(key: key);
 
   final String text;
   final int length;
