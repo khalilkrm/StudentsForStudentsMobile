@@ -35,7 +35,7 @@ class RequestModel {
       _$RequestModelFromJson(json);
 
   getFormatedDate() {
-    var date = DateFormat('dd/MM/y').parse(this.date);
+    var date = DateFormat('dd-MM-y').parse(this.date);
     final DateFormat formatter = DateFormat('EEEE d MMMM y');
     return formatter.format(date);
   }

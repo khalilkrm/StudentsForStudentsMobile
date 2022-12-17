@@ -140,9 +140,9 @@ class MyApp extends StatelessWidget {
                   case 0:
                     return const ChatPage();
                   case 1:
-                    return const HomePage();
-                  case 2:
                     return const ProfilePage();
+                  case 2:
+                  return const HomePage();
                   case 3:
                     return const CalendarPage();
                   case 4:

@@ -21,12 +21,12 @@ class _ScreenNavigationBarState extends State<ScreenNavigationBar> {
             label: 'Chat',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, size: 25),
-            label: 'Accueil',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.person, size: 25),
             label: 'Profil',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home, size: 25),
+            label: 'Accueil',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_month, size: 25),
