@@ -76,6 +76,7 @@ class _RequestContentState extends State<RequestContent> {
                       label: "Rue",
                       prefixiIcon: const Icon(Icons.add_road),
                     ),
+                    const SizedBox(height: 10),
                     Row(children: [
                       Padding(
                         padding: const EdgeInsets.only(right: 10.0),
@@ -103,6 +104,7 @@ class _RequestContentState extends State<RequestContent> {
                         ),
                       ),
                     ]),
+                    const SizedBox(height: 10),
                     TextFormFieldMolecule(
                       minLines: 1,
                       controller: widget._localityTextFieldController,
@@ -154,6 +156,7 @@ class _RequestContentState extends State<RequestContent> {
                           label: "Nom de la demande",
                           prefixiIcon: const Icon(Icons.add),
                         ),
+                        const SizedBox(height: 10),
                         TextFormFieldMolecule(
                           minLines: 5,
                           controller: widget._descriptionTextFieldController,

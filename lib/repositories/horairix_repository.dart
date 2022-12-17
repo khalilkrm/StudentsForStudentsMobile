@@ -6,8 +6,6 @@ import 'package:student_for_student_mobile/models/horairix/HorairixApiModel.dart
 class HorairixRepository {
   final HorairixApi _horairixApi;
 
-  bool? _isError;
-  String? _message;
   final List<Event> _events = [];
 
   HorairixRepository({required horairixApi}) : _horairixApi = horairixApi;
