@@ -48,8 +48,5 @@ app.*.map.json
 *.mock.dart
 generated_*
 
-# Debug
-/test/debug_test.dart
-
 # env
 *.env
