@@ -5,16 +5,32 @@ class ProfileTitleOrganism extends StatelessWidget {
   ProfileTitleOrganism({
     Key? key,
     required this.username,
+    required this.onDisconnect,
   })  : assert(username.isNotEmpty),
         super(key: key);
 
   final String username;
+  final void Function() onDisconnect;
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
         children: [
+          Align(
+            alignment: Alignment.topRight,
+            child: ClipOval(
+              child: Material(
+                color: const Color(0xFFc18845), // button color
+                child: InkWell(
+                  splashColor: Colors.grey.withOpacity(.5), // inkwell color
+                  child: const SizedBox(
+                      width: 56, height: 56, child: Icon(Icons.logout)),
+                  onTap: () {},
+                ),
+              ),
+            ),
+          ),
           Container(
             height: 100,
             width: 100,
@@ -32,7 +48,6 @@ class ProfileTitleOrganism extends StatelessWidget {
               ),
             ),
           ),
-          // The name
           SizedBox(
             height: 70,
             child: Column(

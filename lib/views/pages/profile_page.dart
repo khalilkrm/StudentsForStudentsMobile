@@ -39,6 +39,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   token: userStore.user.token,
                 ),
                 title: ProfileTitleOrganism(
+                  onDisconnect: userStore.signOut,
                   username: userStore.user.username,
                 )));
   }

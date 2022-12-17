@@ -22,7 +22,6 @@ class NestedScollableTabBarViewTemplate extends StatefulWidget {
   final Widget title;
   final List<Widget> tabs;
   final List<TabBarViewModel> views;
-
   @override
   State<NestedScollableTabBarViewTemplate> createState() =>
       _NestedScollableTabBarViewTemplateState();
