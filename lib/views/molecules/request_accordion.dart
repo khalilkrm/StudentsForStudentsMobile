@@ -71,7 +71,7 @@ class RequestAccordion extends StatelessWidget {
                 icon: Icons.book,
                 textColor: _expansionTileTextColor),
             ProfileRequestListTile(
-                title: 'Date de rendez-vous',
+                title: 'Date de demande',
                 subtitle: date,
                 icon: Icons.date_range,
                 textColor: _expansionTileTextColor),
