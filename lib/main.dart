@@ -34,7 +34,6 @@ import 'package:student_for_student_mobile/views/pages/chat_page.dart';
 import 'package:student_for_student_mobile/views/pages/file_page.dart';
 import 'package:student_for_student_mobile/views/pages/home_page.dart';
 import 'package:student_for_student_mobile/views/pages/profile_page.dart';
-import 'package:student_for_student_mobile/views/pages/requests_page.dart';
 import 'package:syncfusion_localizations/syncfusion_localizations.dart';
 
 Future<void> main() async {

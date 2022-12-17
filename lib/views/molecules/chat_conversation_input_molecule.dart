@@ -19,7 +19,7 @@ class _ChatConversationInputMoleculeState
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      height: 100,
+      height: 200,
       color: Colors.white,
       child: Row(children: [
         Expanded(
