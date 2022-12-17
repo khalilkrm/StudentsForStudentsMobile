@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:student_for_student_mobile/models/request/PlaceModel.dart';
+import 'package:student_for_student_mobile/models/request/RequestModel.dart';
 import 'package:student_for_student_mobile/stores/home_store.dart';
 import 'package:student_for_student_mobile/stores/user_store.dart';
 import 'package:student_for_student_mobile/views/molecules/request_accordion.dart';
@@ -107,26 +108,33 @@ class _HomeContentState extends State<HomeContent> {
                             ]),
                           ),
                           homeStore.hasRequests
-                              ? Column(children: [
-                                  ...homeStore.requests
-                                      .map<RequestAccordion>((request) =>
-                                          RequestAccordion(
-                                            name: request.requestName,
-                                            description: request.description,
-                                            date: request.date,
-                                            author: request.sender,
-                                            placeAddress: request.place.content,
-                                            courseName: request.course.content,
-                                            onAccept: () => _onAccept(
-                                              store: homeStore,
-                                              requestId: request.id,
-                                              token: request.token,
-                                            ),
-                                            onLocalize: () => _onLocalize(
-                                                homeStore, request.place),
-                                          ))
-                                      .toList()
-                                ])
+                              ? Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  child: Column(children: [
+                                    ...homeStore.requests
+                                        .map<RequestAccordion>((RequestModel
+                                                request) =>
+                                            RequestAccordion(
+                                              name: request.requestName,
+                                              description: request.description,
+                                              date: request.getFormatedDate(),
+                                              author: request.sender,
+                                              placeAddress:
+                                                  request.place.content,
+                                              courseName:
+                                                  request.course.content,
+                                              onAccept: () => _onAccept(
+                                                store: homeStore,
+                                                requestId: request.id,
+                                                token: userStore.user.token,
+                                              ),
+                                              onLocalize: () => _onLocalize(
+                                                  homeStore, request.place),
+                                            ))
+                                        .toList()
+                                  ]),
+                                )
                               : Center(
                                   child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,

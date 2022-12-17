@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:student_for_student_mobile/stores/profile_store.dart';
+import 'package:student_for_student_mobile/views/molecules/request_list_tile.dart';
+import 'package:student_for_student_mobile/views/molecules/request_list_tile_button.dart';
 import 'package:student_for_student_mobile/views/pages/map_page.dart';
 
 const Color _expansionTileTextColor = Colors.white;
@@ -63,39 +65,6 @@ class ProfileRequestExpansionTileOrganism extends StatelessWidget {
   }
 }
 
-class _ProfileRequestListTileButton extends StatelessWidget {
-  const _ProfileRequestListTileButton({
-    Key? key,
-    required this.text,
-    required this.onPressed,
-    required this.icon,
-    required this.color,
-  }) : super(key: key);
-
-  final String text;
-  final void Function() onPressed;
-  final Icon icon;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: ElevatedButton.icon(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(color),
-          elevation: MaterialStateProperty.all(0),
-          shape: MaterialStateProperty.all(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          ),
-        ),
-        onPressed: onPressed,
-        label: Text(text),
-        icon: icon,
-      ),
-    );
-  }
-}
-
 class _ProfileRequestTitle extends StatelessWidget {
   const _ProfileRequestTitle({
     Key? key,
@@ -120,38 +89,6 @@ class _ProfileRequestTitle extends StatelessWidget {
   }
 }
 
-class _ProfileRequestListTile extends StatelessWidget {
-  const _ProfileRequestListTile({
-    Key? key,
-    required this.title,
-    required this.subtitle,
-    required this.icon,
-  }) : super(key: key);
-
-  final String title;
-  final String subtitle;
-  final IconData icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(icon, color: Colors.white70),
-      title: Text(
-        title,
-        style: GoogleFonts.roboto(
-          color: _expansionTileTextColor,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      subtitle: Text(
-        subtitle,
-        style: GoogleFonts.roboto(color: _expansionTileTextColor),
-      ),
-    );
-  }
-}
-
 // -------------------------
 // Extensions
 // -------------------------
@@ -161,19 +98,27 @@ extension _ProfileRequestExpansionTileOrganismExtension
     on ProfileRequestExpansionTileOrganism {
   List<Widget> createRequestTiles() {
     return [
-      _ProfileRequestListTile(
+      ProfileRequestListTile(
+        textColor: _expansionTileTextColor,
         icon: Icons.book_outlined,
         title: 'Cours',
         subtitle: profileRequestdataModel.courseName,
       ),
-      _ProfileRequestListTile(
+      ProfileRequestListTile(
+          textColor: _expansionTileTextColor,
           icon: Icons.description_outlined,
           title: 'Description de la demande',
           subtitle: profileRequestdataModel.requestDescription),
-      _ProfileRequestListTile(
+      ProfileRequestListTile(
+          textColor: _expansionTileTextColor,
           icon: Icons.location_on_outlined,
           title: 'Lieu de rencontre',
           subtitle: profileRequestdataModel.requestMeetLocation),
+      ProfileRequestListTile(
+          title: 'Date de rendez-vous',
+          subtitle: profileRequestdataModel.meetingDate,
+          icon: Icons.date_range,
+          textColor: _expansionTileTextColor),
     ];
   }
 
@@ -186,20 +131,24 @@ extension _ProfileRequestExpansionTileOrganismExtension
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         if (profileRequestdataModel.isAccepted)
-          _ProfileRequestListTileButton(
-            icon: const Icon(Icons.navigation),
-            onPressed: () =>
-                onNavigatePressed(profileRequestdataModel.requestMeetLocation),
-            text: 'Naviguer',
-            color: _onExpansionTileIsAcceptedColor,
+          Expanded(
+            child: RequestListTileButton(
+              icon: const Icon(Icons.navigation),
+              onPressed: () => onNavigatePressed(
+                  profileRequestdataModel.requestMeetLocation),
+              text: 'Naviguer',
+              color: _onExpansionTileIsAcceptedColor,
+            ),
           ),
         if (!profileRequestdataModel.isAccepted)
-          _ProfileRequestListTileButton(
-            icon: const Icon(Icons.close),
-            onPressed: () => profileRequestdataModel.onCancelPressed(
-                profileRequestdataModel.id, token),
-            text: 'Annuler',
-            color: _onExpansionTileIsPendingColor,
+          Expanded(
+            child: RequestListTileButton(
+              icon: const Icon(Icons.close),
+              onPressed: () => profileRequestdataModel.onCancelPressed(
+                  profileRequestdataModel.id, token),
+              text: 'Annuler',
+              color: _onExpansionTileIsPendingColor,
+            ),
           ),
       ],
     ));

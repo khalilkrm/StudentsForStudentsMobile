@@ -1,4 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:student_for_student_mobile/views/molecules/request_list_tile.dart';
+import 'package:student_for_student_mobile/views/molecules/request_list_tile_button.dart';
+
+const Color _expansionTileTextColor = Colors.white;
+const Color _expansionTileIsAcceptedColor = Color(0xff46543d);
+const Color _expansionTileIsPendingColor = Color(0xFFc18845);
+const Color _onExpansionTileIsAcceptedColor = Color(0xFF85a074);
+const Color _onExpansionTileIsPendingColor = Color(0xFF745229);
 
 class RequestAccordion extends StatelessWidget {
   final String name;
@@ -24,92 +33,72 @@ class RequestAccordion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(children: [
-          Container(
-            decoration: BoxDecoration(boxShadow: [
-              BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: const Offset(0, 3))
-            ]),
-            child: ExpansionTile(
-              collapsedBackgroundColor: Colors.white,
-              textColor: Colors.white,
-              iconColor: Colors.white,
-              collapsedIconColor: Colors.black,
-              collapsedTextColor: Colors.black,
-              backgroundColor: const Color(0xFF5D7052),
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(children: [
+      Container(
+        margin: const EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          color: _expansionTileIsPendingColor,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: ExpansionTile(
+          collapsedTextColor: _expansionTileTextColor,
+          collapsedIconColor: _expansionTileTextColor,
+          textColor: _expansionTileTextColor,
+          leading: const Icon(Icons.timelapse),
+          iconColor: _expansionTileTextColor,
+          title: Text(
+            name,
+            style: GoogleFonts.montserrat(
+              fontWeight: FontWeight.w800,
+              fontSize: 16,
+            ),
+          ),
+          subtitle: Text('Demande de $author', style: GoogleFonts.roboto()),
+          children: [
+            ProfileRequestListTile(
+                title: 'Description',
+                subtitle: description,
+                icon: Icons.description,
+                textColor: _expansionTileTextColor),
+            ProfileRequestListTile(
+                title: 'Lieu',
+                subtitle: placeAddress,
+                icon: Icons.location_on,
+                textColor: _expansionTileTextColor),
+            ProfileRequestListTile(
+                title: 'Cours',
+                subtitle: courseName,
+                icon: Icons.book,
+                textColor: _expansionTileTextColor),
+            ProfileRequestListTile(
+                title: 'Date de rendez-vous',
+                subtitle: date,
+                icon: Icons.date_range,
+                textColor: _expansionTileTextColor),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(name),
-                  Text(date, style: const TextStyle(fontSize: 13)),
+                  RequestListTileButton(
+                    text: 'Accepter',
+                    onPressed: onAccept,
+                    icon: const Icon(Icons.check),
+                    color: _onExpansionTileIsPendingColor,
+                  ),
+                  const SizedBox(width: 20),
+                  RequestListTileButton(
+                    text: 'Localiser',
+                    onPressed: onLocalize,
+                    icon: const Icon(Icons.navigation),
+                    color: _onExpansionTileIsPendingColor,
+                  ),
                 ],
               ),
-              children: [
-                ListTile(
-                  visualDensity:
-                      const VisualDensity(horizontal: 0, vertical: -4),
-                  title: const Text('Utilisateur : ',
-                      style: TextStyle(color: Colors.white)),
-                  subtitle: Text(author,
-                      style: const TextStyle(color: Color(0xAAFFFFFF))),
-                ),
-                ListTile(
-                  visualDensity:
-                      const VisualDensity(horizontal: 0, vertical: -4),
-                  title: const Text('Description : ',
-                      style: TextStyle(color: Colors.white)),
-                  subtitle: Text(description,
-                      style: const TextStyle(color: Color(0xAAFFFFFF))),
-                ),
-                ListTile(
-                  visualDensity:
-                      const VisualDensity(horizontal: 0, vertical: -4),
-                  title: const Text('Lieu : ',
-                      style: TextStyle(color: Colors.white)),
-                  subtitle: Text(placeAddress,
-                      style: const TextStyle(color: Color(0xAAFFFFFF))),
-                ),
-                ListTile(
-                  visualDensity:
-                      const VisualDensity(horizontal: 0, vertical: -4),
-                  title: const Text('Cours : ',
-                      style: TextStyle(color: Colors.white)),
-                  subtitle: Text(courseName,
-                      style: const TextStyle(color: Color(0xAAFFFFFF))),
-                ),
-                const SizedBox(height: 20),
-                Container(
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      top: BorderSide(width: .5, color: Color(0xAAFFFFFF)),
-                    ),
-                  ),
-                  child: TextButton(
-                      onPressed: onAccept,
-                      child: const Text('ACCEPTER',
-                          style: TextStyle(color: Color(0xFFFFFFFF)))),
-                ),
-                Container(
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      top: BorderSide(width: .5, color: Color(0xAAFFFFFF)),
-                    ),
-                  ),
-                  child: TextButton(
-                      onPressed: onLocalize,
-                      child: const Text('LOCALISATION',
-                          style: TextStyle(color: Color(0xFFFFFFFF)))),
-                ),
-              ],
             ),
-          )
-        ]));
+          ],
+        ),
+      )
+    ]);
   }
 }

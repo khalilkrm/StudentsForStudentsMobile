@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:student_for_student_mobile/models/request/CourseModel.dart';
 import 'package:student_for_student_mobile/models/request/PlaceModel.dart';
@@ -32,4 +33,10 @@ class RequestModel {
 
   factory RequestModel.fromJson(Map<String, dynamic> json) =>
       _$RequestModelFromJson(json);
+
+  getFormatedDate() {
+    var date = DateFormat('dd/MM/y').parse(this.date);
+    final DateFormat formatter = DateFormat('EEEE d MMMM y');
+    return formatter.format(date);
+  }
 }

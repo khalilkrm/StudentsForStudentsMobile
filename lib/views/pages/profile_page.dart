@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/date_symbol_data_file.dart';
 import 'package:provider/provider.dart';
 import 'package:student_for_student_mobile/stores/profile_store.dart';
 import 'package:student_for_student_mobile/stores/user_store.dart';

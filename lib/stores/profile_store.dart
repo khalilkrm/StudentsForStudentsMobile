@@ -72,6 +72,7 @@ class ProfileDataModel {
   final String requestDescription;
   final String courseName;
   final String requestMeetLocation;
+  final String meetingDate;
   final Future<void> Function(int, String) onCancelPressed;
 
   ProfileDataModel({
@@ -84,6 +85,7 @@ class ProfileDataModel {
     required this.isMeTheHandler,
     required this.handlerUsername,
     required this.onCancelPressed,
+    required this.meetingDate,
   });
 }
 
@@ -107,6 +109,7 @@ extension _TabBarTopDataModelExtension on RequestModel {
       isMeTheHandler: status && handler == currentUsername,
       handlerUsername: status ? handler : '',
       onCancelPressed: (id, token) => removeRequest(id, token),
+      meetingDate: getFormatedDate(),
     );
   }
 }
