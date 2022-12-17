@@ -11,9 +11,9 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const PreferredSize(
-          preferredSize: Size.fromHeight(50),
-          child: ScreenTitle(title: 'ACCUEIL')),
+      appBar: AppBar(
+        title: const ScreenTitle(title: 'ACCUEIL'),
+      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color(0xFFC18845),
         onPressed: () => Navigator.push(context,

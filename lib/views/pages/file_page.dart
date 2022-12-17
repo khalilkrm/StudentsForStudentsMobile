@@ -10,6 +10,8 @@ import 'package:student_for_student_mobile/views/molecules/file_element.dart';
 import 'package:student_for_student_mobile/views/organisms/screen_navigation_bar.dart';
 import 'package:student_for_student_mobile/views/organisms/search_file_result.dart';
 
+import '../molecules/screen_title.dart';
+
 class FilePage extends StatefulWidget {
   const FilePage({super.key});
 
@@ -55,7 +57,7 @@ class _FilePageState extends State<FilePage> {
       builder: (context, fileStore, userStore, child) => Scaffold(
         appBar: AppBar(
           elevation: 0,
-          title: const Text("Synthèses"),
+          title: const ScreenTitle(title: '         SYNTHESES'),
           actions: [
             IconButton(
               onPressed: () async {
