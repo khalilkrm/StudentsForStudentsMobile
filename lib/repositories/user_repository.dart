@@ -52,4 +52,12 @@ class UserRepository {
           "La requête n'a pas pu être résolue dans le temps imparti de ${timelimit.inSeconds} secondes");
     }
   }
+
+  Future<String> getCursusName({
+    required int cursusId,
+    required String token,
+  }) async {
+    final response = await _userApi.getCursus(id: cursusId, token: token);
+    return response[0]['label'];
+  }
 }

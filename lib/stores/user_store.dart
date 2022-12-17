@@ -17,6 +17,7 @@ class UserStore extends ChangeNotifier {
   bool isError = false;
   String error = "";
   User user = User.defaultUser();
+  String cursusName = "";
 
   UserStore({
     required UserRepository userRepository,
@@ -35,6 +36,17 @@ class UserStore extends ChangeNotifier {
       throw Exception("Le token n'a pas pu être récupérer. Réessayez");
     } else {
       return auth.idToken!;
+    }
+  }
+
+  Future<void> loadUserCursus() async {
+    try {
+      final String name = await _userRepository.getCursusName(
+          cursusId: user.cursusId, token: user.token);
+      cursusName = name;
+    } catch (e) {
+      isError = true;
+      error = e.toString();
     }
   }
 

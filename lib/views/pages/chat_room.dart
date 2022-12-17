@@ -11,13 +11,18 @@ import 'package:student_for_student_mobile/views/organisms/chat_conversation_org
 import 'package:student_for_student_mobile/views/pages/chat_page.dart';
 
 class ChatRoom extends StatefulWidget {
-  const ChatRoom({super.key, required this.roomIndex});
+  const ChatRoom({
+    super.key,
+    required this.roomIndex,
+    required this.collectionName,
+  });
 
   @override
   State<ChatRoom> createState() => _ChatRoomState();
 
   final int roomIndex;
   final String message = '';
+  final String collectionName;
 }
 
 class _ChatRoomState extends State<ChatRoom> {
@@ -31,7 +36,7 @@ class _ChatRoomState extends State<ChatRoom> {
       chatStore.loadMessages(
           documentName: chatStore.rooms[widget.roomIndex].uid);
       chatStore.listenMessages(
-        documentName: "Développement d'applications",
+        documentName: widget.collectionName,
         room: chatStore.rooms[widget.roomIndex],
       );
     });
@@ -96,15 +101,15 @@ class _ChatRoomState extends State<ChatRoom> {
               ChatConversationInputMolecule(
                 onSend: (message) async {
                   await chatStore.sendMessage(
-                    collectionName: "Développement d'applications",
+                    collectionName: widget.collectionName,
                     room: chatStore.rooms[widget.roomIndex],
                     message: message,
                     senderUsername: userStore.user.username,
                   );
                   await chatStore.updateLastRoomMessage(
-                    collectionName: "Développement d'applications",
+                    collectionName: widget.collectionName,
                     room: chatStore.rooms[widget.roomIndex],
-                    data: chatStore.conversation.messages.last,
+                    data: chatStore.conversation.messages.first,
                   );
                 },
               )

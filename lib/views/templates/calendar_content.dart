@@ -30,7 +30,8 @@ class _CalendarContentState extends State<CalendarContent> {
     return Consumer<UserStore>(
       builder: (context, userStore, child) => Consumer<CalendarStore>(
         builder: (context, store, child) => store.state.isLoading
-            ? const WaitingMessage('Le calendrier en cours de chargement...')
+            ? const WaitingMessage(
+                'Le calendrier est en cours de chargement...')
             : !store.state.isCalendarLinked
                 ? ScreenContent(children: [CalendarBox()])
                 : SfCalendar(

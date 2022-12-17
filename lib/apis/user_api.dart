@@ -49,6 +49,22 @@ class UserApi {
     return jsonDecode(response.body);
   }
 
+  getCursus({
+    required int id,
+    required String token,
+  }) async {
+    Uri uri = Uri.https(url.base, url.cursus.replaceAll('{id}', id.toString()));
+    http.Response response = await http.get(uri, headers: {
+      'accept': 'application/json',
+      'Authorization': 'bearer $token'
+    });
+
+    _reponseStatusIs200ElseThrow(
+        response: response, actionName: "getting cursus");
+
+    return jsonDecode(response.body);
+  }
+
   void _reponseStatusIs200ElseThrow(
       {required http.Response response, required String actionName}) {
     final json = jsonDecode(response.body);

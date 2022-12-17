@@ -9,6 +9,7 @@ String place = "Place";
 String publicRequests = "Request/false";
 String requests = "Request";
 String courses = "School/Course";
+String cursus = "School/Cursus/{id}";
 String horairixBaseUrl = 'horairix.helmo.be';
 String horairixAgenda = "Services/SynchronisationAgenda";
 String file = "File";

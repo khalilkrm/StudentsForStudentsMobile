@@ -8,9 +8,8 @@ import 'package:student_for_student_mobile/models/chat/room.dart';
 import 'package:student_for_student_mobile/stores/chat_store.dart';
 import 'package:student_for_student_mobile/stores/user_store.dart';
 import 'package:student_for_student_mobile/views/molecules/screen_title.dart';
+import 'package:student_for_student_mobile/views/organisms/screen_navigation_bar.dart';
 import 'package:student_for_student_mobile/views/pages/chat_room.dart';
-
-import '../organisms/screen_navigation_bar.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -28,9 +27,9 @@ class _ChatPageState extends State<ChatPage> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       var chatStore = Provider.of<ChatStore>(context, listen: false);
       var userStore = Provider.of<UserStore>(context, listen: false);
-      await chatStore.loadRooms(roomName: "Développement d'applications");
-      disposer =
-          chatStore.listenRooms(collectionName: "Développement d'applications");
+      await userStore.loadUserCursus();
+      await chatStore.loadRooms(roomName: userStore.cursusName);
+      disposer = chatStore.listenRooms(collectionName: userStore.cursusName);
     });
   }
 
@@ -56,10 +55,13 @@ class _ChatPageState extends State<ChatPage> {
             itemBuilder: (context, int index) {
               final room = chatStore.rooms[index];
               return RoomWidget(
-                  mounted: mounted,
-                  room: room,
-                  index: index,
-                  chatStore: chatStore);
+                cursusName:
+                    Provider.of<UserStore>(context, listen: false).cursusName,
+                mounted: mounted,
+                room: room,
+                index: index,
+                chatStore: chatStore,
+              );
             },
           ),
         ),
@@ -76,12 +78,14 @@ class RoomWidget extends StatelessWidget {
     required this.room,
     required this.index,
     required this.chatStore,
+    required this.cursusName,
   }) : super(key: key);
 
   final bool mounted;
   final Room room;
   final int index;
   final ChatStore chatStore;
+  final String cursusName;
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +94,10 @@ class RoomWidget extends StatelessWidget {
       onTap: () async {
         if (!mounted) return;
         Navigator.push(context, CupertinoPageRoute(builder: (context) {
-          return ChatRoom(roomIndex: index);
+          return ChatRoom(
+            roomIndex: index,
+            collectionName: cursusName,
+          );
         }));
       },
       child: Container(

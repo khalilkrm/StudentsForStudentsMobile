@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:student_for_student_mobile/models/request/CourseModel.dart';
+import 'package:student_for_student_mobile/models/request/RequestModel.dart';
 import 'package:student_for_student_mobile/repositories/home_repository.dart';
 import 'package:student_for_student_mobile/stores/user_store.dart';
 
@@ -39,7 +40,7 @@ class HomeStore extends ChangeNotifier {
   get hasRequests => _homeRepository.requests.isNotEmpty;
   get errorMessage => _errorMessage;
   get successMessage => _successMessage;
-  get requests => _homeRepository.requests;
+  List<RequestModel> get requests => _homeRepository.requests;
   List<CourseModel> get courses => _homeRepository.courses;
   get selectedCourseId => _selectedCourseId;
 

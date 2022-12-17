@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:student_for_student_mobile/models/files/ui_option.dart';
 import 'package:student_for_student_mobile/models/request/CourseModel.dart';
 import 'package:student_for_student_mobile/models/request/PlaceModel.dart';
 import 'package:student_for_student_mobile/models/request/RequestModel.dart';
 import 'package:student_for_student_mobile/stores/home_store.dart';
 import 'package:student_for_student_mobile/stores/user_store.dart';
 import 'package:student_for_student_mobile/views/molecules/request_accordion.dart';
-import 'package:student_for_student_mobile/views/organisms/option_organism.dart';
 import 'package:student_for_student_mobile/views/organisms/screen_content.dart';
 import 'package:student_for_student_mobile/views/pages/map_page.dart';
 
@@ -81,33 +79,34 @@ class _HomeContentState extends State<HomeContent> {
                                   .toList(),
                             ),
                           ),
+                          const SizedBox(height: 20),
                           homeStore.hasRequests
                               ? Container(
                                   margin: const EdgeInsets.symmetric(
                                       horizontal: 10),
-                                  child: Column(children: [
-                                    ...homeStore.requests
-                                        .map<RequestAccordion>((RequestModel
-                                                request) =>
-                                            RequestAccordion(
-                                              name: request.requestName,
-                                              description: request.description,
-                                              date: request.getFormatedDate(),
-                                              author: request.sender,
-                                              placeAddress:
-                                                  request.place.content,
-                                              courseName:
-                                                  request.course.content,
-                                              onAccept: () => _onAccept(
-                                                store: homeStore,
-                                                requestId: request.id,
-                                                token: userStore.user.token,
-                                              ),
-                                              onLocalize: () => _onLocalize(
-                                                  homeStore, request.place),
-                                            ))
-                                        .toList()
-                                  ]),
+                                  child: Column(
+                                      children: homeStore.requests
+                                          .map<RequestAccordion>((RequestModel
+                                                  request) =>
+                                              RequestAccordion(
+                                                name: request.requestName,
+                                                description:
+                                                    request.description,
+                                                date: request.getFormatedDate(),
+                                                author: request.sender,
+                                                placeAddress:
+                                                    request.place.content,
+                                                courseName:
+                                                    request.course.content,
+                                                onAccept: () => _onAccept(
+                                                  store: homeStore,
+                                                  requestId: request.id,
+                                                  token: userStore.user.token,
+                                                ),
+                                                onLocalize: () => _onLocalize(
+                                                    homeStore, request.place),
+                                              ))
+                                          .toList()),
                                 )
                               : Center(
                                   child: Column(
