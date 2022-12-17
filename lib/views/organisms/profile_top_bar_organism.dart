@@ -23,10 +23,10 @@ class ProfileTitleOrganism extends StatelessWidget {
               child: Material(
                 color: const Color(0xFFc18845), // button color
                 child: InkWell(
-                  splashColor: Colors.grey.withOpacity(.5), // inkwell color
+                  splashColor: Colors.grey.withOpacity(.5),
+                  onTap: onDisconnect, // inkwell color
                   child: const SizedBox(
                       width: 56, height: 56, child: Icon(Icons.logout)),
-                  onTap: () {},
                 ),
               ),
             ),

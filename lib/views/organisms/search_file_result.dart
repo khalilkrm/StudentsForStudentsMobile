@@ -63,10 +63,10 @@ class _ResultFileSearchDelegateState extends State<ResultFileSearchDelegate> {
     }
 
     final List<File> result = widget.results.isEmpty
-        ? widget.source.where((s) {
+        ? widget.source.where((current) {
             var selected =
                 widget.options.where((element) => element.isSelected());
-            return selected.every((element) => element.tester(s));
+            return selected.every((element) => element.tester(current));
           }).toList()
         : widget.results.where(tappedOption.tester).toList();
 

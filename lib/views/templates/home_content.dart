@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:student_for_student_mobile/models/files/ui_option.dart';
+import 'package:student_for_student_mobile/models/request/CourseModel.dart';
 import 'package:student_for_student_mobile/models/request/PlaceModel.dart';
 import 'package:student_for_student_mobile/models/request/RequestModel.dart';
 import 'package:student_for_student_mobile/stores/home_store.dart';
 import 'package:student_for_student_mobile/stores/user_store.dart';
 import 'package:student_for_student_mobile/views/molecules/request_accordion.dart';
+import 'package:student_for_student_mobile/views/organisms/option_organism.dart';
 import 'package:student_for_student_mobile/views/organisms/screen_content.dart';
 import 'package:student_for_student_mobile/views/pages/map_page.dart';
 
@@ -60,52 +63,23 @@ class _HomeContentState extends State<HomeContent> {
                         children: [
                           SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
-                            child: Row(children: [
-                              ...homeStore.courses
-                                  .map<Padding>(
-                                    (course) => Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 20),
-                                      child: TextButton(
-                                        onPressed: () => _handleFilter(
-                                          store: homeStore,
-                                          id: course.id,
-                                          token: userStore.user.token,
-                                        ),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              color:
-                                                  homeStore.selectedCourseId ==
-                                                          course.id
-                                                      ? const Color(0xC1884500)
-                                                      : Colors.white,
-                                              boxShadow: [
-                                                BoxShadow(
-                                                    color: Colors.grey
-                                                        .withOpacity(0.5),
-                                                    spreadRadius: 5,
-                                                    blurRadius: 7,
-                                                    offset: const Offset(0, 3))
-                                              ]),
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 10, vertical: 10),
-                                            child: Text(
-                                              course.content,
-                                              style: TextStyle(
-                                                  color: homeStore
-                                                              .selectedCourseId ==
-                                                          course.id
-                                                      ? Colors.white
-                                                      : Colors.black),
-                                            ),
-                                          ),
-                                        ),
+                            child: Row(
+                              children: homeStore.courses
+                                  .map(
+                                    (CourseModel course) => _CourseOption(
+                                      id: course.id,
+                                      isSelected: homeStore.selectedCourseId ==
+                                          course.id,
+                                      onOptionPressed: () => _handleFilter(
+                                        store: homeStore,
+                                        id: course.id,
+                                        token: userStore.user.token,
                                       ),
+                                      name: course.content,
                                     ),
                                   )
                                   .toList(),
-                            ]),
+                            ),
                           ),
                           homeStore.hasRequests
                               ? Container(
@@ -198,6 +172,41 @@ class _HomeContentState extends State<HomeContent> {
           builder: (context) => MapPage(
                 destination: place.address,
               )),
+    );
+  }
+}
+
+class _CourseOption extends StatelessWidget {
+  const _CourseOption({
+    required this.onOptionPressed,
+    required this.isSelected,
+    required this.name,
+    required this.id,
+  });
+
+  final void Function() onOptionPressed;
+  final bool isSelected;
+  final String name;
+  final int id;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onOptionPressed,
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 10),
+        child: ChoiceChip(
+          label: Text(name),
+          selected: isSelected,
+          labelStyle: TextStyle(
+            color: isSelected ? Colors.white : Colors.black,
+          ),
+          selectedColor: const Color(0xC1884500),
+          onSelected: (bool selected) {
+            onOptionPressed();
+          },
+        ),
+      ),
     );
   }
 }

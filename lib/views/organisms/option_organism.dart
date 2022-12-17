@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:student_for_student_mobile/models/files/ui_option.dart';
 
 class OptionOrganism extends StatelessWidget {
-  const OptionOrganism({Key? key, required this.chips, required this.onTap})
-      : super(key: key);
+  const OptionOrganism({
+    Key? key,
+    required this.chips,
+    required this.onTap,
+  }) : super(key: key);
 
   final UIOption chips;
   final void Function() onTap;
@@ -11,7 +14,7 @@ class OptionOrganism extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onTap(),
+      // onTap: () => onTap(),
       child: Container(
         margin: const EdgeInsets.all(5),
         child: ChoiceChip(

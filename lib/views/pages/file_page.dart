@@ -75,8 +75,8 @@ class _FilePageState extends State<FilePage> {
           shrinkWrap: true,
           itemCount: fileStore.files.files.length,
           itemBuilder: (context, index) {
-            var results = fileStore.files.files;
-            final File uiFile = results[index];
+            var files = fileStore.files.files;
+            final File uiFile = files[index];
             return FileMolecule(
                 uiFile: uiFile, onFileTap: () => _onFileSeleted(uiFile));
           },

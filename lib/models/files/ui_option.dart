@@ -1,10 +1,8 @@
-import 'package:student_for_student_mobile/models/files/file.dart';
-
-class UIOption {
+class UIOption<T> {
   final String name;
   bool _isSelected = false;
   final int id;
-  final bool Function(File) tester;
+  final bool Function(T) tester;
 
   UIOption({required this.name, required this.id, required this.tester});
 
