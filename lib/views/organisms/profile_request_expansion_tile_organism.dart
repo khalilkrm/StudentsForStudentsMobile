@@ -115,7 +115,7 @@ extension _ProfileRequestExpansionTileOrganismExtension
           title: 'Lieu de rencontre',
           subtitle: profileRequestdataModel.requestMeetLocation),
       ProfileRequestListTile(
-          title: 'Date de rendez-vous',
+          title: 'Date de demande',
           subtitle: profileRequestdataModel.meetingDate,
           icon: Icons.date_range,
           textColor: _expansionTileTextColor),
