@@ -36,7 +36,7 @@ class RequestModel {
 
   getFormatedDate() {
     var date = DateFormat('dd-MM-y').parse(this.date);
-    final DateFormat formatter = DateFormat('EEEE d MMMM y');
+    final DateFormat formatter = DateFormat('d-MM-y');
     return formatter.format(date);
   }
 }

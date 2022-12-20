@@ -19,7 +19,7 @@ class _ChatConversationInputMoleculeState
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      height: 200,
+      height: 100,
       color: Colors.white,
       child: Row(children: [
         Expanded(
@@ -36,7 +36,7 @@ class _ChatConversationInputMoleculeState
                   controller: _controller,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: 'Type your message ...',
+                    hintText: 'Votre message...',
                     hintStyle: TextStyle(color: Colors.grey[500]),
                   ),
                 ),
