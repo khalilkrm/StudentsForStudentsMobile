@@ -11,8 +11,7 @@ class HorairixApi {
     required String token,
   }) async {
     String encodedLink = Uri.encodeComponent(link);
-    Uri linkCalendarUri = Uri.https(
-        base, "${linkCalendarUrl.replaceAll("{calendarLink}", encodedLink)}}");
+    Uri linkCalendarUri = Uri.parse("https://$base$linkCalendarUrl$encodedLink");
 
     http.Response response = await http
         .put(linkCalendarUri, headers: {'Authorization': 'Bearer $token'});
