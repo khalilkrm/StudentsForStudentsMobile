@@ -44,7 +44,7 @@ class _CalendarBoxState extends State<CalendarBox> {
                           ),
                         ),
                         Text(
-                          'Pour afficher votre calendrier horiairix, veuillez entrer son lien ci-dessous',
+                          'Pour afficher votre calendrier horairix, veuillez entrer son lien ci-dessous',
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 16),
                         ),

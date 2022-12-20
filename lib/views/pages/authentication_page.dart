@@ -56,7 +56,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
               ),
               const SizedBox(height: 20),
               Text(
-                "Content de vous revoir, vous nous manquiez !",
+                "Content de vous revoir, vous nous avez manqué !",
                 textAlign: TextAlign.center,
                 softWrap: true,
                 overflow: TextOverflow.visible,
