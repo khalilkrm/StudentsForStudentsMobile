@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:io' as io;
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
@@ -7,8 +9,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:student_for_student_mobile/models/files/file.dart';
 import 'package:student_for_student_mobile/models/files/files.dart';
 import 'package:student_for_student_mobile/repositories/file_repository.dart';
-import 'dart:convert';
-import 'dart:io' as io;
 
 class FileStore extends ChangeNotifier {
   final FileRepository _repository;
