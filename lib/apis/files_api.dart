@@ -28,4 +28,29 @@ class FilesApi {
       throw Exception('Failed to download file');
     }
   }
+
+  Future<Map<String, dynamic>> uploadImage(
+      {required String token,
+      required int courseId,
+      required String content,
+      required String filename,
+      required String extension}) async {
+    Uri uri = Uri.https(url.base, url.file);
+    http.Response response = await http.post(uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode({
+          'courseId': courseId,
+          'content': content,
+          'filename': filename,
+          'extension': extension
+        }));
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to upload image');
+    }
+  }
 }

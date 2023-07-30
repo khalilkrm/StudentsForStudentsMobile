@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:student_for_student_mobile/stores/file_store.dart';
 import 'package:student_for_student_mobile/stores/profile_store.dart';
 import 'package:student_for_student_mobile/stores/user_store.dart';
 import 'package:student_for_student_mobile/views/organisms/profile_request_expansion_tile_organism.dart';
@@ -21,17 +22,18 @@ class _ProfilePageState extends State<ProfilePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final userStore = Provider.of<UserStore>(context, listen: false);
       final profileStore = Provider.of<ProfileStore>(context, listen: false);
+      final fileStore = Provider.of<FileStore>(context, listen: false);
       await profileStore.loadOwnedRequests(
-        token: userStore.user.token,
-        currentUsername: userStore.user.username,
-      );
+          token: userStore.user.token,
+          currentUsername: userStore.user.username);
+      await fileStore.loadFiles(token: userStore.user.token);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<UserStore, ProfileStore>(
-        builder: (context, userStore, profileStore, child) =>
+    return Consumer3<UserStore, ProfileStore, FileStore>(
+        builder: (context, userStore, profileStore, fileStore, child) =>
             NestedScollableTabBarViewTemplate(
                 tabs: _buildTabs(profileStore),
                 views: _buildTabViews(
@@ -39,8 +41,18 @@ class _ProfilePageState extends State<ProfilePage> {
                   token: userStore.user.token,
                 ),
                 title: ProfileTitleOrganism(
+                  image: fileStore.downloadImage(
+                      userStore.user.token, userStore.user.username),
                   onDisconnect: userStore.signOut,
                   username: userStore.user.username,
+                  onImagePicked: (imageBytes, extension) async {
+                    await fileStore.uploadImage(userStore.user.token,
+                        courseId: 1,
+                        username: userStore.user.username,
+                        extension: extension,
+                        bytesContent: imageBytes);
+                    await fileStore.loadFiles(token: userStore.user.token);
+                  },
                 )));
   }
 
@@ -65,14 +77,22 @@ class _ProfilePageState extends State<ProfilePage> {
       TabBarViewModel(
         makeScrollable: !profileStore.isCreatedRequestsEmpty,
         child: profileStore.isCreatedRequestsEmpty
-            ? Center(
-                child: Text(
-                  "Vous n'avez pas encore de demande",
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.montserrat(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+            ? Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Vous n'avez créé aucune demande",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.montserrat(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                        )),
+                    const SizedBox(height: 10),
+                    Text("Créez des demandes à partir de l'accueil",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.montserrat(fontSize: 12)),
+                  ],
                 ),
               )
             : Wrap(
@@ -93,13 +113,23 @@ class _ProfilePageState extends State<ProfilePage> {
       TabBarViewModel(
           makeScrollable: !profileStore.isHandledRequestsEmpty,
           child: profileStore.isHandledRequestsEmpty
-              ? Center(
-                  child: Text("Vous n'avez pas encore accepté de demande",
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.montserrat(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      )),
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Vous n'avez accepté aucune demande",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.montserrat(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                          )),
+                      const SizedBox(height: 10),
+                      Text("Acceptez des demandes à partir de l'accueil",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.montserrat(fontSize: 12)),
+                    ],
+                  ),
                 )
               : Wrap(
                   children: [

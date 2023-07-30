@@ -1,5 +1,8 @@
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:student_for_student_mobile/models/request/RequestModel.dart';
+import 'package:student_for_student_mobile/repositories/file_repository.dart';
 import 'package:student_for_student_mobile/repositories/request_repository.dart';
 
 class ProfileStore with ChangeNotifier {
@@ -8,8 +11,11 @@ class ProfileStore with ChangeNotifier {
   List<ProfileDataModel> handledRequests = [];
   List<ProfileDataModel> createdRequests = [];
   String? error;
+  Uint8List? imageBytes;
 
-  ProfileStore({required RequestRepository requestRepository})
+  ProfileStore(
+      {required RequestRepository requestRepository,
+      required FileRepository fileRepository})
       : _requestRepository = requestRepository;
 
   bool get isHandledRequestsEmpty => handledRequests.isEmpty;
@@ -49,10 +55,7 @@ class ProfileStore with ChangeNotifier {
     required String token,
   }) async {
     try {
-      await _requestRepository.deleteRequest(
-        id: requestId,
-        token: token,
-      );
+      await _requestRepository.deleteRequest(id: requestId, token: token);
       _requests.removeWhere((request) => request.id == requestId);
       handledRequests = List.unmodifiable(getHandledRequest());
       createdRequests = List.unmodifiable(getCreatedRequest());

@@ -9,6 +9,7 @@ class TextFormFieldMolecule extends StatefulWidget {
   final String _label;
   final int _minLines;
   final String? _errorText;
+  final bool desactivated;
 
   const TextFormFieldMolecule(
       {required TextEditingController controller,
@@ -16,6 +17,7 @@ class TextFormFieldMolecule extends StatefulWidget {
       required int minLines,
       Widget? prefixiIcon,
       bool type = false,
+      this.desactivated = false,
       String? errorText,
       bool isForPassword = false,
       super.key})
@@ -53,6 +55,7 @@ class _TextFormFieldMoleculeState extends State<TextFormFieldMolecule> {
           borderSide: BorderSide(color: Colors.transparent),
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
+        enabled: !widget.desactivated,
         filled: true,
         fillColor: const Color(0XFFf4f4f4),
         labelText: widget._label,

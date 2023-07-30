@@ -63,6 +63,9 @@ dependencies:
   permission_handler: ^10.2.0
   flutter_secure_storage: ^6.1.0
   uuid: ^3.0.7
+  jwt_decoder: ^2.0.1
+  image_picker: ^1.0.1
+  path: ^1.8.2
 
 dev_dependencies:
   flutter_test:

@@ -9,7 +9,7 @@ import 'package:student_for_student_mobile/views/organisms/option_container_orga
 class ResultFileSearchDelegate extends StatefulWidget {
   ResultFileSearchDelegate(
       {Key? key,
-      required List<File> source,
+      required List<ApplicationFile> source,
       required Set<UIOption> options,
       required this.onFileTap})
       : source = UnmodifiableListView(List.from(source)),
@@ -17,10 +17,10 @@ class ResultFileSearchDelegate extends StatefulWidget {
         results = source,
         super(key: key);
 
-  final UnmodifiableListView<File> source;
+  final UnmodifiableListView<ApplicationFile> source;
   final UnmodifiableSetView<UIOption> options;
-  final List<File> results;
-  final Function(File) onFileTap;
+  final List<ApplicationFile> results;
+  final Function(ApplicationFile) onFileTap;
 
   @override
   State<ResultFileSearchDelegate> createState() =>
@@ -40,7 +40,7 @@ class _ResultFileSearchDelegateState extends State<ResultFileSearchDelegate> {
             shrinkWrap: true,
             itemCount: widget.results.length,
             itemBuilder: (context, index) {
-              final File uiFile = widget.results[index];
+              final ApplicationFile uiFile = widget.results[index];
               return FileMolecule(
                   uiFile: uiFile, onFileTap: () => widget.onFileTap(uiFile));
             },
@@ -62,7 +62,7 @@ class _ResultFileSearchDelegateState extends State<ResultFileSearchDelegate> {
       return;
     }
 
-    final List<File> result = widget.results.isEmpty
+    final List<ApplicationFile> result = widget.results.isEmpty
         ? widget.source.where((current) {
             var selected =
                 widget.options.where((element) => element.isSelected());

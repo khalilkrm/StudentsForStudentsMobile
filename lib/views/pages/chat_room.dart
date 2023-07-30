@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:student_for_student_mobile/apis/urls.dart';
 import 'package:student_for_student_mobile/stores/chat_store.dart';
+import 'package:student_for_student_mobile/stores/file_store.dart';
 import 'package:student_for_student_mobile/stores/user_store.dart';
 import 'package:student_for_student_mobile/views/molecules/avatar_molecule.dart';
 import 'package:student_for_student_mobile/views/molecules/chat_conversation_input_molecule.dart';
@@ -50,8 +52,8 @@ class _ChatRoomState extends State<ChatRoom> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<ChatStore, UserStore>(
-      builder: (context, chatStore, userStore, child) => Scaffold(
+    return Consumer3<ChatStore, UserStore, FileStore>(
+      builder: (context, chatStore, userStore, fileStore, child) => Scaffold(
         appBar: AppBar(
           toolbarHeight: 100,
           elevation: 0,
@@ -87,13 +89,14 @@ class _ChatRoomState extends State<ChatRoom> {
                           topLeft: Radius.circular(30),
                           topRight: Radius.circular(30))),
                   child: ChatConversationOrganism(
+                    image: (String senderUsername) => fileStore.downloadImage(
+                        userStore.user.token, senderUsername),
                     currentUsername: userStore.user.username,
                     conversation: chatStore.conversation.messages
                         .map((message) => UIRoomMessage(
-                              sender: message.senderUsername,
-                              date: chatStore.formatDate(message.date),
-                              text: message.text,
-                            ))
+                            sender: message.senderUsername,
+                            date: chatStore.formatDate(message.date),
+                            text: message.text))
                         .toList(),
                   ),
                 ),

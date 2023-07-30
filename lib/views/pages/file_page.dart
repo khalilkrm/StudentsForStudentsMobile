@@ -78,7 +78,7 @@ class _FilePageState extends State<FilePage> {
           itemCount: fileStore.files.files.length,
           itemBuilder: (context, index) {
             var files = fileStore.files.files;
-            final File uiFile = files[index];
+            final ApplicationFile uiFile = files[index];
             return FileMolecule(
                 uiFile: uiFile, onFileTap: () => _onFileSeleted(uiFile));
           },
@@ -88,7 +88,7 @@ class _FilePageState extends State<FilePage> {
     );
   }
 
-  void _onFileSeleted(File? result) async {
+  void _onFileSeleted(ApplicationFile? result) async {
     if (result == null) return;
     var fileStore = Provider.of<FileStore>(context, listen: false);
     UserStore userStore = Provider.of<UserStore>(context, listen: false);
@@ -97,17 +97,18 @@ class _FilePageState extends State<FilePage> {
   }
 }
 
-typedef FilePredicate = bool Function(File file, String query);
+typedef FilePredicate = bool Function(ApplicationFile file, String query);
 
-class FileSearchDelegate extends SearchDelegate<File?> {
-  final UnmodifiableListView<File> source;
-  final List<File> searchResult = [];
+class FileSearchDelegate extends SearchDelegate<ApplicationFile?> {
+  final UnmodifiableListView<ApplicationFile> source;
+  final List<ApplicationFile> searchResult = [];
 
   /// Options to filter the search results
   final Set<UIOption> chips = {};
   final BuildContext context;
 
-  FileSearchDelegate({required List<File> source, required this.context})
+  FileSearchDelegate(
+      {required List<ApplicationFile> source, required this.context})
       : source = UnmodifiableListView(source);
 
   // ----------------------------
@@ -162,7 +163,7 @@ class FileSearchDelegate extends SearchDelegate<File?> {
 
   _onType({required String query}) {
     // Filtered by the query
-    List<File> filtered = _filter(
+    List<ApplicationFile> filtered = _filter(
         predicate: (file, query) =>
             file.filename.toLowerCase().contains(query.toLowerCase()));
 
@@ -175,11 +176,11 @@ class FileSearchDelegate extends SearchDelegate<File?> {
     _resetChipsWith([...chipCourses, ...chipCursus]);
   }
 
-  List<File> _filter({required FilePredicate predicate}) {
+  List<ApplicationFile> _filter({required FilePredicate predicate}) {
     return source.where((file) => predicate(file, query)).toList();
   }
 
-  List<UIOption> _getChipsBasedOnCourses(List<File> filtered) {
+  List<UIOption> _getChipsBasedOnCourses(List<ApplicationFile> filtered) {
     List<UIOption> chipsBasedOnCourses = _mapToOptions(
         mapper: (uiFile) => UIOption(
             id: uiFile.courseId,
@@ -189,7 +190,7 @@ class FileSearchDelegate extends SearchDelegate<File?> {
     return chipsBasedOnCourses;
   }
 
-  List<UIOption> _getChipsBasedOnCursus(List<File> filtered) {
+  List<UIOption> _getChipsBasedOnCursus(List<ApplicationFile> filtered) {
     List<UIOption> chipsBasedOnCursus = _mapToOptions(
         mapper: (uiFile) => UIOption(
               id: uiFile.cursusId,
@@ -201,13 +202,13 @@ class FileSearchDelegate extends SearchDelegate<File?> {
   }
 
   List<UIOption> _mapToOptions({
-    required UIOption Function(File) mapper,
-    required List<File> list,
+    required UIOption Function(ApplicationFile) mapper,
+    required List<ApplicationFile> list,
   }) {
     return list.map((result) => mapper(result)).toList();
   }
 
-  void _resetSearchResultWith(List<File> filtered) {
+  void _resetSearchResultWith(List<ApplicationFile> filtered) {
     searchResult.clear();
     searchResult.addAll(filtered);
   }

@@ -25,11 +25,11 @@ class RequestStore extends ChangeNotifier {
 
     succeed = await _requestRepository.getPlaces(token: token);
     if (!succeed) {
-      _userStore.signOut();
+      await _userStore.signOut();
     }
     succeed = await _requestRepository.getCourses(token: token);
     if (!succeed) {
-      _userStore.signOut();
+      await _userStore.signOut();
     }
 
     notifyListeners();
@@ -64,7 +64,7 @@ class RequestStore extends ChangeNotifier {
         courseId: courseId);
 
     if (message == 'unauthorized') {
-      _userStore.signOut();
+      await _userStore.signOut();
     }
 
     var data = jsonDecode(message);
@@ -90,7 +90,7 @@ class RequestStore extends ChangeNotifier {
         locality: locality);
 
     if (message == 'unauthorized') {
-      _userStore.signOut();
+      await _userStore.signOut();
     }
 
     var data = jsonDecode(message);

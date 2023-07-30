@@ -31,6 +31,25 @@ class FileStore extends ChangeNotifier {
     }
   }
 
+  Future<void> uploadImage(
+    String token, {
+    required int courseId,
+    required String username,
+    required String extension,
+    required Uint8List bytesContent,
+  }) async {
+    try {
+      await _repository.uploadImage(
+          token: token,
+          courseId: courseId,
+          content: base64.encode(bytesContent),
+          filename: 'userimage_$username',
+          extension: extension);
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
   set onError(void Function(String) callback) {
     onErrorCallback = callback;
   }
@@ -42,7 +61,9 @@ class FileStore extends ChangeNotifier {
     try {
       if (!await Permission.storage.request().isGranted) return;
 
-      File file = _findFileByIndex(filename);
+      ApplicationFile? file = _findFileByIndex(filename);
+
+      if (file == null) return;
 
       final String base64Content = await _repository.downloadFileContent(
         token: token,
@@ -65,10 +86,11 @@ class FileStore extends ChangeNotifier {
     }
   }
 
-  File _findFileByIndex(String filename) {
+  ApplicationFile? _findFileByIndex(String filename) {
     final int index =
         files.files.indexWhere((file) => file.filename == filename);
-    final File file = files.files[index];
+    if (index < 0) return null;
+    final ApplicationFile file = files.files[index];
     return file;
   }
 
@@ -92,5 +114,29 @@ class FileStore extends ChangeNotifier {
   Future<io.File> _writeFileAsBytes(String name, Uint8List bytes) async {
     final file = await _file(name);
     return await file.writeAsBytes(bytes.buffer.asUint8List());
+  }
+
+  ApplicationFile? findImage(String username) {
+    if (files.files.isEmpty) return null;
+    ApplicationFile? file = _findFileByIndex('userimage_$username');
+    return file;
+  }
+
+  Future<Uint8List?> downloadImage(String token, String username) async {
+    try {
+      ApplicationFile? file = findImage(username);
+
+      if (file == null) return null;
+
+      final String base64Content = await _repository.downloadFileContent(
+        token: token,
+        fileName: file.filename,
+      );
+      final a = base64.decode(base64Content);
+      return a;
+    } catch (e) {
+      debugPrint(e.toString());
+      return null;
+    }
   }
 }

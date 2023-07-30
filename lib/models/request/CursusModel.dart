@@ -15,5 +15,6 @@ class CursusModel {
     required this.section,
   });
 
-  factory CursusModel.fromJson(Map<String, dynamic> json) => _$CursusModelFromJson(json);
+  factory CursusModel.fromJson(Map<String, dynamic> json) =>
+      _$CursusModelFromJson(json);
 }

@@ -114,9 +114,7 @@ class RoomWidget extends StatelessWidget {
               ),
               child: Center(
                 child: Text(room.name[0],
-                    style: const TextStyle(
-                      color: Colors.white,
-                    )),
+                    style: const TextStyle(color: Colors.white)),
               ),
             ),
             const SizedBox(

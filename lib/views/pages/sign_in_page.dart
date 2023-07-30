@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:student_for_student_mobile/apis/api_exception.dart';
 import 'package:student_for_student_mobile/stores/user_store.dart';
 import 'package:student_for_student_mobile/views/molecules/button_molecule.dart';
 import 'package:student_for_student_mobile/views/molecules/error_ahead_molecule.dart';
@@ -8,17 +9,18 @@ import 'package:student_for_student_mobile/views/molecules/social_button.dart';
 import 'package:student_for_student_mobile/views/molecules/text_form_field_molecule.dart';
 import 'package:student_for_student_mobile/views/organisms/display_social_buttons.dart';
 import 'package:student_for_student_mobile/views/organisms/screen_content.dart';
+import 'package:student_for_student_mobile/views/pages/sign_up_page.dart';
 
 const _toolbarHeigth = 200.0;
 
-class AuthenticationPage extends StatefulWidget {
-  const AuthenticationPage({super.key});
+class SignInPage extends StatefulWidget {
+  const SignInPage({super.key});
 
   @override
-  State<AuthenticationPage> createState() => _AuthenticationPageState();
+  State<SignInPage> createState() => _SignInPageState();
 }
 
-class _AuthenticationPageState extends State<AuthenticationPage> {
+class _SignInPageState extends State<SignInPage> {
   final TextEditingController _emailTextFieldController =
       TextEditingController();
   final TextEditingController _passwordTextFieldController =
@@ -75,7 +77,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
             builder: (context, store, child) => Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Wrap(
-                    runSpacing: 48.0,
+                    runSpacing: 16.0,
                     // alignment: WrapAlignment.center,
                     // crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
@@ -117,6 +119,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                       ),
                       Wrap(
                         runSpacing: 20.0,
+                        alignment: WrapAlignment.center,
                         children: [
                           ButtonMolecule(
                             isSuccess: store.isSignedIn,
@@ -137,6 +140,18 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                               )
                             ],
                           ),
+                          Column(
+                            children: [
+                              const Text("Pas de compte ?", style: TextStyle()),
+                              TextButton(
+                                  onPressed: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const SignUpPage())),
+                                  child: const Text("Créer un compte"))
+                            ],
+                          ),
                         ],
                       )
                     ],
@@ -154,11 +169,24 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
       _passwordLocalError = null;
     });
 
-    await store.signInWithGoogle();
+    try {
+      await store.signInWithGoogle();
+    } on ApiException catch (e) {
+      if (e.statusCode == 404) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SignUpPage(
+                      email: store.token?.email,
+                      firstname: store.token?.givenName,
+                    )));
+      }
+    }
 
     setState(() {
-      _hideTopErrors = store.isError &&
-          store.error.toLowerCase().contains(RegExp(r"(mail|mot de passe)"));
+      final doesNotContainsAheadErrors =
+          !store.error.toLowerCase().contains(RegExp(r"(mail|mot de passe)"));
+      _hideTopErrors = doesNotContainsAheadErrors;
     });
   }
 
@@ -173,7 +201,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
 
     if (_emailLocalError == null && _passwordLocalError == null) {
       setState(() => _tryingToConnect = true);
-      await store.signIn(email: email, password: password);
+      await store.signInWithEmail(email: email, password: password);
       setState(() {
         _hideTopErrors = store.isError &&
             store.error.toLowerCase().contains(RegExp(r"(mail|mot de passe)"));

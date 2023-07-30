@@ -28,7 +28,7 @@ import 'package:student_for_student_mobile/stores/nav_store.dart';
 import 'package:student_for_student_mobile/stores/profile_store.dart';
 import 'package:student_for_student_mobile/stores/request_store.dart';
 import 'package:student_for_student_mobile/stores/user_store.dart';
-import 'package:student_for_student_mobile/views/pages/authentication_page.dart';
+import 'package:student_for_student_mobile/views/pages/sign_in_page.dart';
 import 'package:student_for_student_mobile/views/pages/calendar_page.dart';
 import 'package:student_for_student_mobile/views/pages/chat_page.dart';
 import 'package:student_for_student_mobile/views/pages/file_page.dart';
@@ -84,8 +84,8 @@ Future<void> main() async {
   final MapStore mapStore = MapStore(repository: googleMapRepository);
   final ChatStore chatStore = ChatStore(repository: chatRepository);
   final FileStore fileStore = FileStore(repository: fileRepository);
-  final ProfileStore profileStore =
-      ProfileStore(requestRepository: requestRepository);
+  final ProfileStore profileStore = ProfileStore(
+      requestRepository: requestRepository, fileRepository: fileRepository);
 
   runApp(MultiProvider(
     providers: [
@@ -131,7 +131,7 @@ class MyApp extends StatelessWidget {
       home: Scaffold(body: Consumer<UserStore>(
         builder: (context, userStore, child) {
           if (!userStore.isSignedIn) {
-            return const AuthenticationPage();
+            return const SignInPage();
           } else {
             return Consumer<NavStore>(
               builder: (context, navStore, child) {
@@ -141,7 +141,7 @@ class MyApp extends StatelessWidget {
                   case 1:
                     return const ProfilePage();
                   case 2:
-                  return const HomePage();
+                    return const HomePage();
                   case 3:
                     return const CalendarPage();
                   case 4:

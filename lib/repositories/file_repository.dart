@@ -1,4 +1,5 @@
 import 'package:student_for_student_mobile/apis/files_api.dart';
+import 'package:student_for_student_mobile/models/files/file.dart';
 import 'package:student_for_student_mobile/models/files/files.dart';
 
 class FileRepository {
@@ -15,6 +16,24 @@ class FileRepository {
 
     Files files = Files.fromJson(filesJson);
     return files;
+  }
+
+  Future<void> uploadImage(
+      {required String token,
+      required int courseId,
+      required String content,
+      required String filename,
+      required String extension}) async {
+    var imageJson = await _api.uploadImage(
+        token: token,
+        courseId: courseId,
+        content: content,
+        filename: filename,
+        extension: extension);
+
+    if (_isErrorInResponse(imageJson)) {
+      throw Exception(_getErrorFromResponse(imageJson));
+    }
   }
 
   Future<String> downloadFileContent({

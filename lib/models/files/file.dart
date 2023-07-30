@@ -1,4 +1,4 @@
-class File {
+class ApplicationFile {
   final String filename;
   final String ownerName;
   final DateTime creationDate;
@@ -10,7 +10,7 @@ class File {
   final int cursusId;
   final String extension;
 
-  File({
+  ApplicationFile({
     required this.filename,
     required this.ownerName,
     required this.creationDate,
@@ -24,7 +24,7 @@ class File {
   });
 
   static fromJson({required Map<String, dynamic> content}) {
-    return File(
+    return ApplicationFile(
       filename: content['filename'],
       ownerName: content['ownerName'],
       extension: content['extension'],

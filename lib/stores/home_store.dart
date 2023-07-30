@@ -27,11 +27,11 @@ class HomeStore extends ChangeNotifier {
 
     succeed = await _homeRepository.getRequests(token: token);
     if (!succeed) {
-      _userStore.signOut();
+      await _userStore.signOut();
     }
     succeed = await _homeRepository.getCourses(token: token);
     if (!succeed) {
-      _userStore.signOut();
+      await _userStore.signOut();
     }
 
     notifyListeners();
@@ -54,7 +54,7 @@ class HomeStore extends ChangeNotifier {
     );
 
     if (message == 'unauthorized') {
-      _userStore.signOut();
+      await _userStore.signOut();
     }
 
     var data = jsonDecode(message);

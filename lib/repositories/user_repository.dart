@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:http/http.dart' as http;
+import 'package:student_for_student_mobile/apis/api_exception.dart';
 import 'package:student_for_student_mobile/apis/user_api.dart';
 import 'package:student_for_student_mobile/models/user/user.dart';
 
@@ -26,7 +29,7 @@ class UserRepository {
   Future<User> signIn({
     required String email,
     required String password,
-    Duration timelimit = const Duration(seconds: 5),
+    Duration timelimit = const Duration(seconds: 60),
   }) async {
     try {
       final map = await _userApi
@@ -41,7 +44,7 @@ class UserRepository {
 
   Future<User> getUserFromToken({
     required String token,
-    Duration timelimit = const Duration(seconds: 5),
+    Duration timelimit = const Duration(seconds: 60),
   }) async {
     try {
       final map =
@@ -59,5 +62,25 @@ class UserRepository {
   }) async {
     final response = await _userApi.getCursus(id: cursusId, token: token);
     return response[0]['label'];
+  }
+
+  Future<void> signUpWithEmail(
+      {required String email,
+      required String password,
+      required String lastname,
+      required String firstname,
+      required int cursusId}) async {
+    http.Response response = await _userApi.singnUp(
+        firstname: firstname,
+        lastname: lastname,
+        email: email,
+        password: password,
+        cursusId: cursusId);
+
+    final body = jsonDecode(response.body);
+
+    if (response.statusCode != 200) {
+      throw ApiException(response.statusCode, body['message']);
+    }
   }
 }
