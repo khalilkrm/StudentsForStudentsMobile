@@ -34,8 +34,11 @@ class RequestModel {
   factory RequestModel.fromJson(Map<String, dynamic> json) =>
       _$RequestModelFromJson(json);
 
-  getFormatedDate() {
-    var date = DateFormat('dd/MM/y').parse(this.date);
+  String getFormatedDate() {
+    final RegExp notANumber = RegExp(r'\D');
+    final String separator = notANumber.stringMatch(this.date) ?? '';
+    final String currentFormat = 'dd${separator}MM${separator}yyyy';
+    final DateTime date = DateFormat(currentFormat).parse(this.date);
     final DateFormat formatter = DateFormat('d-MM-y');
     return formatter.format(date);
   }

@@ -77,33 +77,29 @@ class _RequestContentState extends State<RequestContent> {
                       prefixiIcon: const Icon(Icons.add_road),
                     ),
                     const SizedBox(height: 10),
-                    Row(children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10.0),
-                        child: SizedBox(
-                          width: 145,
-                          child: TextFormFieldMolecule(
-                            minLines: 1,
-                            controller: widget._numberTextFieldController,
-                            label: "Numéro",
-                            prefixiIcon: const Icon(Icons.numbers),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: 140,
+                            child: TextFormFieldMolecule(
+                              minLines: 1,
+                              controller: widget._numberTextFieldController,
+                              label: "Numéro",
+                              prefixiIcon: const Icon(Icons.numbers),
+                            ),
                           ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10.0),
-                        child: SizedBox(
-                          width: 145,
-                          child: TextFormFieldMolecule(
-                            minLines: 1,
-                            type: true,
-                            controller: widget._postalCodeTextFieldController,
-                            label: "Code postal",
-                            prefixiIcon: const Icon(Icons.local_post_office),
+                          SizedBox(
+                            width: 140,
+                            child: TextFormFieldMolecule(
+                              minLines: 1,
+                              type: true,
+                              controller: widget._postalCodeTextFieldController,
+                              label: "Code postal",
+                              prefixiIcon: const Icon(Icons.local_post_office),
+                            ),
                           ),
-                        ),
-                      ),
-                    ]),
+                        ]),
                     const SizedBox(height: 10),
                     TextFormFieldMolecule(
                       minLines: 1,

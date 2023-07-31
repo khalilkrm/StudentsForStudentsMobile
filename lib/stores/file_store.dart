@@ -21,7 +21,11 @@ class FileStore extends ChangeNotifier {
 
   Future<void> loadFiles({required String token}) async {
     try {
-      files = await _repository.getFiles(token: token);
+      final files = await _repository.getFiles(token: token);
+      this.files = Files(
+          files: files.files
+              .where((element) => !element.filename.startsWith('userimage_'))
+              .toList());
     } on Exception catch (e) {
       isError = true;
       error = e.toString();

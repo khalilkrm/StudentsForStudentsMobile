@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:student_for_student_mobile/apis/urls.dart';
 import 'package:student_for_student_mobile/stores/chat_store.dart';
@@ -42,10 +43,12 @@ class _ChatRoomState extends State<ChatRoom> {
         room: chatStore.rooms[widget.roomIndex],
       );
     });
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   }
 
   @override
   void dispose() {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     disposer?.cancel();
     super.dispose();
   }

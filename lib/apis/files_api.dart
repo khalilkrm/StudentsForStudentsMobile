@@ -36,17 +36,18 @@ class FilesApi {
       required String filename,
       required String extension}) async {
     Uri uri = Uri.https(url.base, url.file);
+    final body = jsonEncode({
+      'courseId': courseId,
+      'content': content,
+      'filename': filename,
+      'extension': extension
+    });
     http.Response response = await http.post(uri,
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json'
         },
-        body: jsonEncode({
-          'courseId': courseId,
-          'content': content,
-          'filename': filename,
-          'extension': extension
-        }));
+        body: body);
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {

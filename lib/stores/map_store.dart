@@ -104,10 +104,10 @@ class MapStore extends material.ChangeNotifier {
 
     try {
       _setMarkers([
-        LatLng(
-          route.startLocation.latitude,
-          route.startLocation.longitude,
-        ),
+        // LatLng(
+        //   route.startLocation.latitude,
+        //   route.startLocation.longitude,
+        // ),
         LatLng(
           route.endLocation.latitude,
           route.endLocation.longitude,

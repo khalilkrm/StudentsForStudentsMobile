@@ -26,8 +26,8 @@ class MapPageState extends State<MapPage> {
       var store = Provider.of<MapStore>(context, listen: false);
       store.onError(() => _showErrorDialog());
       store.initialize(widget._destination, _controller);
-      SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
     });
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   }
 
   @override
@@ -38,6 +38,7 @@ class MapPageState extends State<MapPage> {
 
   @override
   void dispose() {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     _mapStore?.disposeFromListenCurrentLocation();
     super.dispose();
   }
